@@ -1,6 +1,7 @@
 const chalk = require('chalk'); // colors
 const express = require('express'); // server
 const Discord = require('discord-rpc'); // rpc wrapper
+const he = require('he'); // html entities
 
 const rpc = new Discord.Client({ transport: 'ipc' });
 const app = express();
@@ -72,9 +73,7 @@ function timeToMilli(time) {
  */
 function discordStringify(str) {
     if(str && typeof str === 'string') {
-        // strip script/html tags
-        str = str.replace(/<script[^>]*>([\S\s]*?)<\/script>/gmi, '');
-        str = str.replace(/<\/?\w(?:[^"'>]|"[^"]*"|'[^']*')*>/gmi, '');
+        str = he.decode(str);
 
         // remove any new lines
         str = str.replace(/(\r\n|\n|\r)/gm, '');
