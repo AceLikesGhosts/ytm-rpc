@@ -31,9 +31,9 @@ node index.js
 
 ## Notes
 
-- The bot will display the provided song information on Discord Rich Presence.
+- The RPC Client will display the provided song information on Discord Rich Presence (see images below).
 - The server uses the Express framework to handle incoming POST requests.
-- The `discordStringify` function is used to sanitize strings and remove any HTML or script tags before displaying them in Discord.
+- The `discordStringify` function is used to sanitize strings and parse all HTML entities into their string form and removes all new lines before displaying them on Discord.
 - The `update` function updates the Rich Presence status with the provided song information.
 - The default image for the bot is 'ytm' (You can customize this in the code).
 

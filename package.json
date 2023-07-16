@@ -1,12 +1,12 @@
 {
-  "name": "ytmusicdiscord",
-  "version": "1.0.0",
+  "name": "ytm-rpc",
+  "version": "0.0.1",
   "description": "Shows YouTubeMusic as Rich presence",
   "main": "index.js",
   "scripts": {
     "start": "node ."
   },
-  "author": "DevDenis",
+  "author": "acelikesghosts",
   "license": "ISC",
   "dependencies": {
     "chalk": "^4.0.0",
