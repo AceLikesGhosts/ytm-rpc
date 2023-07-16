@@ -84,7 +84,6 @@ function discordStringify(str) {
 }
 
 /**
- * 
  * @param {string} song 
  * @param {string} artist 
  * @param {number} timeNow 

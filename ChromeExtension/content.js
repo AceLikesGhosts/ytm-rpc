@@ -1,6 +1,5 @@
 // content.js
-function sendMessage()
-{
+function sendMessage() {
     var songName = document.getElementsByClassName("title style-scope ytmusic-player-bar")[0].innerHTML;
     var artistName = document.getElementsByClassName("byline style-scope ytmusic-player-bar complex-string")[0].innerText;
     var time = document.getElementsByClassName("time-info style-scope ytmusic-player-bar")[0].innerText.toString().split('/')[1];
@@ -15,14 +14,12 @@ function sendMessage()
     });
 }
 
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse)
-{
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     sendResponse({
         response: "Message Received! (content)"
     });
 
-    if (document.getElementsByClassName("byline style-scope ytmusic-player-bar complex-string")[0] != undefined)
-    {
+    if(document.getElementsByClassName("byline style-scope ytmusic-player-bar complex-string")[0] != undefined) {
         sendMessage();
     }
 });

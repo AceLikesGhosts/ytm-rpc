@@ -1,5 +1,4 @@
-function updateRichPresence(songName, artistName, timeMax, icon, link)
-{
+function updateRichPresence(songName, artistName, timeMax, icon, link) {
     var data = {
         song: songName,
         artist: artistName,
@@ -24,19 +23,16 @@ function updateRichPresence(songName, artistName, timeMax, icon, link)
 }
 
 // Check if the event listener is already registered
-if (!chrome.tabs.onUpdated.hasListener(tabUpdatedListener))
-{
+if(!chrome.tabs.onUpdated.hasListener(tabUpdatedListener)) {
     chrome.tabs.onUpdated.addListener(tabUpdatedListener);
 }
 
-function tabUpdatedListener(tabId, changeInfo, tab)
-{
+function tabUpdatedListener(tabId, changeInfo, tab) {
     chrome.tabs.sendMessage(tabId, {
         message: 'send'
     });
 }
 
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse)
-{
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     updateRichPresence(request.song, request.artist, request.timeMax, request.icon, null);
 });
