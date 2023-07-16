@@ -6,6 +6,7 @@ const he = require('he'); // html entities
 const rpc = new Discord.Client({ transport: 'ipc' });
 const app = express();
 
+/** @type {Readonly<{ client_id: string; port: number; default_img: string; current_song: string; tempTime: string; }>} */
 const globals = {
     client_id: '1075993095138713612',
     port: 2134,
@@ -53,6 +54,11 @@ app.post('/', (req, res) => {
     return;
 });
 
+/**
+ * @description Turns a time string seperated by `:`s into a millisecond time.
+ * @param {string} time 
+ * @returns {number}
+ */
 function timeToMilli(time) {
     var temp = Date.now();
     if(time.split(':').length == 2) {
@@ -66,8 +72,8 @@ function timeToMilli(time) {
     return temp;
 }
 
-// this is safe
 /**
+ * @description Stringifies a string to use on
  * @param {string} str 
  * @returns {string} A string with HTML entities removed.
  */
@@ -83,6 +89,7 @@ function discordStringify(str) {
 }
 
 /**
+ * @description Updates the Discord RPC locally.
  * @param {string} song 
  * @param {string} artist 
  * @param {number} timeNow 
