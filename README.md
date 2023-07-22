@@ -41,6 +41,7 @@ The extension should now be installed and active in your Chromium browser.
 ## Prerequisites
 
 - Node.js and npm installed on your machine.
+- A [Chromium](https://www.chromium.org/Home/) based web-browser.
 
 ## Usage
 
