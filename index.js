@@ -107,8 +107,8 @@ function update(song, artist, timeNow, timeMax, icon, link) {
         song += '...';
     }
 
-    const currentTime = Date.now();
-    const endTime = currentTime + (timeMax - timeNow); // Calculate the correct end time
+    var currentTime = Date.now();
+    var endTime = currentTime + (timeMax - timeNow); // Calculate the correct end time
 
     rpc.setActivity({
         details: replaceHTMLEntities(song),
