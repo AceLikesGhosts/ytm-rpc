@@ -42,7 +42,25 @@ npm run setup
 node index.js
 ```
 
-2. Ensure your Discord application is running and logged in with the provided `client_id`.
+2. Ensure that the Chrome extension is active.
+
+## Updating
+
+Updating your local version of the project is rather simple, and all you have to do is:
+
+1. Navigate to where it is installed and update the Git repo
+```bash
+git pull
+```
+
+2. Update the required dependencies using npm:
+```bash
+npm install
+```
+
+3. Navigate to [Chrome's extension manager](chrome://extensions) (chrome://extensions) and press `Update`
+!["update image"](images/update.png)
+
 
 ## Notes
 
