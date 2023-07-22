@@ -2,15 +2,16 @@ const chalk = require('chalk'); // colors
 const express = require('express'); // server
 const Discord = require('discord-rpc'); // rpc wrapper
 const he = require('he'); // html entities
+const { config } = require('dotenv'); config(); // dotenv
 
 const rpc = new Discord.Client({ transport: 'ipc' });
 const app = express();
 
 /** @type {Readonly<{ client_id: string; port: number; default_img: string; current_song: string; tempTime: string; }>} */
 const globals = {
-    client_id: '1075993095138713612',
-    port: 2134,
-    default_img: 'ytm', // link or asset name
+    client_id: process.env.CLIENT_ID || '1075993095138713612', // client id of discord rpc app
+    port: process.env.PORT || 2134,                // port for webserver (if you change it you have to change it in the extension as well)
+    default_img: process.env.DEFAULT_IMG || 'ytm', // link or asset name
     current_song: 'Nothing playing',
     tempTime: '0'
 };

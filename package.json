@@ -4,13 +4,15 @@
   "description": "Shows YouTubeMusic as Rich presence",
   "main": "index.js",
   "scripts": {
-    "start": "node ."
+    "start": "node index.js",
+    "setup": "bash setup.sh"
   },
   "author": "acelikesghosts",
   "license": "ISC",
   "dependencies": {
     "chalk": "^4.0.0",
     "discord-rpc": "^4.0.1",
+    "dotenv": "^16.3.1",
     "express": "^4.17.1",
     "he": "^1.2.0"
   }
