@@ -1,4 +1,4 @@
-# Discord Rich Presence
+# Youtube Music Discord Rich Presence
 
 This project is a Discord Rich Presence that displays information about the currently playing music on Discord.
 
