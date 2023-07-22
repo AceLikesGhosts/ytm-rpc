@@ -1,16 +1,18 @@
 // content.js
 function sendMessage() {
-    var songName = document.getElementsByClassName("title style-scope ytmusic-player-bar")[0].innerHTML;
+    var movieplayer = document.querySelector("#movie_player > div.ytp-chrome-top > div.ytp-title > div > a");
+    var songName = movieplayer.innerHTML;
+    var link = movieplayer.getAttribute('href');
     var artistName = document.getElementsByClassName("byline style-scope ytmusic-player-bar complex-string")[0].innerText;
     var time = document.getElementsByClassName("time-info style-scope ytmusic-player-bar")[0].innerText.toString().split('/')[1];
     var icon = document.getElementsByClassName("image style-scope ytmusic-player-bar")[0].src;
-    // var link = document.getElementById('share-url').value;
+    console.log(link);
     chrome.runtime.sendMessage({
         song: songName,
         artist: artistName,
         timeMax: time,
         icon: icon,
-        // link: link
+        link: link
     });
 }
 

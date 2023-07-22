@@ -7,6 +7,8 @@ function updateRichPresence(songName, artistName, timeMax, icon, link) {
         link: link
     };
 
+    console.table(data);
+
     var settings = {
         "async": true,
         "crossDomain": true,
@@ -34,5 +36,5 @@ function tabUpdatedListener(tabId, changeInfo, tab) {
 }
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-    updateRichPresence(request.song, request.artist, request.timeMax, request.icon, null);
+    updateRichPresence(request.song, request.artist, request.timeMax, request.icon, request.link);
 });
