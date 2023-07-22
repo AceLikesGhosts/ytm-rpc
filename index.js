@@ -12,7 +12,7 @@ const globals = {
     client_id: process.env.CLIENT_ID || '1075993095138713612', // client id of discord rpc app
     port: process.env.PORT || 2134,                // port for webserver (if you change it you have to change it in the extension as well)
     default_img: process.env.DEFAULT_IMG || 'ytm', // link or asset name
-    tempTime: '0'
+    tempTime: 'TEMP_VALUE_THIS_CHANGES'
 };
 
 rpc.on('ready', () => {
@@ -22,21 +22,13 @@ rpc.on('ready', () => {
 
 app.use(express.json({ limit: '10mb' }));
 app.post('/', (req, res) => {
-    /** @type { { content: string; song: string; timeMax: number; timeNow: number; icon: string; } } */
+    /** @type { { content: string; song: string; timeMax: number; timeNow: number; icon: string; isPaused: boolean; } } */
     let content = req.body;
 
-    if(content.song == undefined || content.song == null || globals.tempTime == content.timeNow || content.timeMax == '0' || content.timeNow === content.timeMax) {
+    if(content.song == undefined || content.song == null || (globals.tempTime == content.timeNow) && !content.isPaused || content.timeMax == '0' || content.timeNow === content.timeMax) {
         return res.status(400).json({
             ok: false,
             message: 'Missing required field `song` or `timeMax` was equal to the cached time.'
-        });
-    }
-
-    if(globals.current_song == content.song) {
-        console.log(chalk.red(`song "${globals.current_song}" and "${content.song}" are the same`));
-        return res.status(400).json({
-            ok: false,
-            message: 'Current song and posted song are the same.'
         });
     }
 
@@ -51,7 +43,7 @@ app.post('/', (req, res) => {
 
     console.log(`${chalk.green('playing')} ${dataString}`);
 
-    update(content.song, content.artist, timeToMilli(content.timeNow), timeToMilli(content.timeMax), content.icon, content.link);
+    update(content.song, content.artist, timeToMilli(content.timeNow), timeToMilli(content.timeMax), content.icon, content.link, !content.isPaused);
     res.sendStatus(200);
     return;
 });
@@ -91,8 +83,9 @@ function replaceHTMLEntities(str) {
  * @param {number} timeMax - How long the song lasts (milliseconds)
  * @param {string} icon - The link to the album cover/icon
  * @param {string} link - The link to the song on Youtube Music
+ * @param {boolean} isPaused - If the song is paused.
  */
-function update(song, artist, timeNow, timeMax, icon, link) {
+function update(song, artist, timeNow, timeMax, icon, link, isPaused) {
     song = replaceHTMLEntities(song);
     artist = replaceHTMLEntities(artist);
     artist = artist.substr(0, artist.length - 6); // removes the year + the bullet point + the space (EX: The Day * 2009 -> The Day)
@@ -110,21 +103,37 @@ function update(song, artist, timeNow, timeMax, icon, link) {
     var currentTime = Date.now();
     var endTime = currentTime + (timeMax - timeNow); // Calculate the correct end time
 
-    rpc.setActivity({
-        details: replaceHTMLEntities(song),
-        state: replaceHTMLEntities(artist),
-        startTimestamp: timeNow || 0,
-        endTimestamp: endTime || 0,
-        largeImageKey: icon || globals.default_img,
-        largeImageText: song,
-        buttons: [
-            {
-                label: '▶ Listen on Youtube Music',
-                url: link || 'https://music.youtube.com'
-            }
-        ],
-        instance: true
-    });
+    if(isPaused) {
+        rpc.setActivity({
+            details: replaceHTMLEntities(song),
+            state: replaceHTMLEntities(artist),
+            startTimestamp: timeNow || 0,
+            endTimestamp: endTime || 0,
+            largeImageKey: icon || globals.default_img,
+            largeImageText: song,
+            buttons: [
+                {
+                    label: '▶ Listen on Youtube Music',
+                    url: link || 'https://music.youtube.com'
+                }
+            ],
+            instance: true
+        });
+    } else {
+        rpc.setActivity({
+            details: `Paused: ${replaceHTMLEntities(song)}`,
+            state: replaceHTMLEntities(artist),
+            largeImageKey: icon || globals.default_img,
+            largeImageText: song,
+            buttons: [
+                {
+                    label: '▶ Listen on Youtube Music',
+                    url: link || 'https://music.youtube.com'
+                }
+            ],
+            instance: true
+        });
+    }
 }
 
 rpc.login({ clientId: globals.client_id });
