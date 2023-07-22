@@ -2,7 +2,8 @@
 function sendMessage() {
     var movieplayer = document.querySelector("#movie_player > div.ytp-chrome-top > div.ytp-title > div > a");
     var songName = movieplayer.innerHTML;
-    var link = movieplayer.getAttribute('href');
+    var link_raw = movieplayer.getAttribute('href');
+    var watch_id = link_raw.slice(link_raw.indexOf('v='));
 
     var progressbar = document.querySelector("#progress-bar");
     var timeMax = progressbar.ariaValueMax;
@@ -22,7 +23,7 @@ function sendMessage() {
         timeNow: timeNow,
         icon: icon,
         isPaused: isPaused,
-        link: link
+        link: 'https://music.youtube.com/watch?' + watch_id
     });
 }
 
