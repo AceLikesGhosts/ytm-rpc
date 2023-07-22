@@ -27,13 +27,20 @@ app.post('/', (req, res) => {
     let content = req.body;
 
     if(content.song == undefined || content.song == null || globals.tempTime == content.timeMax.replace(' ', '') || content.timeMax.replace(' ', '') == '0:00') {
-        res.sendStatus(200);
+        res.status(200).json({
+            ok: false,
+            message: 'Missing required field `song` or `timeMax` was equal to the cached time.'
+        });
+
         return;
     }
 
     if(globals.current_song == content.song) {
-        console.log(`song ${globals.current_song} and ${content.song} are the same`)
-        res.sendStatus(200);
+        console.log(chalk.red(`song "${globals.current_song}" and "${content.song}" are the same`));
+        res.sendStatus(200).json({
+            ok: false,
+            message: 'Current song and posted song are the same.'
+        });
         return;
     }
 
@@ -41,9 +48,8 @@ app.post('/', (req, res) => {
     globals.current_song = content.song;
 
     const dataString =
-        `${content.song} ${content.artist} ${content.timeMax.replace(' ', '')}`
+        `${content.song} • ${content.artist} ${content.timeMax.replace(' ', '')}`
             .replace(/\d\d\d\d/g, '')
-            .replace(content.song, `${content.song} •`)
             .replace(/\s{2,}/gm, ' ')
             .replace(/(\r\n|\n|\r)/gm, '')
             .trim();
