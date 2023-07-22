@@ -2,6 +2,14 @@
 
 This project is a Discord Rich Presence bot that displays information about the currently playing music on Discord.
 
+## Features
+| Features          | Status    |
+| ----------------  | --------- |
+| Song Name         | :white_check_mark: |
+| Album Cover       | :white_check_mark: |
+| Pausing/Unpausing | :white_check_mark: |
+| Share Button      | :white_check_mark: |
+
 ## Installation
 
 1. Clone the repository to your local machine.
