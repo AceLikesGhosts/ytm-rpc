@@ -1,6 +1,6 @@
 # Discord Rich Presence
 
-This project is a Discord Rich Presence bot that displays information about the currently playing music on Discord.
+This project is a Discord Rich Presence that displays information about the currently playing music on Discord.
 
 ## Features
 | Features          | Status    |
@@ -28,7 +28,15 @@ npm run setup
 
 4. Ensure you have a Discord application created and obtain the `client_id` for the RPC. Replace the value of `CLIENT_ID` in the `.env` file with your application's client ID.
 
-5. Add the extension to your web browser (tested in Google Chrome), installation steps very between browsers.
+5. Add the extension to your web browser (only Chromium based browsers are supported)
+
+### Extension Installation:
+1. Open your Chromium based browser and navigate to `chrome://extensions/`, or the respective extensions page, in the address bar.
+2. Turn on the Developer Mode switch (usually located at the top-right corner of the extensions page).
+3. Click on the "Load unpacked" button.
+4. Browse to the project directory where you cloned the repository and select the folder containing the extension files.
+The Discord Rich Presence extension should now be installed and active in your Chromium browser.
+
 
 ## Prerequisites
 
@@ -64,7 +72,7 @@ npm install
 
 ## Notes
 
-- The RPC Client will display the provided song information on Discord Rich Presence (see images below).
+- The RPC Client will display the provided song information with a Discord Rich Presence (see images below).
 - The server uses the Express framework to handle incoming POST requests.
 - The `replaceHTMLEntities` function is used to sanitize strings and parse all HTML entities into their string form and removes all new lines before displaying them on Discord.
 - The `update` function updates the Rich Presence status with the provided song information.
