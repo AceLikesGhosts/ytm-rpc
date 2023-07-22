@@ -18,7 +18,7 @@ const globals = {
 
 rpc.on('ready', () => {
     console.log(chalk.blue('rpc client ready'));
-    update('Nothing playing', 'Waiting for music..', undefined, undefined, undefined, undefined)
+    update('Nothing playing', 'Waiting for music..', undefined, undefined, undefined, undefined);
 });
 
 app.use(express.json({ limit: '10mb' }));
@@ -27,7 +27,7 @@ app.post('/', (req, res) => {
     let content = req.body;
 
     if(content.song == undefined || content.song == null || globals.tempTime == content.timeMax.replace(' ', '') || content.timeMax.replace(' ', '') == '0:00') {
-        res.status(200).json({
+        res.status(400).json({
             ok: false,
             message: 'Missing required field `song` or `timeMax` was equal to the cached time.'
         });
@@ -37,7 +37,7 @@ app.post('/', (req, res) => {
 
     if(globals.current_song == content.song) {
         console.log(chalk.red(`song "${globals.current_song}" and "${content.song}" are the same`));
-        res.sendStatus(200).json({
+        res.sendStatus(400).json({
             ok: false,
             message: 'Current song and posted song are the same.'
         });
