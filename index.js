@@ -80,11 +80,11 @@ function timeToMilli(time) {
 }
 
 /**
- * @description Stringifies a string to use on
- * @param {string} str 
- * @returns {string} A string with HTML entities removed.
+ * @description Replaces HTML entities with the proper character, and removes new lines.
+ * @param {string} str - The string to decode HTML entities within.
+ * @returns {string} - A string with HTML entities removed.
  */
-function discordStringify(str) {
+function replaceHTMLEntities(str) {
     if(str && typeof str === 'string') {
         str = he.decode(str);
 
@@ -97,16 +97,16 @@ function discordStringify(str) {
 
 /**
  * @description Updates the Discord RPC locally.
- * @param {string} song 
- * @param {string} artist 
- * @param {number} timeNow 
- * @param {number} timeMax 
- * @param {string} icon 
- * @param {string} link 
+ * @param {string} song   - The name of the song
+ * @param {string} artist - The artist of the song
+ * @param {number} timeNow - How far into the song we are (milliseconds)
+ * @param {number} timeMax - How long the song lasts (milliseconds)
+ * @param {string} icon - The link to the album cover/icon
+ * @param {string} link - The link to the song on Youtube Music
  */
 function update(song, artist, timeNow, timeMax, icon, link) {
-    song = discordStringify(song);
-    artist = discordStringify(artist);
+    song = replaceHTMLEntities(song);
+    artist = replaceHTMLEntities(artist);
 
     if(song.length >= 127) {
         song = song.substr(0, 127 - 3);
@@ -119,8 +119,8 @@ function update(song, artist, timeNow, timeMax, icon, link) {
     }
 
     rpc.setActivity({
-        details: discordStringify(song),
-        state: discordStringify(artist),
+        details: replaceHTMLEntities(song),
+        state: replaceHTMLEntities(artist),
         startTimestamp: timeNow || 0,
         endTimestamp: timeMax || 0,
         largeImageKey: icon || globals.default_img,
