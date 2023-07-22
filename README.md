@@ -67,7 +67,7 @@ git pull
 npm install
 ```
 
-1. Navigate to [the browser's extension manager](#extension-installation) and press `Update`
+3. Navigate to [the browser's extension manager](#extension-installation) and press `Update`
 !["update image"](images/update.png)
 
 
