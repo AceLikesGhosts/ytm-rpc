@@ -75,6 +75,7 @@ npm install
 
 ## Notes
 
+- Due to it being an RPC client, the state will only update every **15** seconds, if you pause you have to wait 15 seconds for it to show, if you skip, anything. Simply a downside of it being an RPC client, unlike the Spotify integration.
 - The RPC Client will display the provided song information with a Discord Rich Presence (see images below).
 - The server uses the Express framework to handle incoming POST requests.
 - The `replaceHTMLEntities` function is used to sanitize strings and parse all HTML entities into their string form and removes all new lines before displaying them on Discord.
