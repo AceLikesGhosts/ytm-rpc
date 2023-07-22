@@ -69,11 +69,11 @@ app.post('/', (req, res) => {
 function timeToMilli(time) {
     var temp = Date.now();
     if(time.split(':').length == 2) {
-        temp += Math.round(parseFloat(time.split(':')[0]) * 60000);
+        temp += Math.round(parseFloat(time.split(':')[0]) * 60_000);
         temp += Math.round(parseFloat(time.split(':')[1]) * 1000);
     } else if(time.split(':').length == 3) {
-        temp += Math.round(parseFloat(time.split(':')[0]) * 3600000);
-        temp += Math.round(parseFloat(time.split(':')[1]) * 60000);
+        temp += Math.round(parseFloat(time.split(':')[0]) * 3_600_000);
+        temp += Math.round(parseFloat(time.split(':')[1]) * 60_000);
         temp += Math.round(parseFloat(time.split(':')[2]) * 1000);
     }
     return temp;
