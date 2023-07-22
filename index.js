@@ -115,8 +115,8 @@ function update(song, artist, timeNow, timeMax, icon, link, isPaused) {
 
     if(isPaused) {
         rpc.setActivity({
-            details: replaceHTMLEntities(song),
-            state: replaceHTMLEntities(artist),
+            details: song,
+            state: artist,
             startTimestamp: timeNow || 0,
             endTimestamp: endTime || 0,
             largeImageKey: icon || globals.default_img,
@@ -131,8 +131,8 @@ function update(song, artist, timeNow, timeMax, icon, link, isPaused) {
         });
     } else {
         rpc.setActivity({
-            details: `Paused: ${replaceHTMLEntities(song)}`,
-            state: replaceHTMLEntities(artist),
+            details: `Paused: ${song}`,
+            state: artist,
             largeImageKey: icon || globals.default_img,
             largeImageText: song,
             buttons: [
