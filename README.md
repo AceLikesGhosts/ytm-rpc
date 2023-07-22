@@ -34,8 +34,8 @@ npm run setup
 1. Open your Chromium based browser and navigate to `chrome://extensions/`, or the respective extensions page, in the address bar.
 2. Turn on the Developer Mode switch (usually located at the top-right corner of the extensions page).
 3. Click on the "Load unpacked" button.
-4. Browse to the project directory where you cloned the repository and select the folder containing the extension files.
-The Discord Rich Presence extension should now be installed and active in your Chromium browser.
+4. Browse to the project directory where you cloned the repository and select the folder named `ChromeExtension`.
+The extension should now be installed and active in your Chromium browser.
 
 
 ## Prerequisites
@@ -66,7 +66,7 @@ git pull
 npm install
 ```
 
-3. Navigate to [Chrome's extension manager](chrome://extensions) (chrome://extensions) and press `Update`
+1. Navigate to [the browser's extension manager](#extension-installation) and press `Update`
 !["update image"](images/update.png)
 
 
