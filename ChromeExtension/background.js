@@ -7,8 +7,6 @@ function updateRichPresence(songName, artistName, timeMax, icon, link) {
         link: link
     };
 
-    console.table(data);
-
     var settings = {
         "async": true,
         "crossDomain": true,

@@ -6,7 +6,6 @@ function sendMessage() {
     var artistName = document.getElementsByClassName("byline style-scope ytmusic-player-bar complex-string")[0].innerText;
     var time = document.getElementsByClassName("time-info style-scope ytmusic-player-bar")[0].innerText.toString().split('/')[1];
     var icon = document.getElementsByClassName("image style-scope ytmusic-player-bar")[0].src;
-    console.log(link);
     chrome.runtime.sendMessage({
         song: songName,
         artist: artistName,
