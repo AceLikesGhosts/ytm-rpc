@@ -55,4 +55,5 @@ node index.js
 
 ## Images
 
-!["example rpc image"](images/rpc.png)
+!["screenshot of RPC"](images/rpc.png)
+!["screenshot of paused RPC state"](images/paused.png)
