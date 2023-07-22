@@ -7,12 +7,12 @@ const { config } = require('dotenv'); config(); // dotenv
 const rpc = new Discord.Client({ transport: 'ipc' });
 const app = express();
 
-/** @type {Readonly<{ client_id: string; port: number; default_img: string; tempTime: string; }>} */
+/** @type {Readonly<{ client_id: string; port: number; default_img: string; tempTime: string; last_state: { song: string; timeMax: number; timeNow: number; icon: string; isPaused: boolean; } }>} */
 const globals = {
     client_id: process.env.CLIENT_ID || '1075993095138713612', // client id of discord rpc app
     port: process.env.PORT || 2134,                // port for webserver (if you change it you have to change it in the extension as well)
     default_img: process.env.DEFAULT_IMG || 'ytm', // link or asset name
-    tempTime: 'TEMP_VALUE_THIS_CHANGES'
+    last_state: {}
 };
 
 rpc.on('ready', () => {
@@ -22,17 +22,22 @@ rpc.on('ready', () => {
 
 app.use(express.json({ limit: '10mb' }));
 app.post('/', (req, res) => {
-    /** @type { { content: string; song: string; timeMax: number; timeNow: number; icon: string; isPaused: boolean; } } */
+    /** @type { { song: string; timeMax: number; timeNow: number; icon: string; isPaused: boolean; } } */
     let content = req.body;
 
-    if(content.song == undefined || content.song == null || (globals.tempTime == content.timeNow) && !content.isPaused || content.timeMax == '0' || content.timeNow === content.timeMax) {
+    if(content.song == undefined || content.song == null) {
         return res.status(400).json({
             ok: false,
-            message: 'Missing required field `song` or `timeMax` was equal to the cached time.'
+            message: 'Missing required field `song`.'
         });
     }
 
-    globals.tempTime = content.timeNow;
+    if(JSON.stringify(content) === JSON.stringify(globals.last_state)) {
+        return res.status(400).json({
+            ok: false,
+            message: 'Same exact state as last update.'
+        });
+    }
 
     const dataString =
         `${content.song} • ${content.artist} ${content.timeMax.replace(' ', '')}`
@@ -41,8 +46,13 @@ app.post('/', (req, res) => {
             .replace(/(\r\n|\n|\r)/gm, '')
             .trim();
 
-    console.log(`${chalk.green('playing')} ${dataString}`);
-
+    if(globals.last_state.song !== content.song) {
+        console.log(`${chalk.green('playing')} ${dataString}`);
+    }// else {
+    //  console.log(`${chalk.green('updated')} ${dataString}`);
+    //}
+    
+    globals.last_state = content;
     update(content.song, content.artist, timeToMilli(content.timeNow), timeToMilli(content.timeMax), content.icon, content.link, !content.isPaused);
     res.sendStatus(200);
     return;

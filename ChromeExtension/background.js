@@ -1,3 +1,5 @@
+var lastSongData = null;
+
 function updateRichPresence(songName, artistName, timeNow, timeMax, icon, link, isPaused) {
     var data = {
         song: songName,
@@ -8,6 +10,10 @@ function updateRichPresence(songName, artistName, timeNow, timeMax, icon, link, 
         link: link,
         isPaused: isPaused
     };
+
+    if(JSON.stringify(lastSongData) === JSON.stringify(data)) {
+        return;
+    }
 
     var settings = {
         "async": true,
@@ -30,6 +36,14 @@ if(!chrome.tabs.onUpdated.hasListener(tabUpdatedListener)) {
 }
 
 function tabUpdatedListener(tabId, changeInfo, tab) {
+    if(tab.incognito) {
+        return;
+    }
+
+    if(!tab.url.startsWith('music.youtube.com')) {
+        return;
+    }
+
     chrome.tabs.sendMessage(tabId, {
         message: 'send'
     });
