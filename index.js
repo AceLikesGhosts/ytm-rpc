@@ -99,15 +99,15 @@ function replaceHTMLEntities(str) {
 function update(song, artist, timeNow, timeMax, icon, link, isPaused) {
     song = replaceHTMLEntities(song);
     artist = replaceHTMLEntities(artist);
-    artist = artist.substr(0, artist.length - 6); // removes the year + the bullet point + the space (EX: The Day * 2009 -> The Day)
+    artist = artist.substring(0, artist.length - 6); // removes the year + the bullet point + the space (EX: The Day * 2009 -> The Day)
 
     if(song.length >= 127) {
-        song = song.substr(0, 127 - 3);
+        song = song.substring(0, 127 - 3);
         song += '...';
     }
 
     if(artist.length >= 127) {
-        song = song.substr(0, 127 - 3);
+        song = song.substring(0, 127 - 3);
         song += '...';
     }
 
