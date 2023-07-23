@@ -28,6 +28,10 @@ function sendMessage() {
     // rip the URL from the album cover
     var icon = document.getElementsByClassName('image style-scope ytmusic-player-bar')[0].src;
 
+    if(isPaused === undefined || isPaused === null) {
+        isPaused = false;
+    }
+
     chrome.runtime.sendMessage({
         song: songName,
         artist: artistName,
