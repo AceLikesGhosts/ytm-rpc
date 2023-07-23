@@ -75,12 +75,21 @@ function timeToMilli(time) {
  * @param {string} str - The string to decode HTML entities within.
  * @returns {string} - A string with HTML entities removed.
  */
-function replaceHTMLEntities(str) {
+function discordStringify(str) {
     if(str && typeof str === 'string') {
+        if(str === '' || str === ' ') {
+            throw new Error(`failed to parse string -> it was empty.`);
+        }
+        
         str = he.decode(str);
 
         // remove any new lines
         str = str.replace(/(\r\n|\n|\r)/gm, '');
+
+        if(str.length >= 127) {
+            str = str.substring(0, 124);
+            str += '...';
+        }
     }
 
     return str;
@@ -97,19 +106,9 @@ function replaceHTMLEntities(str) {
  * @param {boolean} isPaused - If the song is paused.
  */
 function update(song, artist, timeNow, timeMax, icon, link, isPaused) {
-    song = replaceHTMLEntities(song);
-    artist = replaceHTMLEntities(artist);
+    song = discordStringify(song);
+    artist = discordStringify(artist);
     artist = artist.substring(0, artist.length - 6); // removes the year + the bullet point + the space (EX: The Day * 2009 -> The Day)
-
-    if(song.length >= 127) {
-        song = song.substring(0, 127 - 3);
-        song += '...';
-    }
-
-    if(artist.length >= 127) {
-        song = song.substring(0, 127 - 3);
-        song += '...';
-    }
 
     const currentTime = Date.now();
     const endTime = currentTime + (timeMax - timeNow); // Calculate the correct end time
