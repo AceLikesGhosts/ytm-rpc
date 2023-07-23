@@ -1,4 +1,4 @@
-// content.js
+// sends the request to the background script (which then sends to the server)
 function sendMessage() {
     
     var movieplayer = document.querySelector("#movie_player > div.ytp-chrome-top > div.ytp-title > div > a");
