@@ -6,7 +6,7 @@ function updateRichPresence(songName, artistName, timeNow, timeMax, icon, link, 
         artist: artistName,
         timeMax: timeMax,
         timeNow: timeNow,
-        icon: icon || 'ytm',
+        icon: icon,
         link: link,
         isPaused: isPaused
     };
@@ -16,15 +16,15 @@ function updateRichPresence(songName, artistName, timeNow, timeMax, icon, link, 
     }
 
     var settings = {
-        "async": true,
-        "crossDomain": true,
-        "url": "http://localhost:2134/",
-        "method": "POST",
-        "headers": {
-            "content-type": "application/json"
+        'async': true,
+        'crossDomain': true,
+        'url': 'http://localhost:2134/',
+        'method': "POST",
+        'headers': {
+            'content-type': 'application/json'
         },
-        "processData": false,
-        "data": JSON.stringify(data)
+        'processData': false,
+        'data': JSON.stringify(data)
     };
 
     $.ajax(settings);
