@@ -15,7 +15,7 @@ const globals = {
     last_state: {}
 };
 
-rpc.on('ready', function() {
+rpc.on('ready', () => {
     console.log(chalk.blue('rpc client ready'));
     update('Nothing playing', 'Waiting for music..', undefined, undefined, undefined, undefined);
 });
