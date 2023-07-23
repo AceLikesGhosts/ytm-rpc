@@ -7,7 +7,7 @@ const { config } = require('dotenv'); config(); // dotenv
 const rpc = new Discord.Client({ transport: 'ipc' });
 const app = express();
 
-/** @type {Readonly<{ client_id: string; port: number; default_img: string; tempTime: string; last_state: { song: string; timeMax: number; timeNow: number; icon: string; isPaused: boolean; } }>} */
+/** @private @type {Readonly<{ client_id: string; port: number; default_img: string; tempTime: string; last_state: { song: string; timeMax: number; timeNow: number; icon: string; isPaused: boolean; } }>} */
 const globals = {
     client_id: process.env.CLIENT_ID || '1075993095138713612', // client id of discord rpc app
     port: process.env.PORT || 2134,                // port for webserver (if you change it you have to change it in the extension as well)
@@ -15,15 +15,15 @@ const globals = {
     last_state: {}
 };
 
-rpc.on('ready', () => {
+rpc.on('ready', function() {
     console.log(chalk.blue('rpc client ready'));
     update('Nothing playing', 'Waiting for music..', undefined, undefined, undefined, undefined);
 });
 
 app.use(express.json({ limit: '10mb' }));
 app.post('/', (req, res) => {
-    /** @type { { song: string; timeMax: number; timeNow: number; icon: string; isPaused: boolean; } } */
-    let content = req.body;
+    /** @constant @type { { song: string; timeMax: number; timeNow: number; icon: string; isPaused: boolean; } } */
+    const content = req.body;
 
     if(content.song == undefined || content.song == null) {
         return res.status(400).json({
@@ -39,6 +39,7 @@ app.post('/', (req, res) => {
         });
     }
 
+    /** @constant */
     const dataString =
         `${content.song} • ${content.artist} ${content.timeMax.replace(' ', '')}`
             .replace(/\d\d\d\d/g, '')
@@ -51,7 +52,7 @@ app.post('/', (req, res) => {
     }// else {
     //  console.log(`${chalk.green('updated')} ${dataString}`);
     //}
-    
+
     globals.last_state = content;
     update(content.song, content.artist, timeToMilli(content.timeNow), timeToMilli(content.timeMax), content.icon, content.link, !content.isPaused);
     res.sendStatus(200);
@@ -64,7 +65,7 @@ app.post('/', (req, res) => {
  * @returns {number}
  */
 function timeToMilli(time) {
-    var temp = Date.now();
+    let temp = Date.now();
     temp += Math.round(parseFloat(time) * 1000);
     return temp;
 }
@@ -110,8 +111,8 @@ function update(song, artist, timeNow, timeMax, icon, link, isPaused) {
         song += '...';
     }
 
-    var currentTime = Date.now();
-    var endTime = currentTime + (timeMax - timeNow); // Calculate the correct end time
+    const currentTime = Date.now();
+    const endTime = currentTime + (timeMax - timeNow); // Calculate the correct end time
 
     if(isPaused) {
         rpc.setActivity({
