@@ -10,6 +10,11 @@ This project is a Discord Rich Presence that displays information about the curr
 | Pausing/Unpausing | :white_check_mark: |
 | Share Button      | :white_check_mark: |
 
+## Prerequisites
+
+- Node.js and npm installed on your machine.
+- A [Chromium](https://www.chromium.org/Home/) based web-browser.
+
 ## Installation
 
 1. Clone the repository to your local machine.
@@ -39,11 +44,6 @@ npm run setup
 4. Browse to the project directory where you cloned the repository and select the folder named `ChromeExtension`.
 The extension should now be installed and active in your Chromium browser.
 
-
-## Prerequisites
-
-- Node.js and npm installed on your machine.
-- A [Chromium](https://www.chromium.org/Home/) based web-browser.
 
 ## Usage
 
