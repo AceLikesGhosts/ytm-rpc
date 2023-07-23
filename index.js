@@ -41,9 +41,7 @@ app.post('/', (req, res) => {
 
     /** @constant */
     const dataString =
-        `${content.song} • ${content.artist} ${content.timeMax.replace(' ', '')}`
-            .replace(/\d\d\d\d/g, '')
-            .replace(/\s{2,}/gm, ' ')
+        `${content.song} • ${content.artist.substring(0, content.artist.length - 6)} ${content.timeMax.replace(' ', '')}`
             .replace(/(\r\n|\n|\r)/gm, '')
             .trim();
 
