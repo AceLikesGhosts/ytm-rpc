@@ -3,6 +3,10 @@
   "version": "0.0.1",
   "description": "Shows YouTubeMusic as Rich presence",
   "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/acelikesghosts/ytm-rpc"
+  },
   "scripts": {
     "start": "node index.js",
     "setup": "bash setup.sh"
