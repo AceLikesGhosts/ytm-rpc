@@ -53,7 +53,10 @@ app.post('/', (req, res) => {
 
     globals.last_state = content;
     update(content.song, content.artist, timeToMilli(content.timeNow), timeToMilli(content.timeMax), content.icon, content.link, !content.isPaused);
-    res.sendStatus(200);
+    res.status(200).json({
+        ok: true,
+        message: 'Updated RPC'
+    });
     return;
 });
 
