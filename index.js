@@ -78,7 +78,7 @@ function discordStringify(str) {
         if(str === '' || str === ' ') {
             throw new Error(`failed to parse string -> it was empty.`);
         }
-        
+
         str = he.decode(str);
 
         // remove any new lines
