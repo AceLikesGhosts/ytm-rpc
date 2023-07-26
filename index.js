@@ -111,6 +111,16 @@ function update(song, artist, timeNow, timeMax, icon, link, isPaused) {
     artist = discordStringify(artist);
     artist = artist.substring(0, artist.length - 6); // removes the year + the bullet point + the space (EX: The Day * 2009 -> The Day)
 
+    if(!song || song === undefined || song.length < 1) {
+        console.error('No song name was passed to `update`.');
+        return;
+    }
+
+    if(!artist || artist === undefined || artist.length < 1) {
+        console.error('No artist was passed to `update`.');
+        return;
+    }
+
     const currentTime = Date.now();
     const endTime = currentTime + (timeMax - timeNow); // Calculate the correct end time
 
