@@ -11,15 +11,17 @@ function updateRichPresence(songName, artistName, timeNow, timeMax, icon, link, 
         isPaused: isPaused
     };
 
-    if(JSON.stringify(lastSongData) === JSON.stringify(data)) {
+    if(lastSongData === JSON.stringify(data)) {
         return;
     }
+
+    lastSongData = JSON.stringify(data);
 
     var settings = {
         'async': true,
         'crossDomain': true,
         'url': 'http://localhost:2134/',
-        'method': "POST",
+        'method': 'POST',
         'headers': {
             'content-type': 'application/json'
         },
