@@ -35,7 +35,7 @@ npm run setup
 
 5. Add the extension to your web browser (only Chromium based browsers are supported)
 
-6. (Optional) If the default port of `2134` is in use already, change the value in both the `.env`, and the [extension's background script](https://github.com/acelikesghosts/ytm-rpc/blob/1bed97e1b8decec06ba40c8ab5263d03060aa079/ChromeExtension/background.js#L21)
+6. (Optional) If the default port of `2134` is in use already, change the value in both the `.env`, and the [extension's background script](https://github.com/AceLikesGhosts/ytm-rpc/blob/master/ChromeExtension/background.js#L23)
 
 ### Extension Installation:
 1. Open your Chromium based browser and navigate to `chrome://extensions/`, or the respective extensions page, in the address bar.
