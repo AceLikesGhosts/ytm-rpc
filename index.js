@@ -17,7 +17,7 @@ const globals = {
 
 rpc.on('ready', () => {
     console.log(chalk.blue('rpc client ready'));
-    update('Nothing playing', 'Waiting for music..      ', undefined, undefined, undefined, undefined);
+    update('Nothing playing', 'Waiting for music..      ', undefined, undefined, undefined, undefined, true);
 });
 
 app.use(express.json({ limit: '10mb' }));
