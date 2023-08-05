@@ -7,11 +7,13 @@ const { config } = require('dotenv'); config(); // dotenv
 const rpc = new Discord.Client({ transport: 'ipc' });
 const app = express();
 
-/** @private @type {Readonly<{ client_id: string; port: number; default_img: string; tempTime: string; last_state: { song: string; timeMax: number; timeNow: number; icon: string; isPaused: boolean; } }>} */
+/** @private @type {Readonly<{ client_id: string; port: number; default_img: string; pause_img: string; play_img: string; tempTime: string; last_state: { song: string; timeMax: number; timeNow: number; icon: string; isPaused: boolean; } }>} */
 const globals = {
     client_id: process.env.CLIENT_ID || '1075993095138713612', // client id of discord rpc app
     port: process.env.PORT || 2134,                // port for webserver (if you change it you have to change it in the extension as well)
     default_img: process.env.DEFAULT_IMG || 'ytm', // link or asset name
+    pause_img: process.env.PAUSE_IMG || 'paused',  // link or asset name
+    play_img: process.env.PLAY_IMG || 'play',  // link or asset name
     last_state: {}
 };
 
@@ -104,9 +106,9 @@ function discordStringify(str) {
  * @param {number} timeMax - How long the song lasts (milliseconds)
  * @param {string} icon - The link to the album cover/icon
  * @param {string} link - The link to the song on Youtube Music
- * @param {boolean} isPaused - If the song is paused.
+ * @param {boolean} isPlaying - If the song is paused.
  */
-function update(song, artist, timeNow, timeMax, icon, link, isPaused) {
+function update(song, artist, timeNow, timeMax, icon, link, isPlaying) {
     song = discordStringify(song);
     artist = discordStringify(artist);
     artist = artist.substring(0, artist.length - 6); // removes the year + the bullet point + the space (EX: The Day * 2009 -> The Day)
@@ -124,7 +126,7 @@ function update(song, artist, timeNow, timeMax, icon, link, isPaused) {
     const currentTime = Date.now();
     const endTime = currentTime + (timeMax - timeNow); // Calculate the correct end time
 
-    if(isPaused) {
+    if(isPlaying) {
         rpc.setActivity({
             details: song,
             state: artist,
@@ -132,6 +134,8 @@ function update(song, artist, timeNow, timeMax, icon, link, isPaused) {
             endTimestamp: endTime || 0,
             largeImageKey: icon || globals.default_img,
             largeImageText: song,
+            smallImageKey: globals.play_img || undefined,
+            smallImageText: globals.play_img !== undefined ? 'Playing' : undefined,
             buttons: [
                 {
                     label: '▶ Listen on Youtube Music',
@@ -146,6 +150,8 @@ function update(song, artist, timeNow, timeMax, icon, link, isPaused) {
             state: artist,
             largeImageKey: icon || globals.default_img,
             largeImageText: song,
+            smallImageKey: globals.pause_img || undefined,
+            smallImageText: globals.pause_img !== undefined ? 'Paused' : undefined,
             buttons: [
                 {
                     label: '▶ Listen on Youtube Music',

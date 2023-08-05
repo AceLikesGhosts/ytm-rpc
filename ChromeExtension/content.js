@@ -45,6 +45,10 @@ new function() {
         });
     }
 
+    /**
+     * @description Adds an observer that calls `sendMessage`
+     * @param {string} name 
+     */
     function setUpObserver(name) {
         const targetNode = document.querySelector(name);
 
