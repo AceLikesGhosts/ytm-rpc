@@ -37,11 +37,13 @@ if(!chrome.tabs.onUpdated.hasListener(tabUpdatedListener)) {
     chrome.tabs.onUpdated.addListener(tabUpdatedListener);
 }
 
+/**
+ * @param {number} tabId 
+ * @param {chrome.tabs.TabChangeInfo} changeInfo 
+ * @param {chrome.tabs.Tab} tab 
+ * @returns {void}
+ */
 function tabUpdatedListener(tabId, changeInfo, tab) {
-    if(tab.incognito) {
-        return;
-    }
-
     if(!tab.url.startsWith('music.youtube.com')) {
         return;
     }
