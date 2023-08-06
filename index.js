@@ -63,7 +63,7 @@ app.post('/', (req, res) => {
 });
 
 /**
- * @description Turns a time string seperated by `:`s into a millisecond time.
+ * @description Turns seconds into milliseconds, added onto the current UTC time.
  * @param {number} time 
  * @returns {number}
  */
@@ -76,7 +76,7 @@ function timeToMilli(time) {
 /**
  * @description Replaces HTML entities with the proper character, and removes new lines.
  * @param {string} str - The string to decode HTML entities within.
- * @returns {string} - A string with HTML entities removed.
+ * @returns {string} A string with HTML entities removed.
  */
 function discordStringify(str) {
     if(str && typeof str === 'string') {
@@ -100,12 +100,12 @@ function discordStringify(str) {
 
 /**
  * @description Updates the Discord RPC locally.
- * @param {string} song   - The name of the song
- * @param {string} artist - The artist of the song
+ * @param {string} song    - The name of the song
+ * @param {string} artist  - The artist of the song
  * @param {number} timeNow - How far into the song we are (milliseconds)
  * @param {number} timeMax - How long the song lasts (milliseconds)
- * @param {string} icon - The link to the album cover/icon
- * @param {string} link - The link to the song on Youtube Music
+ * @param {string} icon    - The link to the album cover/icon
+ * @param {string} link    - The link to the song on Youtube Music
  * @param {boolean} isPlaying - If the song is playing.
  */
 function update(song, artist, timeNow, timeMax, icon, link, isPlaying) {
