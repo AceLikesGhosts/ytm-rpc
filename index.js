@@ -106,7 +106,7 @@ function discordStringify(str) {
  * @param {number} timeMax - How long the song lasts (milliseconds)
  * @param {string} icon - The link to the album cover/icon
  * @param {string} link - The link to the song on Youtube Music
- * @param {boolean} isPlaying - If the song is paused.
+ * @param {boolean} isPlaying - If the song is playing.
  */
 function update(song, artist, timeNow, timeMax, icon, link, isPlaying) {
     song = discordStringify(song);

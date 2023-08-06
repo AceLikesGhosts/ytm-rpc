@@ -25,8 +25,16 @@ new function() {
         // play = paused : pause = unpaused
         var isPaused = pauseButton.getAttribute('title') === 'Play' ? true : false;
 
-        // the artist's name
-        var artistName = document.getElementsByClassName('byline style-scope ytmusic-player-bar complex-string')[0].innerText;
+        // the bar where the artist's name can be located
+        var artistFormattedString = document.querySelector("#layout > ytmusic-player-bar > div.middle-controls.style-scope.ytmusic-player-bar > div.content-info-wrapper.style-scope.ytmusic-player-bar > span > span.subtitle.style-scope.ytmusic-player-bar > yt-formatted-string")
+        
+        if(artistFormattedString === undefined || artistFormattedString.title === null) {
+            console.error('%c[YTM-RPC] %cFailed to fetch artists, formatted string bat was undefined.', 'color:purple;', 'color:white;');
+            return;
+        }
+
+        var artistName = artistFormattedString.title;
+
         // rip the URL from the album cover
         var icon = document.getElementsByClassName('image style-scope ytmusic-player-bar')[0].src;
 
