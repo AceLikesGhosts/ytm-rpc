@@ -26,10 +26,10 @@ export class RPCServer extends GenericServer {
             );
         });
 
-        this._rpc.login({ clientId: opts.client_id });
+        void this._rpc.login({ clientId: opts.client_id });
     }
 
     public override update(presence: Presence): void {
-        this._rpc.setActivity(presence);
+        void this._rpc.setActivity(presence);
     }
 }

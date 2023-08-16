@@ -27,6 +27,7 @@ export class GenericServer implements Server {
         this._app.use(express.json({ limit: '10mb' }));
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public update(_presence: Presence): void {
         throw new Error('`update` on `Server` is not implemented.');
     }
@@ -35,7 +36,7 @@ export class GenericServer implements Server {
         this._app.post('/', (req, res) => {
             const content: ContentRequest = req.body;
 
-            if(content.song == undefined || content.song == null) {
+            if(content.song === undefined || content.song === null) {
                 return res.status(400).json({
                     ok: false,
                     message: 'Missing required field `song`.'
