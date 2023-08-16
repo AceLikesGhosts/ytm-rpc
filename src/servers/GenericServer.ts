@@ -15,7 +15,7 @@ type ContentRequest = {
     isPaused: boolean;
 };
 
-export class GenericServer implements Server {
+export abstract class GenericServer implements Server {
     private readonly _opts: Readonly<Globals>;
     private readonly _app: Application;
     private _lastState: ContentRequest = {} as ContentRequest;
@@ -28,9 +28,7 @@ export class GenericServer implements Server {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    public update(_presence: Presence): void {
-        throw new Error('`update` on `Server` is not implemented.');
-    }
+    public abstract update(_presence: Presence): void;
 
     public start(): void {
         this._app.post('/', (req, res) => {
