@@ -1,9 +1,9 @@
 import chalk from 'chalk';
 import express, { type Application } from 'express';
-import { type Presence } from 'discord-rpc';
+import { makePresence, milliToTime } from '../utils';
+import type { Presence } from 'discord-rpc';
 import type { Globals } from '../types/Globals';
 import type { Server } from '../types/Server';
-import { makePresence, milliToTime } from '../utils';
 
 type ContentRequest = {
     song: string;

@@ -1,6 +1,6 @@
 import { config } from 'dotenv'; config();
-import type { Globals as IGlobals } from './types/Globals';
 import { RPCServer } from './servers/RPCServer';
+import type { Globals as IGlobals } from './types/Globals';
 
 export const Globals: IGlobals = {
     client_id: process.env.CLIENT_ID || '1075993095138713612',

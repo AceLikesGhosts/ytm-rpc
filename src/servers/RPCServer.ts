@@ -1,8 +1,8 @@
+import chalk from 'chalk';
 import { Client, type Presence } from 'discord-rpc';
+import { makePresence } from '../utils';
 import { GenericServer } from './GenericServer';
 import type { Globals } from '../types/Globals';
-import chalk from 'chalk';
-import { makePresence } from '../utils';
 
 export class RPCServer extends GenericServer {
     private readonly _rpc: Client;
