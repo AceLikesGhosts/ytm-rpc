@@ -1,11 +1,11 @@
 import { Client, type Presence } from 'discord-rpc';
 import { GenericServer } from './GenericServer';
-import { Globals } from '../types/Globals';
+import type { Globals } from '../types/Globals';
 import chalk from 'chalk';
 import { makePresence } from '../utils';
 
 export class RPCServer extends GenericServer {
-    private _rpc: Client;
+    private readonly _rpc: Client;
 
     public constructor(opts: Readonly<Globals>) {
         super(opts);

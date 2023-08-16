@@ -1,5 +1,5 @@
 import { config } from 'dotenv'; config();
-import { Globals as IGlobals } from './types/Globals';
+import type { Globals as IGlobals } from './types/Globals';
 import { RPCServer } from './servers/RPCServer';
 
 export const Globals: IGlobals = {

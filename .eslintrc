@@ -1,0 +1,12 @@
+{
+    "extends": [
+        "@biased-ts/eslint-config/ProperTS",
+        "@biased-ts/eslint-config/ProperDoc"
+    ],
+    "root": true,
+    "parserOptions": {
+        "project": [
+            "./tsconfig.json"
+        ]
+    }
+}

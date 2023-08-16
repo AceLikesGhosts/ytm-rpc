@@ -16,8 +16,8 @@ type ContentRequest = {
 };
 
 export class GenericServer implements Server {
-    private _opts: Readonly<Globals>;
-    private _app: Application;
+    private readonly _opts: Readonly<Globals>;
+    private readonly _app: Application;
     private _lastState: ContentRequest = {} as ContentRequest;
 
     public constructor(opts: Readonly<Globals>) {
@@ -59,7 +59,7 @@ export class GenericServer implements Server {
                 console.log(`${chalk.green('playing')} ${dataString}`);
             }// else {
             //  console.log(`${chalk.green('updated')} ${dataString}`);
-            //}
+            // }
 
             this._lastState = content;
             this.update(

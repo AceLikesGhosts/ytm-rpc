@@ -73,7 +73,8 @@ export function makePresence(
             ],
             instance: true
         };
-    } else {
+    }
+    else {
         return {
             details: `Paused: ${song}`,
             state: artist,
@@ -90,4 +91,4 @@ export function makePresence(
             instance: true
         };
     }
-};
+}
