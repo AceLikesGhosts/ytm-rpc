@@ -6,5 +6,5 @@ interface IGlobals {
         default_img: string;
         pause_img: string;
         play_img: string;
-    }
+    };
 }

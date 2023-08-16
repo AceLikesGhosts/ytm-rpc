@@ -76,7 +76,7 @@ export function makePresence(
     }
     else {
         return {
-            details: `Paused: ${song}`,
+            details: `Paused: ${ song }`,
             state: artist,
             largeImageKey: icon || Globals.images.default_img,
             largeImageText: song,

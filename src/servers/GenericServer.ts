@@ -41,7 +41,7 @@ export abstract class GenericServer implements Server {
                 });
             }
 
-            if(JSON.stringify(content) === JSON.stringify(this._lastState)) {
+            if(this._lastState && content === this._lastState) {
                 return res.status(400).json({
                     ok: false,
                     message: 'Same exact state as last update.'
@@ -50,12 +50,12 @@ export abstract class GenericServer implements Server {
 
             /** @constant */
             const dataString =
-                `${content.song} • ${content.artist.substring(0, content.artist.length - 6)} ${content.timeMax.replace(' ', '')}`
+                `${ content.song } • ${ content.artist.substring(0, content.artist.length - 6) } ${ content.timeMax.replace(' ', '') }`
                     .replace(/(\r\n|\n|\r)/gm, '')
                     .trim();
 
             if(this._lastState.song !== content.song) {
-                console.log(`${chalk.green('playing')} ${dataString}`);
+                console.log(`${ chalk.green('playing') } ${ dataString }`);
             }// else {
             //  console.log(`${chalk.green('updated')} ${dataString}`);
             // }
