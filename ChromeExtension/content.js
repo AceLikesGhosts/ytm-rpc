@@ -28,7 +28,7 @@ new function() {
         // the bar where the artist's name can be located
         var artistFormattedString = document.querySelector("#layout > ytmusic-player-bar > div.middle-controls.style-scope.ytmusic-player-bar > div.content-info-wrapper.style-scope.ytmusic-player-bar > span > span.subtitle.style-scope.ytmusic-player-bar > yt-formatted-string")
         
-        if(artistFormattedString === undefined || artistFormattedString.title === null) {
+        if(artistFormattedString === undefined || !artistFormattedString.title) {
             console.error('%c[YTM-RPC] %cFailed to fetch artists, formatted string bat was undefined.', 'color:purple;', 'color:white;');
             return;
         }
