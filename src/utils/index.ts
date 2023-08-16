@@ -1,6 +1,6 @@
 import type { Presence } from 'discord-rpc';
 import he from 'he';
-import { Globals } from '../../dist';
+import { Globals } from '../index';
 
 export function stringify(str: string): string {
     if(!str || typeof str !== 'string') {
