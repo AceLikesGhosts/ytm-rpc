@@ -14,6 +14,7 @@ This project is a Discord Rich Presence that displays information about the curr
 ## Prerequisites
 
 - Node.js and npm installed on your machine.
+- Typescript compiler (`tsc`) installed on your machine.
 - A [Chromium](https://www.chromium.org/Home/) based web-browser.
 
 ## Installation
@@ -32,11 +33,18 @@ npm run setup
 # ./setup.sh
 ```
 
-4. Ensure you have a Discord application created and obtain the `client_id` for the RPC. Replace the value of `CLIENT_ID` in the `.env` file with your application's client ID.
+4. Run the build script
+```bash
+npm run build
+# OR
+# npx tsc ./src/
+```
 
-5. Add the extension to your web browser (only Chromium based browsers are supported)
+5. Ensure you have a Discord application created and obtain the `client_id` for the RPC. Replace the value of `CLIENT_ID` in the `.env` file with your application's client ID.
 
-6. (Optional) If the default port of `2134` is in use already, change the value in both the `.env`, and the [extension's background script](https://github.com/AceLikesGhosts/ytm-rpc/blob/master/ChromeExtension/background.js#L23)
+6. Add the extension to your web browser (only Chromium based browsers are supported)
+
+7. (Optional) If the default port of `2134` is in use already, change the value in both the `.env`, and the [extension's background script](https://github.com/AceLikesGhosts/ytm-rpc/blob/master/ChromeExtension/background.js#L23)
 
 ### Extension Installation:
 1. Open your Chromium based browser and navigate to the respective extensions page (`chrome://extensions` for Google Chrome/Chromium, `opera://extensions` for Opera/OperaGX).
@@ -48,13 +56,20 @@ The extension should now be installed and active in your Chromium browser.
 
 ## Usage
 
-1. Start the Express server to listen for incoming requests:
-
+1. Compile the Typescript codebase if you have not already
 ```bash
-node index.js
+npm run build
+# OR
+# npx tsc ./src/
 ```
 
-2. Ensure that the Chrome extension is active.
+2. Start the Express server to listen for incoming requests:
+
+```bash
+node .
+```
+
+3. Ensure that the Chrome extension is active.
 
 ## Updating
 
@@ -70,19 +85,20 @@ git pull
 npm install
 ```
 
-3. Navigate to [the browser's extension manager](#extension-installation) and press `Update`
+3. Rebuild the Typescript codebase
+```bash
+npm run build
+# OR
+# npx tsc ./src/
+```
+
+4. Navigate to [the browser's extension manager](#extension-installation) and press `Update`
 !["update image"](images/update.png)
 
 
 ## Notes
 
-- Due to it being an RPC client, the state will only update every **15** seconds, if you pause you have to wait 15 seconds for it to show, if you skip, anything. Simply a downside of it being an RPC client, unlike the Spotify integration.
-- The RPC Client will display the provided song information with a Discord Rich Presence (see images below).
-- The server uses the Express framework to handle incoming POST requests.
-- The `replaceHTMLEntities` function is used to sanitize strings and parse all HTML entities into their string form and removes all new lines before displaying them on Discord.
-- The `update` function updates the Rich Presence status with the provided song information.
-- The default image for the bot is 'ytm' (You can customize this in the code, or set your own in the `.env`).
-
+- If using the RPC strategy you will be limited to 1 change per every 15 seconds, alongside not getting the `Listening to` status.
 
 ## Images
 
