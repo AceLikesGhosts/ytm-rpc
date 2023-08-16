@@ -27,6 +27,8 @@ export function milliToTime(millis: string): number {
     return temp;
 }
 
+// eventually, once `Listening to` is added, this will be useful:
+// https://github.com/Riddim-GLiTCH/BDLastFMRPC/blob/main/LastFMRichPresence.plugin.js#L377-L388
 export function makePresence(
     song: string,
     artist: string,
