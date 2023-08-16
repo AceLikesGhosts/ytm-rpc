@@ -27,6 +27,10 @@ export abstract class GenericServer implements Server {
         this._app.use(express.json({ limit: '10mb' }));
     }
 
+    public getApp(): Application {
+        return this._app;
+    }
+
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public abstract update(_presence: Presence): void;
 
