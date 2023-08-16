@@ -2,7 +2,7 @@
   "name": "ytm-rpc",
   "version": "0.0.1",
   "description": "Shows YouTubeMusic as Rich presence",
-  "main": "index.js",
+  "main": "./dist/index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/acelikesghosts/ytm-rpc"
