@@ -3,6 +3,7 @@ import { RPCServer } from './servers/RPCServer';
 import type { IConstants } from './types/Constants';
 
 const Constants: IConstants = {
+    using_bd_plugin: Boolean(process.env.USING_BD_PLUGIN) || false,
     client_id: process.env.CLIENT_ID || '1075993095138713612',
     port: Number(process.env.PORT) || 2134,
     images: {
