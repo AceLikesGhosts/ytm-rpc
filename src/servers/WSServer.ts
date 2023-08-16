@@ -1,6 +1,7 @@
 import type { Application, WithWebsocketMethod } from 'express-ws';
 import expressWS from 'express-ws';
 import { type Presence } from 'discord-rpc';
+import type { SongPresenceData} from '../utils';
 import { makePresence } from '../utils';
 import { GenericServer } from './GenericServer';
 import type { IConstants } from '../types/Constants';
@@ -47,7 +48,8 @@ export class WSServer extends GenericServer {
                     isPlaying: true
                 },
                 opts
-            )!
+            )!,
+            null
         );
     }
 
@@ -62,8 +64,11 @@ export class WSServer extends GenericServer {
         super.start();
     }
 
-    public fixPresence(presence: Presence): DiscordPresence {
+    public fixPresence(presence: Presence, original: SongPresenceData | null): DiscordPresence {
         const rp: DiscordPresence = {} as DiscordPresence;
+
+        const actualArtist: string = presence.state!.substring(0, presence.state!.indexOf('•'));
+
         rp.application_id = ((<any>this)._opts).client_id;
         rp.assets = {
             large_image: presence.largeImageKey!,
@@ -74,20 +79,22 @@ export class WSServer extends GenericServer {
         rp.buttons = [
             ...presence.buttons!.map((button) => button.label)
         ];
-        rp.metadata.button_urls = [
-            ...presence.buttons!.map((button) => button.url)
-        ];
-        rp.name = presence.state! + ' - ' + presence.details!;
-        rp.details = presence.details ? presence.details : 'Undefined';
-        rp.state = presence.state ? presence.state : 'Unknown';
+        rp.metadata = {
+            button_urls: [
+                ...presence.buttons!.map((button) => button.url)
+            ]
+        };
+        rp.name = actualArtist + ' - ' + original && original?.song ? original.song : presence.details ? presence.details : 'Undefined';
+        rp.details = original?.song ? original.song : presence.details ? presence.details : 'Undefined';
+        rp.state = presence.state ? presence.state.replace('•', '-') : 'Unknown';
         rp.type = 2; // Listening to
         rp.flags = 1; // no clue tbh but its needed to work
 
         return rp;
     }
 
-    public override update(presence: Presence): void {
-        const fixedPresence = this.fixPresence(presence);
+    public override update(presence: Presence, original: SongPresenceData | null): void {
+        const fixedPresence = this.fixPresence(presence, original);
         this._expressWs?.getWss().clients.forEach((client) => {
             client.send(JSON.stringify(fixedPresence));
         });

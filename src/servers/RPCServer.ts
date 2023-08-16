@@ -9,6 +9,7 @@ export class RPCServer extends GenericServer {
 
     public constructor(opts: Readonly<IConstants>) {
         super(opts);
+        console.log('RPC SERVER');
         this._rpc = new Client({ transport: 'ipc' });
 
         this._rpc.on('ready', () => {

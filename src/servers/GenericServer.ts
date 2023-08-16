@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 import express, { type Application } from 'express';
 import { makePresence, milliToTime } from '../utils';
+import type { SongPresenceData } from '../utils';
 import type { Presence } from 'discord-rpc';
 import type { IConstants } from '../types/Constants';
 import type { Server } from '../types/Server';
@@ -32,7 +33,7 @@ export abstract class GenericServer implements Server {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    public abstract update(_presence: Presence): void;
+    public abstract update(_presence: Presence, _original: SongPresenceData): void;
 
     public start(): void {
         this._app.post('/', (req, res) => {
@@ -77,7 +78,8 @@ export abstract class GenericServer implements Server {
                         isPlaying: !content.isPaused
                     },
                     this._opts
-                )!
+                )!,
+                content as unknown as SongPresenceData
             );
             res.status(200).json({
                 ok: true,

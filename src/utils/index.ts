@@ -28,7 +28,7 @@ export function milliToTime(millis: string): number {
     return temp;
 }
 
-type SongPresenceData = {
+export type SongPresenceData = {
     song: string;
     artist: string;
     timeNow?: number;

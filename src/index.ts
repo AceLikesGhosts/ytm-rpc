@@ -4,7 +4,7 @@ import type { IConstants } from './types/Constants';
 import { WSServer } from './servers/WSServer';
 
 const Constants: IConstants = {
-    using_bd_plugin: Boolean(process.env.USING_BD_PLUGIN) || false,
+    using_bd_plugin: !!process.env.USING_BD_PLUGIN || false,
     client_id: process.env.CLIENT_ID || '1075993095138713612',
     port: Number(process.env.PORT) || 2134,
     images: {
@@ -14,6 +14,9 @@ const Constants: IConstants = {
     }
 } as const;
 
-Constants.using_bd_plugin ?
-    new WSServer(Constants).start()
-    : new RPCServer(Constants).start();
+if(Constants.using_bd_plugin) {
+    new WSServer(Constants).start();
+} 
+else {
+    new RPCServer(Constants).start();
+}
