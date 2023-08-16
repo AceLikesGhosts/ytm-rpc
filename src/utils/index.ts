@@ -1,6 +1,6 @@
 import he from 'he';
-import { Globals } from '../index';
 import type { Presence } from 'discord-rpc';
+import { IConstants } from 'src/types/Constants';
 
 export function stringify(str: string): string {
     if(!str || typeof str !== 'string') {
@@ -28,16 +28,22 @@ export function milliToTime(millis: string): number {
     return temp;
 }
 
+type SongPresenceData = {
+    song: string;
+    artist: string;
+    timeNow?: number;
+    timeMax?: number;
+    icon?: string;
+    link?: string;
+    isPlaying?: boolean;
+};
+
 // eventually, once `Listening to` is added, this will be useful:
 // https://github.com/Riddim-GLiTCH/BDLastFMRPC/blob/main/LastFMRichPresence.plugin.js#L377-L388
 export function makePresence(
-    song: string,
-    artist: string,
-    timeNow?: number,
-    timeMax?: number,
-    icon?: string,
-    link?: string,
-    isPlaying?: boolean): Presence | null {
+    { song, artist, timeNow, timeMax, icon, link, isPlaying}: SongPresenceData, 
+    constants: IConstants
+    ): Presence | null {
     song = stringify(song);
     artist = stringify(artist);
     artist = artist.substring(0, artist.length - 6); // removes the year + the bullet point + the space (EX: The Day * 2009 -> The Day)
@@ -61,10 +67,10 @@ export function makePresence(
             state: artist,
             startTimestamp: timeNow || 0,
             endTimestamp: endTime || 0,
-            largeImageKey: icon || Globals.images.default_img,
+            largeImageKey: icon || constants.images.default_img,
             largeImageText: song,
-            smallImageKey: Globals.images.play_img || undefined,
-            smallImageText: Globals.images.play_img !== undefined ? 'Playing' : undefined,
+            smallImageKey: constants.images.play_img || undefined,
+            smallImageText: constants.images.play_img !== undefined ? 'Playing' : undefined,
             buttons: [
                 {
                     label: '▶ Listen on Youtube Music',
@@ -78,10 +84,10 @@ export function makePresence(
         return {
             details: `Paused: ${ song }`,
             state: artist,
-            largeImageKey: icon || Globals.images.default_img,
+            largeImageKey: icon || constants.images.default_img,
             largeImageText: song,
-            smallImageKey: Globals.images.pause_img || undefined,
-            smallImageText: Globals.images.pause_img !== undefined ? 'Paused' : undefined,
+            smallImageKey: constants.images.pause_img || undefined,
+            smallImageText: constants.images.pause_img !== undefined ? 'Paused' : undefined,
             buttons: [
                 {
                     label: '▶ Listen on Youtube Music',

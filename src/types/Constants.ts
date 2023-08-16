@@ -1,5 +1,5 @@
-export type Globals = Readonly<IGlobals>;
-interface IGlobals {
+export type IConstants = Readonly<Constants>;
+export interface Constants {
     client_id: string;
     port: number;
     images: {

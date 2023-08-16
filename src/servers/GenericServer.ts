@@ -2,7 +2,7 @@ import chalk from 'chalk';
 import express, { type Application } from 'express';
 import { makePresence, milliToTime } from '../utils';
 import type { Presence } from 'discord-rpc';
-import type { Globals } from '../types/Globals';
+import type { IConstants } from '../types/Constants';
 import type { Server } from '../types/Server';
 
 type ContentRequest = {
@@ -16,11 +16,11 @@ type ContentRequest = {
 };
 
 export abstract class GenericServer implements Server {
-    private readonly _opts: Readonly<Globals>;
+    private readonly _opts: Readonly<IConstants>;
     private readonly _app: Application;
     private _lastState: ContentRequest = {} as ContentRequest;
 
-    public constructor(opts: Readonly<Globals>) {
+    public constructor(opts: Readonly<IConstants>) {
         this._opts = opts;
 
         this._app = express();
@@ -63,13 +63,16 @@ export abstract class GenericServer implements Server {
             this._lastState = content;
             this.update(
                 makePresence(
-                    content.song,
-                    content.artist,
-                    milliToTime(content.timeNow),
-                    milliToTime(content.timeMax),
-                    content.icon,
-                    content.link,
-                    !content.isPaused
+                    {
+                        song: content.song,
+                        artist: content.artist,
+                        timeNow: milliToTime(content.timeNow),
+                        timeMax: milliToTime(content.timeMax),
+                        icon: content.icon,
+                        link: content.link,
+                        isPlaying: !content.isPaused
+                    },
+                    this._opts
                 )!
             );
             res.status(200).json({
