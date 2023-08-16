@@ -66,8 +66,8 @@ export class GenericServer implements Server {
                 makePresence(
                     content.song,
                     content.artist,
-                    milliToTime(content.timeNow as unknown as number),
-                    milliToTime(content.timeMax as unknown as number),
+                    milliToTime(content.timeNow),
+                    milliToTime(content.timeMax),
                     content.icon,
                     content.link,
                     !content.isPaused

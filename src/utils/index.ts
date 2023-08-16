@@ -21,9 +21,9 @@ export function stringify(str: string): string {
     return str;
 }
 
-export function milliToTime(millis: number): number {
+export function milliToTime(millis: string): number {
     let temp = Date.now();
-    temp += Math.round(parseFloat(millis as unknown as string) * 1000);
+    temp += Math.round(parseFloat(millis) * 1000);
     return temp;
 }
 
