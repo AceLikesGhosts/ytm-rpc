@@ -108,7 +108,7 @@ export class WSServer extends GenericServer {
         rp.details = original && original.song ? original.song : presence && presence.details ? presence.details : 'Unknown';
         rp.state = `by ${ actualArtist }`;
         rp.type = 2; // Listening to
-        rp.flags = 1; // no clue tbh but its needed to work
+        rp.flags = 1;
 
         return rp;
     }
