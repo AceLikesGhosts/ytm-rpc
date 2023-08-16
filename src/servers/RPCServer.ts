@@ -22,7 +22,7 @@ export class RPCServer extends GenericServer {
                     undefined,
                     undefined,
                     true
-                )
+                )!
             );
         });
 

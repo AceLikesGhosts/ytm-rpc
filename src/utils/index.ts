@@ -1,5 +1,6 @@
 import type { Presence } from 'discord-rpc';
 import he from 'he';
+import { Globals } from '../../dist';
 
 export function stringify(str: string): string {
     if(!str || typeof str !== 'string') {
@@ -32,27 +33,27 @@ export function milliToTime(millis: string): number {
 export function makePresence(
     song: string,
     artist: string,
-    timeNow: number,
-    timeMax: number,
-    icon: string,
-    link: string,
-    isPlaying: boolean): Presence {
+    timeNow?: number,
+    timeMax?: number,
+    icon?: string,
+    link?: string,
+    isPlaying?: boolean): Presence | null {
     song = stringify(song);
     artist = stringify(artist);
     artist = artist.substring(0, artist.length - 6); // removes the year + the bullet point + the space (EX: The Day * 2009 -> The Day)
 
     if(!song || song === undefined || song.length < 1) {
         console.error('No song name was passed to `update`.');
-        return;
+        return null;
     }
 
     if(!artist || artist === undefined || artist.length < 1) {
         console.error('No artist was passed to `update`.');
-        return;
+        return null;
     }
 
     const currentTime = Date.now();
-    const endTime = currentTime + (timeMax - timeNow); // Calculate the correct end time
+    const endTime = currentTime + ((timeMax || 0) - (timeNow || 0)); // Calculate the correct end time
 
     if(isPlaying) {
         return {
@@ -60,10 +61,10 @@ export function makePresence(
             state: artist,
             startTimestamp: timeNow || 0,
             endTimestamp: endTime || 0,
-            largeImageKey: icon || this._opts.images.default_img,
+            largeImageKey: icon || Globals.images.default_img,
             largeImageText: song,
-            smallImageKey: this._opts.images.play_img || undefined,
-            smallImageText: this._opts.images.play_img !== undefined ? 'Playing' : undefined,
+            smallImageKey: Globals.images.play_img || undefined,
+            smallImageText: Globals.images.play_img !== undefined ? 'Playing' : undefined,
             buttons: [
                 {
                     label: '▶ Listen on Youtube Music',
@@ -76,10 +77,10 @@ export function makePresence(
         return {
             details: `Paused: ${song}`,
             state: artist,
-            largeImageKey: icon || this._opts.images.default_img,
+            largeImageKey: icon || Globals.images.default_img,
             largeImageText: song,
-            smallImageKey: this._opts.images.pause_img || undefined,
-            smallImageText: this._opts.images.pause_img !== undefined ? 'Paused' : undefined,
+            smallImageKey: Globals.images.pause_img || undefined,
+            smallImageText: Globals.images.pause_img !== undefined ? 'Paused' : undefined,
             buttons: [
                 {
                     label: '▶ Listen on Youtube Music',

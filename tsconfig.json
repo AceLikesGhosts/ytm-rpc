@@ -5,7 +5,8 @@
         "lib": [
             "es6",
             "es2017",
-            "esnext.asynciterable"
+            "esnext.asynciterable",
+            "DOM"
         ],
         "sourceMap": true,
         "importHelpers": true,
@@ -27,8 +28,7 @@
         "resolveJsonModule": true,
         "allowJs": true,
         "skipLibCheck": true,
-        "baseUrl": ".",
-        "declaration": true
+        "baseUrl": "."
     },
     "exclude": [
         "node_modules"

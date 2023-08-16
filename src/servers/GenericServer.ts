@@ -71,7 +71,7 @@ export class GenericServer implements Server {
                     content.icon,
                     content.link,
                     !content.isPaused
-                )
+                )!
             );
             res.status(200).json({
                 ok: true,
