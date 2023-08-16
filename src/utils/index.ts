@@ -1,6 +1,6 @@
 import he from 'he';
 import type { Presence } from 'discord-rpc';
-import { IConstants } from 'src/types/Constants';
+import type { IConstants } from 'src/types/Constants';
 
 export function stringify(str: string): string {
     if(!str || typeof str !== 'string') {
@@ -41,9 +41,9 @@ type SongPresenceData = {
 // eventually, once `Listening to` is added, this will be useful:
 // https://github.com/Riddim-GLiTCH/BDLastFMRPC/blob/main/LastFMRichPresence.plugin.js#L377-L388
 export function makePresence(
-    { song, artist, timeNow, timeMax, icon, link, isPlaying}: SongPresenceData, 
+    { song, artist, timeNow, timeMax, icon, link, isPlaying }: SongPresenceData,
     constants: IConstants
-    ): Presence | null {
+): Presence | null {
     song = stringify(song);
     artist = stringify(artist);
     artist = artist.substring(0, artist.length - 6); // removes the year + the bullet point + the space (EX: The Day * 2009 -> The Day)
