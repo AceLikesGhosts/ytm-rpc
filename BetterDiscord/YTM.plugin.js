@@ -1,5 +1,3 @@
-/* eslint-disable jsdoc/no-bad-blocks */
-/* eslint-disable jsdoc/require-asterisk-prefix */
 /**
  * @name YTM
  * @description A simple WebSocket connection to a local YTM-RPC server, to display your Youtube Music data more.. "properly"
@@ -9,6 +7,8 @@
  * @website https://github.com/acelikesghosts/ytm-rpc
  * @source https://raw.githubusercontent.com/AceLikesGhosts/ytm-rpc/master/BetterDiscord/YTM.plugin.js
  */
+/* eslint-disable jsdoc/no-bad-blocks */
+/* eslint-disable jsdoc/require-asterisk-prefix */
 /** @cc_on
  @if (@_jscript)
     
@@ -51,10 +51,123 @@ module.exports = class YTM {
     }
     // #endregion
 
+    /** @type {WebSocket} */
+    ws;
+    port = 2134;
+    assetManager;
+    rpc;
+    getAsset;
+    clientID;
+
+    async setActivity(activity) {
+        // activity.assets.large_image
+        // activity.assets.small_image
+        const large = await this.getAsset(activity.assets.large_image);
+        const small = await this.getAsset(activity.assets.small_image);
+
+        activity.assets.large_image = large;
+        activity.assets.small_image = small;
+
+        console.log('[YTM] Updated activity');
+        console.log(activity);
+        this.rpc.dispatch({
+            type: 'LOCAL_ACTIVITY_UPDATE',
+            activity
+        });
+    }
+
+    restartWS() {
+        this.ws.close(1000, 'BetterDiscord plugin changed port');
+        this.ws = new WebSocket('ws://localhost:' + port);
+        this.ws.onmessage = (/** @type {{ data: string }} */ ev) => {
+            void this.setActivity(JSON.parse(ev.data));
+        };
+    }
+
     start() {
+        console.log('[YTM] Started plugin');
+        const settings = BdApi.loadData('YTM', 'settings') || { port: 2134 };
+        this.port = settings.port;
+        this.rpc = BdApi.Webpack.getByKeys('dispatch', '_subscriptions');
+
+        // https://github.com/Riddim-GLiTCH/BDLastFMRPC/blob/main/LastFMRichPresence.plugin.js
+        // i love you
+        let filter = BdApi.Webpack.Filters.byStrings('getAssetImage: size must === [number, number] for Twitch');
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        let assetManager = BdApi.Webpack.getModule(m => typeof m === 'object' && Object.values(m).some(filter));
+        let foundGetAsset;
+        for(const key in assetManager) {
+            const member = assetManager[key];
+            if(member.toString().includes('apply(')) {
+                foundGetAsset = member;
+                break;
+            }
+        }
+        this.getAsset = async key => {
+            return (await foundGetAsset('1075993095138713612', [key, undefined]))[0];
+        };
+
+        this.ws = new WebSocket('ws://localhost:' + this.port);
+        this.ws.onmessage = (/** @type {{ data: string }} */ ev) => {
+            console.log('[YTM] Recieved Websocket message');
+
+            const data = JSON.parse(ev.data);
+
+            if(data && data.closing) {
+                console.log('[YTM] Master server shut down.');
+                this.rpc.dispatch({
+                    type: 'LOCAL_ACTIVITY_UPDATE',
+                    activity: {}
+                });
+                return;
+            }
+
+            void this.setActivity(data);
+        };
     }
 
     stop() {
+        this.ws.close(1000, 'BetterDiscord plugin shut down.');
+        BdApi.saveData('YTM', 'settings', {
+            port: this.port
+        });
+    }
+
+    getSettingsPanel() {
+        // returns HTML element w our settings
+        const DIV_CONTAINER = document.createElement('div');
+        DIV_CONTAINER.style = 'color:white';
+
+        const WARNING_DIV = document.createElement('div');
+
+        const WARNING_SPAN_1 = document.createElement('span');
+        WARNING_SPAN_1.innerText = 'When modifiying the ';
+
+        const WARNING_CODE = document.createElement('code');
+        WARNING_CODE.innerText = 'port';
+
+        const WARNING_SPAN_2 = document.createElement('span');
+        WARNING_SPAN_2.innerText = ' it will restart the WebSocket and attempt to reconnect upon submitting (pressing enter/clicking off)';
+
+        WARNING_DIV.append(WARNING_SPAN_1, WARNING_CODE, WARNING_SPAN_2);
+
+        DIV_CONTAINER.append(WARNING_DIV);
+
+        const PORT_INPUT = document.createElement('input');
+        PORT_INPUT.type = 'number';
+        PORT_INPUT.value = this.port;
+        PORT_INPUT.placeholder = this.port;
+
+        PORT_INPUT.addEventListener('change', (e) => {
+            this.port = e.data;
+            this.restartWS();
+        });
+
+        PORT_INPUT.style = 'background: transparent;color:white';
+
+        DIV_CONTAINER.append(PORT_INPUT);
+
+        return DIV_CONTAINER;
     }
 };
 /* @end@ */

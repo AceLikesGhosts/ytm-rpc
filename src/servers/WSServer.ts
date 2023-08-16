@@ -1,7 +1,7 @@
 import type { Application, WithWebsocketMethod } from 'express-ws';
 import expressWS from 'express-ws';
 import { type Presence } from 'discord-rpc';
-import type { SongPresenceData} from '../utils';
+import type { SongPresenceData } from '../utils';
 import { makePresence } from '../utils';
 import { GenericServer } from './GenericServer';
 import type { IConstants } from '../types/Constants';
@@ -51,6 +51,16 @@ export class WSServer extends GenericServer {
             )!,
             null
         );
+
+        process.on('SIGINT', () => {
+            this._expressWs?.getWss().clients.forEach((client) => {
+                client.send(JSON.stringify({
+                    closing: true
+                }));
+            });
+
+            process.exit(0);
+        });
     }
 
     public override start(): void {
@@ -67,9 +77,11 @@ export class WSServer extends GenericServer {
     public fixPresence(presence: Presence, original: SongPresenceData | null): DiscordPresence {
         const rp: DiscordPresence = {} as DiscordPresence;
 
-        const actualArtist: string = presence.state!.substring(0, presence.state!.indexOf('•'));
-
         rp.application_id = ((<any>this)._opts).client_id;
+        rp.timestamps = {
+            start: presence.startTimestamp as number,
+            end: presence.endTimestamp as number
+        };
         rp.assets = {
             large_image: presence.largeImageKey!,
             large_text: presence.largeImageText!,
@@ -84,9 +96,17 @@ export class WSServer extends GenericServer {
                 ...presence.buttons!.map((button) => button.url)
             ]
         };
-        rp.name = actualArtist + ' - ' + original && original?.song ? original.song : presence.details ? presence.details : 'Undefined';
-        rp.details = original?.song ? original.song : presence.details ? presence.details : 'Undefined';
-        rp.state = presence.state ? presence.state.replace('•', '-') : 'Unknown';
+        const splitStr: string[] | undefined = original?.artist?.split('•') || presence.state?.split('•');
+        const actualArtist = splitStr![0];
+        // const actualAlbum = splitStr![1];
+
+        // rp.name = actualArtist + ' - ' + original && original?.song ? original.song : presence.details || 'Unknown';
+        rp.name = `${ actualArtist } • ${ original && original.song ? original.song : presence.details }`;
+        // rp.details = original?.song ? original.song : presence.details ? presence.details : 'Undefined';
+        // rp.state = presence.state ? presence.state.replace('•', '-') : 'Unknown';
+        // rp.state = 'By ' + actualArtist;
+        rp.details = original && original.song ? original.song : presence && presence.details ? presence.details : 'Unknown';
+        rp.state = `by ${ actualArtist }`;
         rp.type = 2; // Listening to
         rp.flags = 1; // no clue tbh but its needed to work
 
@@ -94,6 +114,10 @@ export class WSServer extends GenericServer {
     }
 
     public override update(presence: Presence, original: SongPresenceData | null): void {
+        if(presence.largeImageKey === this['_opts'].images.default_img) {
+            return;
+        }
+
         const fixedPresence = this.fixPresence(presence, original);
         this._expressWs?.getWss().clients.forEach((client) => {
             client.send(JSON.stringify(fixedPresence));

@@ -1,7 +1,7 @@
 import { config } from 'dotenv'; config();
 import { RPCServer } from './servers/RPCServer';
 import type { IConstants } from './types/Constants';
-import { WSServer } from './servers/WSServer';
+// import { WSServer } from './servers/WSServer';
 
 const Constants: IConstants = {
     using_bd_plugin: (process.env.USING_BD_PLUGIN as unknown as boolean) || false,
@@ -14,9 +14,9 @@ const Constants: IConstants = {
     }
 } as const;
 
-if(Constants.using_bd_plugin) {
-    new WSServer(Constants).start();
-} 
-else {
+// if(Constants.using_bd_plugin) {
+    // new WSServer(Constants).start();
+// } 
+// else {
     new RPCServer(Constants).start();
-}
+// }
