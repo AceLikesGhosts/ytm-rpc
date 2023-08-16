@@ -35,7 +35,7 @@ npm run setup
 
 4. Run the build script
 ```bash
-npm run build
+npm run ts:build
 # OR
 # npx tsc ./src/
 ```
@@ -58,7 +58,7 @@ The extension should now be installed and active in your Chromium browser.
 
 1. Compile the Typescript codebase if you have not already
 ```bash
-npm run build
+npm run ts:build
 # OR
 # npx tsc ./src/
 ```
@@ -87,7 +87,7 @@ npm install
 
 3. Rebuild the Typescript codebase
 ```bash
-npm run build
+npm run ts:build
 # OR
 # npx tsc ./src/
 ```
