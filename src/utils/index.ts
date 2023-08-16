@@ -53,7 +53,7 @@ export function makePresence(
     }
 
     const currentTime = Date.now();
-    const endTime = currentTime + ((timeMax || 0) - (timeNow || 0)); // Calculate the correct end time
+    const endTime = currentTime + (timeMax! - timeNow!); // Calculate the correct end time
 
     if(isPlaying) {
         return {

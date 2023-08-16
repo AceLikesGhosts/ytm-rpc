@@ -8,7 +8,7 @@ export const Globals: IGlobals = {
     images: {
         default_img: process.env.DEFAULT_IMG || 'ytm',
         pause_img: process.env.PAUSE_IMG || 'paused',
-        play_img: process.env.PLAY_IMG || 'play'
+        play_img: process.env.PLAY_IMG || 'playing'
     }
 };
 
