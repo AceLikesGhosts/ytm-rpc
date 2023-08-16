@@ -1,6 +1,7 @@
 import { config } from 'dotenv'; config();
 import { RPCServer } from './servers/RPCServer';
 import type { IConstants } from './types/Constants';
+import { WSServer } from './servers/WSServer';
 
 const Constants: IConstants = {
     using_bd_plugin: Boolean(process.env.USING_BD_PLUGIN) || false,
@@ -13,5 +14,6 @@ const Constants: IConstants = {
     }
 } as const;
 
-// TODO: logic to decide what server to use
-new RPCServer(Constants).start();
+Constants.using_bd_plugin ?
+    new WSServer(Constants).start()
+    : new RPCServer(Constants).start();

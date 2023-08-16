@@ -1,4 +1,5 @@
 import chalk from 'chalk';
+import expressWS from 'express-ws';
 import { type Presence } from 'discord-rpc';
 import { makePresence } from '../utils';
 import { GenericServer } from './GenericServer';
@@ -23,7 +24,11 @@ export class WSServer extends GenericServer {
                 opts
             )!
         );
+    }
 
+    public override start(): void {
+        this._app = expressWS(this._app).app;
+        super.start();
     }
 
     public override update(presence: Presence): void {

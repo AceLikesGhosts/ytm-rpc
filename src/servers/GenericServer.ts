@@ -17,7 +17,7 @@ type ContentRequest = {
 
 export abstract class GenericServer implements Server {
     private readonly _opts: Readonly<IConstants>;
-    private readonly _app: Application;
+    public _app: Application;
     private _lastState: ContentRequest = {} as ContentRequest;
 
     public constructor(opts: Readonly<IConstants>) {
