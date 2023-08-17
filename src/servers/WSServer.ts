@@ -122,7 +122,5 @@ export class WSServer extends GenericServer {
         this._expressWs?.getWss().clients.forEach((client) => {
             client.send(JSON.stringify(fixedPresence));
         });
-
-        return void 0;
     }
 }

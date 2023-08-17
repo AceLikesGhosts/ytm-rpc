@@ -81,11 +81,10 @@ export abstract class GenericServer implements Server {
                 )!,
                 content as unknown as SongPresenceData
             );
-            res.status(200).json({
+            return res.status(200).json({
                 ok: true,
                 message: 'Updated RPC'
             });
-            return;
         });
 
         this._app.listen(this._opts.port, () => {
