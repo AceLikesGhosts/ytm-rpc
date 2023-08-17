@@ -208,7 +208,7 @@ module.exports = class YTM {
         const DELAY_RECONNECT_INPUT = document.createElement('input');
         DELAY_RECONNECT_INPUT.type = 'number';
         DELAY_RECONNECT_INPUT.placeholder = DELAY_RECONNECT_INPUT.value = this.intervalDurationSeconds;
-
+        DELAY_RECONNECT_INPUT.style = 'background:transparent;color:white';
         DELAY_RECONNECT_INPUT.addEventListener('change', (e) => {
             this.attemptReconnectWS = e.data;
         });
