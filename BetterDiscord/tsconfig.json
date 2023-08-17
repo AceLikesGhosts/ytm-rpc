@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+        "allowJs": true,
+        // This is never used as we cannot build a raw JS file! lol.
+        // just here to stop eslint from bitching.
+        "outDir": "aaa"
+    },
+    "include": [
+        "./**.*"
+    ]
+}
