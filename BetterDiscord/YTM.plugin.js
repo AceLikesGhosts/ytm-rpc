@@ -52,14 +52,14 @@ module.exports = class YTM {
     // #endregion
 
     /** @type {WebSocket} */
-    ws;
+    ws = void 0;
     /**
      * @type {number}
      */
     port = 2134;
-    assetManager;
-    rpc;
-    getAsset;
+    assetManager = void 0;
+    rpc = void 0;
+    getAsset = void 0;
     /**
      * @type {string}
      */
@@ -71,7 +71,7 @@ module.exports = class YTM {
     /**
      * @type {NodeJS.Timeout}
      */
-    reconnectInterval;
+    reconnectInterval = void 0;
 
     async setActivity(activity) {
         // activity.assets.large_image
@@ -91,28 +91,31 @@ module.exports = class YTM {
     }
 
     connectWS() {
-        if(this.ws !== undefined && this.ws.readyState === this.ws.OPEN) {
-            console.log('[YTM] Closed Websocket due to another call to `connectWS` occuring.');
-            this.ws.close(1000, 'BetterDiscord plugin requested shutdown in order to restart it');
+        if(typeof this.ws !== 'undefined') {
+            if(this.ws.readyState === this.ws.OPEN) {
+                console.log('[YTM] Closed Websocket due to another call to `connectWS` occuring.');
+                this.ws.close(1000, 'BetterDiscord plugin requested shutdown in order to restart it');
+            }
         }
 
         this.ws = new WebSocket('ws://localhost:' + this.port);
         this.ws.onmessage = (ev) => this.handleWSMessage(ev);
-        this.ws.onclose = () => this.attemptReconnectWS(this.connectWS);
+        this.ws.onopen = () => {
+            clearInterval(this.reconnectInterval);
+            console.log('[YTM] Connected WebSocket');
+        };
+        this.ws.onclose = () => this.reconnectWS(this.connectWS);
     }
 
-    attemptReconnectWS(reconnect) {
-        if(!this.ws) {
-            console.error('[YTM] There was no WebSocket instance and yet we\'re trying to reconnect?');
-            reconnect();
-            return;
-        }
-
-        this.reconnectInterval = setInterval(() => {
-            console.log('[YTM] Attempted to reconnect to WebSocket');
-            reconnect();
+    reconnectWS(reconnect) {
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
+        const that = this;
+        this.reconnectInterval = setTimeout(() => {
+            console.log('[YTM] Attemping to reconnect the WebSocket');
+            reconnect.bind(that)();
         }, this.intervalDurationSeconds * 1000);
     }
+
 
     /**
      * @param {{ data: string }} ev 
@@ -124,6 +127,7 @@ module.exports = class YTM {
 
         if(data && data.closing) {
             console.log('[YTM] Master server shut down.');
+            this.ws.close(1000, 'Master server shutdown');
             this.rpc.dispatch({
                 type: 'LOCAL_ACTIVITY_UPDATE',
                 activity: {}
@@ -161,6 +165,7 @@ module.exports = class YTM {
     }
 
     stop() {
+        console.log('[YTM] Stopped plugin.');
         if(this.ws && this.ws.readyState !== this.ws.CLOSED) {
             this.ws.close(1000, 'BetterDiscord plugin shut down.');
             this.ws = undefined;
@@ -214,6 +219,7 @@ module.exports = class YTM {
         DELAY_RECONNECT_INPUT.style = 'background:transparent;color:white';
         DELAY_RECONNECT_INPUT.addEventListener('change', (e) => {
             this.intervalDurationSeconds = e.data;
+            clearInterval(this.reconnectInterval);
         });
 
         DIV_CONTAINER.append(PORT_INPUT);
