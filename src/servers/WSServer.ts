@@ -68,7 +68,9 @@ export class WSServer extends GenericServer {
         this._app = this._expressWs.app;
 
         // we don't care what we send/get from here, ever!
-        (this._app as Application & WithWebsocketMethod).ws('/', () => void 0);
+        (this._app as Application & WithWebsocketMethod).ws('/', (client) => {
+            client.send(JSON.stringify(this['_lastState']));
+        });
         console.log(chalk.blue('added websocket server to express instance'));
 
         super.start();
