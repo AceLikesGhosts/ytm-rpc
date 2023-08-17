@@ -17,19 +17,14 @@ function updateRichPresence(songName, artistName, timeNow, timeMax, icon, link, 
 
     lastSongData = JSON.stringify(data);
 
-    var settings = {
-        'async': true,
-        'crossDomain': true,
-        'url': 'http://localhost:2134/',
-        'method': 'POST',
-        'headers': {
-            'content-type': 'application/json'
+    fetch('http://localhost:2134/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
         },
-        'processData': false,
-        'data': JSON.stringify(data)
-    };
-
-    $.ajax(settings);
+        body: JSON.stringify(data),
+        mode: 'cors'
+    })
 }
 
 // Check if the event listener is already registered
