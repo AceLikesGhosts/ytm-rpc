@@ -14,7 +14,7 @@ const Constants: IConstants = {
     }
 } as const;
 
-if(Constants.using_bd_plugin) {
+if(Constants.using_bd_plugin === true) {
     new WSServer(Constants).start();
 } 
 else {
