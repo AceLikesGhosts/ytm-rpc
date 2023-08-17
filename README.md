@@ -102,5 +102,15 @@ npm run ts:build
 
 ## Images
 
+
+#### RPC
+
 !["screenshot of RPC"](images/rpc.png)
 !["screenshot of paused RPC state"](images/paused.png)
+
+---
+
+
+#### BetterDiscord Plugin
+!["screenshot of betterdiscord listening to status"](images/bd-activity.png)
+!["screenshot of betterdiscord listening to status but paused"](images/bd-activity-paused.png)
