@@ -142,6 +142,7 @@ module.exports = class YTM {
         console.log('[YTM] Started plugin');
         const settings = BdApi.loadData('YTM', 'settings') || { port: 2134 };
         this.port = settings.port;
+        this.intervalDurationSeconds = settings.intervalDurationSeconds;
         this.rpc = BdApi.Webpack.getByKeys('dispatch', '_subscriptions');
 
         // https://github.com/Riddim-GLiTCH/BDLastFMRPC/blob/main/LastFMRichPresence.plugin.js
@@ -176,7 +177,8 @@ module.exports = class YTM {
         }
 
         BdApi.saveData('YTM', 'settings', {
-            port: this.port
+            port: this.port,
+            interval: this.intervalDurationSeconds
         });
     }
 
