@@ -90,27 +90,28 @@ module.exports = class YTM {
         });
     }
 
-    attemptReconnectWS() {
-        if(!this.ws) {
-            console.error('[YTM] There was no WebSocket instance and yet we\'re trying to reconnect?');
-            return void this.connectWS();
-        }
-
-        this.reconnectInterval = setInterval(() => {
-            console.log('[YTM] Attempted to reconnect to WebSocket');
-            void this.connectWS();
-        }, this.intervalDurationSeconds * 1000);
-    }
-
     connectWS() {
-        if(this.ws && this.ws.OPEN) {
+        if(this.ws !== undefined && this.ws.readyState === this.ws.OPEN) {
             console.log('[YTM] Closed Websocket due to another call to `connectWS` occuring.');
             this.ws.close(1000, 'BetterDiscord plugin requested shutdown in order to restart it');
         }
 
         this.ws = new WebSocket('ws://localhost:' + this.port);
-        this.ws.onmessage = this.handleWSMessage;
-        this.ws.onclose = this.attemptReconnectWS;
+        this.ws.onmessage = (ev) => this.handleWSMessage(ev);
+        this.ws.onclose = () => this.attemptReconnectWS(this.connectWS);
+    }
+
+    attemptReconnectWS(reconnect) {
+        if(!this.ws) {
+            console.error('[YTM] There was no WebSocket instance and yet we\'re trying to reconnect?');
+            reconnect();
+            return;
+        }
+
+        this.reconnectInterval = setInterval(() => {
+            console.log('[YTM] Attempted to reconnect to WebSocket');
+            reconnect();
+        }, this.intervalDurationSeconds * 1000);
     }
 
     /**
@@ -162,6 +163,7 @@ module.exports = class YTM {
     stop() {
         if(this.ws && this.ws.readyState !== this.ws.CLOSED) {
             this.ws.close(1000, 'BetterDiscord plugin shut down.');
+            this.ws = undefined;
         }
 
         if(this.reconnectInterval) {
@@ -194,6 +196,7 @@ module.exports = class YTM {
         DIV_CONTAINER.append(WARNING_DIV);
 
         const PORT_INPUT = document.createElement('input');
+        PORT_INPUT.id = 'PORT-INPUT';
         PORT_INPUT.type = 'number';
         PORT_INPUT.value = this.port;
         PORT_INPUT.placeholder = this.port;
@@ -210,7 +213,7 @@ module.exports = class YTM {
         DELAY_RECONNECT_INPUT.placeholder = DELAY_RECONNECT_INPUT.value = this.intervalDurationSeconds;
         DELAY_RECONNECT_INPUT.style = 'background:transparent;color:white';
         DELAY_RECONNECT_INPUT.addEventListener('change', (e) => {
-            this.attemptReconnectWS = e.data;
+            this.intervalDurationSeconds = e.data;
         });
 
         DIV_CONTAINER.append(PORT_INPUT);
