@@ -76,6 +76,9 @@ export class WSServer extends GenericServer {
 
     public fixPresence(presence: Presence, original: SongPresenceData | null): DiscordPresence {
         const rp: DiscordPresence = {} as DiscordPresence;
+        const splitStr: string[] | undefined = original?.artist?.split('•') || presence.state?.split('•');
+        const actualArtist: string = splitStr![0];
+        const actualAlbum: string = splitStr![1];
 
         rp.application_id = ((<any>this)._opts).client_id;
         rp.timestamps = {
@@ -84,7 +87,7 @@ export class WSServer extends GenericServer {
         };
         rp.assets = {
             large_image: presence.largeImageKey!,
-            large_text: presence.largeImageText!,
+            large_text: `on ${ actualAlbum }`,
             small_image: presence.smallImageKey!,
             small_text: presence.smallImageText!
         };
@@ -96,9 +99,16 @@ export class WSServer extends GenericServer {
                 ...presence.buttons!.map((button) => button.url)
             ]
         };
-        const splitStr: string[] | undefined = original?.artist?.split('•') || presence.state?.split('•');
-        const actualArtist = splitStr![0];
-        // const actualAlbum = splitStr![1];
+
+        /**
+         * The way that it will be displayed on the client is:
+         * 
+         * Listening to (name)
+         * Details
+         * State
+         * Large Image Text
+         */
+
 
         // rp.name = actualArtist + ' - ' + original && original?.song ? original.song : presence.details || 'Unknown';
         rp.name = `${ actualArtist } • ${ original && original.song ? original.song : presence.details }`;
