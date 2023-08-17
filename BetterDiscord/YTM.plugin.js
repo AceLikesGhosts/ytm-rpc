@@ -53,11 +53,25 @@ module.exports = class YTM {
 
     /** @type {WebSocket} */
     ws;
+    /**
+     * @type {number}
+     */
     port = 2134;
     assetManager;
     rpc;
     getAsset;
+    /**
+     * @type {string}
+     */
     clientID;
+    /**
+     * @type {number}
+     */
+    intervalDurationSeconds = 15;
+    /**
+     * @type {NodeJS.Timeout}
+     */
+    reconnectInterval;
 
     async setActivity(activity) {
         // activity.assets.large_image
@@ -76,12 +90,47 @@ module.exports = class YTM {
         });
     }
 
-    restartWS() {
-        this.ws.close(1000, 'BetterDiscord plugin changed port');
-        this.ws = new WebSocket('ws://localhost:' + port);
-        this.ws.onmessage = (/** @type {{ data: string }} */ ev) => {
-            void this.setActivity(JSON.parse(ev.data));
-        };
+    attemptReconnectWS() {
+        if(!this.ws) {
+            console.error('[YTM] There was no WebSocket instance and yet we\'re trying to reconnect?');
+            return void this.connectWS();
+        }
+
+        this.reconnectInterval = setInterval(() => {
+            console.log('[YTM] Attempted to reconnect to WebSocket');
+            void this.connectWS();
+        }, this.intervalDurationSeconds * 1000);
+    }
+
+    connectWS() {
+        if(this.ws && this.ws.OPEN) {
+            console.log('[YTM] Closed Websocket due to another call to `connectWS` occuring.');
+            this.ws.close(1000, 'BetterDiscord plugin requested shutdown in order to restart it');
+        }
+
+        this.ws = new WebSocket('ws://localhost:' + this.port);
+        this.ws.onmessage = this.handleWSMessage;
+        this.ws.onclose = this.attemptReconnectWS;
+    }
+
+    /**
+     * @param {{ data: string }} ev 
+     */
+    handleWSMessage(ev) {
+        console.log('[YTM] Recieved Websocket message');
+
+        const data = JSON.parse(ev.data);
+
+        if(data && data.closing) {
+            console.log('[YTM] Master server shut down.');
+            this.rpc.dispatch({
+                type: 'LOCAL_ACTIVITY_UPDATE',
+                activity: {}
+            });
+            return;
+        }
+
+        void this.setActivity(data);
     }
 
     start() {
@@ -107,27 +156,18 @@ module.exports = class YTM {
             return (await foundGetAsset('1075993095138713612', [key, undefined]))[0];
         };
 
-        this.ws = new WebSocket('ws://localhost:' + this.port);
-        this.ws.onmessage = (/** @type {{ data: string }} */ ev) => {
-            console.log('[YTM] Recieved Websocket message');
-
-            const data = JSON.parse(ev.data);
-
-            if(data && data.closing) {
-                console.log('[YTM] Master server shut down.');
-                this.rpc.dispatch({
-                    type: 'LOCAL_ACTIVITY_UPDATE',
-                    activity: {}
-                });
-                return;
-            }
-
-            void this.setActivity(data);
-        };
+        this.connectWS();
     }
 
     stop() {
-        this.ws.close(1000, 'BetterDiscord plugin shut down.');
+        if(this.ws && this.ws.readyState !== this.ws.CLOSED) {
+            this.ws.close(1000, 'BetterDiscord plugin shut down.');
+        }
+
+        if(this.reconnectInterval) {
+            clearInterval(this.reconnectInterval);
+        }
+
         BdApi.saveData('YTM', 'settings', {
             port: this.port
         });
@@ -160,12 +200,21 @@ module.exports = class YTM {
 
         PORT_INPUT.addEventListener('change', (e) => {
             this.port = e.data;
-            this.restartWS();
+            this.connectWS();
         });
 
         PORT_INPUT.style = 'background: transparent;color:white';
 
+        const DELAY_RECONNECT_INPUT = document.createElement('input');
+        DELAY_RECONNECT_INPUT.type = 'number';
+        DELAY_RECONNECT_INPUT.placeholder = DELAY_RECONNECT_INPUT.value = this.intervalDurationSeconds;
+
+        DELAY_RECONNECT_INPUT.addEventListener('change', (e) => {
+            this.attemptReconnectWS = e.data;
+        });
+
         DIV_CONTAINER.append(PORT_INPUT);
+        DIV_CONTAINER.append(DELAY_RECONNECT_INPUT);
 
         return DIV_CONTAINER;
     }
