@@ -177,6 +177,16 @@ module.exports = class YTM {
             clearInterval(this.reconnectInterval);
         }
 
+        // clear RPC
+        this.rpc.dispatch({
+            type: 'LOCAL_ACTIVITY_UPDATE',
+            activity: {}
+        });
+
+        this.rpc = void 0;
+        this.assetManager = void 0;
+        this.getAsset = void 0;
+
         BdApi.saveData('YTM', 'settings', {
             port: this.port,
             interval: this.intervalDurationSeconds
