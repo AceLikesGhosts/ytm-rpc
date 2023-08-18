@@ -78,8 +78,8 @@ export class WSServer extends GenericServer {
     public fixPresence(presence: Presence): DiscordPresence {
         const rp: DiscordPresence = {} as DiscordPresence;
         const splitStr: string[] | undefined = presence?.state?.split('•');
-        const actualArtist: string = splitStr![0];
-        const actualAlbum: string = splitStr![1];
+        const actualArtist: string = splitStr![0].trim();
+        const actualAlbum: string = splitStr![1].trim();
 
         rp.application_id = ((<any>this)._opts).client_id;
         rp.timestamps = {
