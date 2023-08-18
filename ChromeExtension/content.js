@@ -3,6 +3,13 @@
 new function() {
     // sends the request to the background script (which then sends to the server)
     function sendMessage() {
+        var progressbar = document.querySelector('#progress-bar');
+
+        if(progressbar.ariaValueText === '0:00 of NaN:NaN') {
+            console.error('%c[YTM-RPC] %cProgress Bar did not have proper data!', 'color:purple;', 'color:white;');
+            return; // there was no data
+        }
+
         var movieplayer = document.querySelector('#movie_player > div.ytp-chrome-top > div.ytp-title > div > a');
         // inner content of the movie player is the name of the song
         var songName = movieplayer.innerHTML;
@@ -17,7 +24,6 @@ new function() {
         // progress bar contains `ariaValueMax` & `ariaValueNow` which is
         // how far we have progressed into the song and the total amount of time
         // in the song (in seconds)
-        var progressbar = document.querySelector('#progress-bar');
         var timeMax = progressbar.ariaValueMax;
         var timeNow = progressbar.ariaValueNow;
 
