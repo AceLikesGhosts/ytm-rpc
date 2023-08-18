@@ -38,8 +38,6 @@ export type SongPresenceData = {
     isPlaying?: boolean;
 };
 
-// eventually, once `Listening to` is added, this will be useful:
-// https://github.com/Riddim-GLiTCH/BDLastFMRPC/blob/main/LastFMRichPresence.plugin.js#L377-L388
 export function makePresence(
     { song, artist, timeNow, timeMax, icon, link, isPlaying }: SongPresenceData,
     constants: IConstants
