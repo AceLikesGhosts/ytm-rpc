@@ -67,7 +67,7 @@ export class WSServer extends GenericServer {
 
         // we don't care what we send/get from here, ever!
         (this._app as Application & WithWebsocketMethod).ws('/', (_, req) => {
-            console.log(chalk.blue(`WebSocket (${req.socket.remoteAddress}) connected to WS server`));
+            console.log(chalk.blue(`WebSocket (${ req.socket.remoteAddress }) connected to WS server`));
         });
 
         console.log(chalk.blue('added websocket server to express instance'));
@@ -88,18 +88,22 @@ export class WSServer extends GenericServer {
         };
         rp.assets = {
             large_image: presence.largeImageKey!,
-            large_text: `on ${actualAlbum}`,
+            large_text: `on ${ actualAlbum }`,
             small_image: presence.smallImageKey!,
             small_text: presence.smallImageText!
         };
-        rp.buttons = [
-            ...presence.buttons!.map((button) => button.label)
-        ];
+
+        rp.buttons = [];
         rp.metadata = {
-            button_urls: [
-                ...presence.buttons!.map((button) => button.url)
-            ]
+            button_urls: []
         };
+
+        if(presence.buttons) {
+            for(let i: number = 0; i < presence.buttons.length; i++) {
+                rp.buttons.push(presence.buttons[i].label);
+                rp.metadata.button_urls.push(presence.buttons[i].url);
+            }
+        }
 
         /**
          * The way that it will be displayed on the client is:
@@ -112,12 +116,12 @@ export class WSServer extends GenericServer {
 
 
         // rp.name = actualArtist + ' - ' + original && original?.song ? original.song : presence.details || 'Unknown';
-        rp.name = `${actualArtist} • ${presence.details}`;
+        rp.name = `${ actualArtist } • ${ presence.details }`;
         // rp.details = original?.song ? original.song : presence.details ? presence.details : 'Undefined';
         // rp.state = presence.state ? presence.state.replace('•', '-') : 'Unknown';
         // rp.state = 'By ' + actualArtist;
         rp.details = presence.details ? presence.details : 'Unknown';
-        rp.state = `by ${actualArtist}`;
+        rp.state = `by ${ actualArtist }`;
         rp.type = 2; // Listening to
         rp.flags = 1;
 
@@ -125,7 +129,7 @@ export class WSServer extends GenericServer {
     }
 
     public override update(presence: Presence): void {
-        if (presence.largeImageKey === this['_opts'].images.default_img) {
+        if(presence.largeImageKey === this['_opts'].images.default_img) {
             return;
         }
 
