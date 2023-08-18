@@ -68,7 +68,10 @@ export class WSServer extends GenericServer {
         this._app = this._expressWs.app;
 
         // we don't care what we send/get from here, ever!
-        (this._app as Application & WithWebsocketMethod).ws('/', () => void 0);
+        (this._app as Application & WithWebsocketMethod).ws('/', (_, req) => {
+            console.log(chalk.blue(`WebSocket (${req.socket.remoteAddress}) connected to WS server`));
+        });
+
         console.log(chalk.blue('added websocket server to express instance'));
 
         super.start();
@@ -87,7 +90,7 @@ export class WSServer extends GenericServer {
         };
         rp.assets = {
             large_image: presence.largeImageKey!,
-            large_text: `on ${ actualAlbum }`,
+            large_text: `on ${actualAlbum}`,
             small_image: presence.smallImageKey!,
             small_text: presence.smallImageText!
         };
@@ -111,12 +114,12 @@ export class WSServer extends GenericServer {
 
 
         // rp.name = actualArtist + ' - ' + original && original?.song ? original.song : presence.details || 'Unknown';
-        rp.name = `${ actualArtist } • ${ original && original.song ? original.song : presence.details }`;
+        rp.name = `${actualArtist} • ${original && original.song ? original.song : presence.details}`;
         // rp.details = original?.song ? original.song : presence.details ? presence.details : 'Undefined';
         // rp.state = presence.state ? presence.state.replace('•', '-') : 'Unknown';
         // rp.state = 'By ' + actualArtist;
         rp.details = original && original.song ? original.song : presence && presence.details ? presence.details : 'Unknown';
-        rp.state = `by ${ actualArtist }`;
+        rp.state = `by ${actualArtist}`;
         rp.type = 2; // Listening to
         rp.flags = 1;
 
@@ -124,7 +127,7 @@ export class WSServer extends GenericServer {
     }
 
     public override update(presence: Presence, original: SongPresenceData | null): void {
-        if(presence.largeImageKey === this['_opts'].images.default_img) {
+        if (presence.largeImageKey === this['_opts'].images.default_img) {
             return;
         }
 
