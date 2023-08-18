@@ -168,8 +168,9 @@ module.exports = class YTM {
     stop() {
         console.log('[YTM] Stopped plugin.');
         if(this.ws && this.ws.readyState !== this.ws.CLOSED) {
+            this.ws.onclose = void 0; // Forcefully remove our onclose reconnecter
             this.ws.close(1000, 'BetterDiscord plugin shut down.');
-            this.ws = undefined;
+            this.ws = void 0;
         }
 
         if(this.reconnectInterval) {
