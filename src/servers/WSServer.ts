@@ -1,7 +1,6 @@
 import type { Application, WithWebsocketMethod } from 'express-ws';
 import expressWS from 'express-ws';
 import { type Presence } from 'discord-rpc';
-import type { SongPresenceData } from '../utils';
 import { makePresence } from '../utils';
 import { GenericServer } from './GenericServer';
 import type { IConstants } from '../types/Constants';
@@ -48,8 +47,7 @@ export class WSServer extends GenericServer {
                     isPlaying: true
                 },
                 opts
-            )!,
-            null
+            )!
         );
 
         process.on('SIGINT', () => {
@@ -77,9 +75,9 @@ export class WSServer extends GenericServer {
         super.start();
     }
 
-    public fixPresence(presence: Presence, original: SongPresenceData | null): DiscordPresence {
+    public fixPresence(presence: Presence): DiscordPresence {
         const rp: DiscordPresence = {} as DiscordPresence;
-        const splitStr: string[] | undefined = original?.artist?.split('•') || presence.state?.split('•');
+        const splitStr: string[] | undefined = presence?.state?.split('•');
         const actualArtist: string = splitStr![0];
         const actualAlbum: string = splitStr![1];
 
@@ -114,11 +112,11 @@ export class WSServer extends GenericServer {
 
 
         // rp.name = actualArtist + ' - ' + original && original?.song ? original.song : presence.details || 'Unknown';
-        rp.name = `${actualArtist} • ${original && original.song ? original.song : presence.details}`;
+        rp.name = `${actualArtist} • ${presence.details}`;
         // rp.details = original?.song ? original.song : presence.details ? presence.details : 'Undefined';
         // rp.state = presence.state ? presence.state.replace('•', '-') : 'Unknown';
         // rp.state = 'By ' + actualArtist;
-        rp.details = original && original.song ? original.song : presence && presence.details ? presence.details : 'Unknown';
+        rp.details = presence.details ? presence.details : 'Unknown';
         rp.state = `by ${actualArtist}`;
         rp.type = 2; // Listening to
         rp.flags = 1;
@@ -126,12 +124,12 @@ export class WSServer extends GenericServer {
         return rp;
     }
 
-    public override update(presence: Presence, original: SongPresenceData | null): void {
+    public override update(presence: Presence): void {
         if (presence.largeImageKey === this['_opts'].images.default_img) {
             return;
         }
 
-        const fixedPresence = this.fixPresence(presence, original);
+        const fixedPresence = this.fixPresence(presence);
         this._expressWs?.getWss().clients.forEach((client) => {
             client.send(JSON.stringify(fixedPresence));
         });
