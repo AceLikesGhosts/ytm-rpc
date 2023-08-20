@@ -17,13 +17,17 @@ This project is a Discord Rich Presence that displays information about the curr
 - Typescript compiler (`tsc`) installed on your machine.
 - A [Chromium](https://www.chromium.org/Home/) based web-browser.
 
-## Installation
+## Server Installation
+
+> [!IMPORTANT]  
+> The default server installation will use an rich presence, which does not support `Listening to ...`, if you want
+> that feature you are required to use a [client mod](#client-mod-installation)
 
 1. Clone the repository to your local machine.
 2. Navigate to the project directory and install the required dependencies using npm:
 
 ```bash
-npm install
+npm **install**
 ```
 
 3. Run the setup script (creates `.env`)
@@ -53,6 +57,49 @@ npm run ts:build
 4. Browse to the project directory where you cloned the repository and select the folder named `ChromeExtension`.
 The extension should now be installed and active in your Chromium browser.
 
+
+## Client Mod Installation:
+
+> [!WARNING]  
+> Using a client mod is against [Discord's Terms of Service](https://dis.gd/tos), and can result in account termination.
+
+Based off of your flavor of [Discord](https://discordapp.com) client mod, the plugin you will need to install
+will vary with installation steps.
+
+All client mod flavors still require both the server and the extension.
+
+| Client Mod                                          | Status             |
+| --------------------------------------------------- | ------------------ |
+| [BetterDiscord](#betterdiscord-plugin-installation) | :white_check_mark: |
+| [Replugged](#replugged-plugin-installation)         | :white_check_mark: |
+| Vencord                                             | :x:                |
+
+### BetterDiscord Plugin Installation
+
+1. Navigate to the [client-mods/BetterDiscord](./client-mods/BetterDiscord/) folder.
+2. Open your [BetterDiscord](https://betterdiscord.app) plugin folder.
+3. Copy the `YTM.plugin.js` file into your BetterDiscord plugin folder.
+4. Enable the plugin within BetterDiscord
+5. (Optional) If you have modified the port of the server, change the port within the settings.
+
+### Replugged Plugin Installation
+
+1. Navigate to the [client-mods/replugged](./client-mods/replugged/) folder.
+2. Install the required dependencies and build the source code.
+    ```sh
+    pnpm install
+    pnpm run build
+    ```
+3. Ensure that it is in your [Replugged](https://replugged.dev) plugin folder after building, if it is not manually copy it into it.
+4. Navigate to the plugin settings within Replugged
+5. Press `load missing plugins`, then refresh Discord
+
+!["gif of load missing plugins"](images/load-missing-plugins.gif)
+
+### Vencord Plugin Installation
+
+At this moment, [Venord](https://vencord.dev) is not supported due to the restrictive license on their
+plugin template, which contains their build tools. 
 
 ## Usage
 
@@ -93,6 +140,7 @@ npm run ts:build
 ```
 
 4. Navigate to [the browser's extension manager](#extension-installation) and press `Update`
+
 !["update image"](images/update.png)
 
 
@@ -111,6 +159,11 @@ npm run ts:build
 ---
 
 
-#### BetterDiscord Plugin
+#### Client Mod Plugins
+
+> [!NOTE]
+> These screenshots are taken with the [BetterDiscord](#betterdiscord-plugin-installation) plugin
+> although it will look the same on any other client mod flavor.
+
 !["screenshot of betterdiscord listening to status"](images/bd-activity.png)
 !["screenshot of betterdiscord listening to status but paused"](images/bd-activity-paused.png)
