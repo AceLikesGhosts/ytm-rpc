@@ -18,10 +18,11 @@
         "lint:fix": "npm run prettier:fix && npm run eslint:fix"
     },
     "keywords": [],
-    "author": "",
+    "author": "AceLikesGhosts",
     "license": "ISC",
     "devDependencies": {
         "@types/node": "^18.17.6",
+        "@types/react": "^18.2.20",
         "@typescript-eslint/eslint-plugin": "^5.62.0",
         "@typescript-eslint/parser": "^5.62.0",
         "eslint": "^8.47.0",
@@ -31,5 +32,9 @@
         "prettier": "^2.8.8",
         "replugged": "^4.6.0",
         "typescript": "^5.1.6"
+    },
+    "dependencies": {
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0"
     }
 }

@@ -5,12 +5,12 @@
     "author": {
         "name": "ace.",
         "discordID": "1000992611840049192",
-        "github": "replugged-org"
+        "github": "acelikesghosts"
     },
-    "version": "1.0.0",
+    "version": "0.0.1",
     "updater": {
         "type": "github",
-        "id": "replugged-org/plugin-template"
+        "id": "acelikesghosts/ytm-rpc"
     },
     "license": "MIT",
     "type": "replugged-plugin",
