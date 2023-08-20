@@ -28,7 +28,7 @@ This project is a Discord Rich Presence that displays information about the curr
 2. Navigate to the project directory and install the required dependencies using npm:
 
 ```bash
-npm **install**
+npm install
 ```
 
 3. Run the setup script (creates `.env`)
