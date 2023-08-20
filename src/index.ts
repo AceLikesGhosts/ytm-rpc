@@ -4,7 +4,7 @@ import type { IConstants } from './types/Constants';
 import { WSServer } from './servers/WSServer';
 
 const Constants: IConstants = {
-    using_bd_plugin: process.env.USING_BD_PLUGIN === 'true' ? true : false,
+    using_ws: process.env.USING_WS === 'true' ? true : false,
     client_id: process.env.CLIENT_ID || '1075993095138713612',
     port: Number(process.env.PORT) || 2134,
     images: {
@@ -14,7 +14,7 @@ const Constants: IConstants = {
     }
 } as const;
 
-if(Constants.using_bd_plugin === true) {
+if(Constants.using_ws === true) {
     new WSServer(Constants).start();
 } 
 else {
