@@ -1,6 +1,6 @@
 export type IConstants = Readonly<Constants>;
 export interface Constants {
-    using_bd_plugin: boolean;
+    using_ws: boolean;
     client_id: string;
     port: number;
     images: {
