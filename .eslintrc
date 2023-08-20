@@ -7,7 +7,7 @@
     "parserOptions": {
         "project": [
             "./tsconfig.json",
-            "./BetterDiscord/tsconfig.json"
+            "./client-mods/BetterDiscord/tsconfig.json"
         ]
     }
 }
