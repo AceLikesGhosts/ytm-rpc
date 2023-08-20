@@ -21,7 +21,8 @@ This project is a Discord Rich Presence that displays information about the curr
 
 > [!IMPORTANT]  
 > The default server installation will use an rich presence, which does not support `Listening to ...`, if you want
-> that feature you are required to use a [client mod](#client-mod-installation)
+> that feature you are required to use a [client mod](#client-mod-installation). If you are using a client mod,
+> set the `USING_WS` setting in your `.env` to `true`.
 
 1. Clone the repository to your local machine.
 2. Navigate to the project directory and install the required dependencies using npm:
