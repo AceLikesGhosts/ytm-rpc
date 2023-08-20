@@ -1,4 +1,4 @@
-import { Logger, common, settings } from 'replugged';
+import { Logger, common, settings, webpack } from 'replugged';
 const { fluxDispatcher } = common;
 
 const logger = new Logger('Plugin', 'YTM');
@@ -8,7 +8,7 @@ export const pluginSettings = await settings.init<{
 }>('me.acelikesghosts.ytm');
 let ws: WebSocket | undefined;
 let reconnectInterval: NodeJS.Timeout;
-// let getAsset: (key: string) => Promise<string>;
+let getAsset: (key: string) => Promise<string>;
 
 // Only the parts we care enough about to need typed
 interface WebSocketData {
@@ -64,8 +64,8 @@ function handleMessage(ev: MessageEvent<string>): void {
 
 async function setActivity(data: WebSocketData): Promise<void> {
     logger.log(`ASSETS: ${ JSON.stringify(data.assets) }`);
-    const large = 'mp:' + data.assets.large_image;
-    const small = 'mp:' + data.assets.small_image;
+    const large = await getAsset(data.assets.large_image);
+    const small = await getAsset(data.assets.small_image);
 
     data.assets.large_image = large;
     data.assets.small_image = small;
@@ -79,40 +79,12 @@ async function setActivity(data: WebSocketData): Promise<void> {
     });
 }
 
-// from BetterDiscord's source code/port of zeres plugin libs thing
-// function byStrings(...strings: string[]) {
-//     return (module: any) => {
-//         if(!module?.toString || typeof (module?.toString) !== 'function') return; // Not stringable
-//         let moduleString = '';
-//         try { moduleString = module?.toString([]); }
-//         catch(err) { moduleString = module?.toString(); }
-//         if(!moduleString) return false; // Could not create string
-//         for(const s of strings) {
-//             if(!moduleString.includes(s)) return false;
-//         }
-//         return true;
-//     };
-// }
-
-
-
 export async function start(): Promise<void> {
-    // const filter = byStrings('getAssetImage: size must === [number, number] for Twitch');
-    // const assetManager: Record<string, any> = webpack.getModule((m: Record<string, unknown>) => typeof m === 'object' && Object.values(m).some(filter))!;
-
-    // let foundGetAsset: (clientId: string, thing: [key: string, undef: undefined]) => Promise<string[]>;
-
-    // for(const key in assetManager) {
-    //     const member = assetManager[key];
-    //     if(member.toString().includes('apply(')) {
-    //         foundGetAsset = member;
-    //         break;
-    //     }
-    // }
-
-    // getAsset = async (key: string) => {
-    //     return (await foundGetAsset('1075993095138713612', [key, undefined]))[0];
-    // };
+    const assetManager = webpack.getById(3564) as { hR: (clientId: string, data: [key: string, undef: undefined]) => Promise<string[]> };
+    const foundGetAsset = assetManager.hR;
+    getAsset = async (key: string) => {
+        return (await foundGetAsset('1075993095138713612', [key, undefined]))[0];
+    };
 
     connectWS();
 }
