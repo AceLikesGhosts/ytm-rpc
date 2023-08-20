@@ -73,7 +73,7 @@ All client mod flavors still require both the server and the extension.
 | --------------------------------------------------- | ------------------ |
 | [BetterDiscord](#betterdiscord-plugin-installation) | :white_check_mark: |
 | [Replugged](#replugged-plugin-installation)         | :white_check_mark: |
-| Vencord                                             | :x:                |
+| [Vencord](#vencord-plugin-installation)             | :x:                |
 
 ### BetterDiscord Plugin Installation
 
