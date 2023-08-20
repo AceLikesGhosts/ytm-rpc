@@ -24,7 +24,7 @@ function reconnectWS(reconnect: () => void): void {
         logger.log('Attempting to reconnect to WebSoket server');
         reconnect();
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    }, pluginSettings.get('intervalDurationSeconds'));
+    }, pluginSettings.get('intervalDurationSeconds', 15));
 }
 
 function connectWS(): void {
@@ -35,7 +35,7 @@ function connectWS(): void {
         }
     }
 
-    ws = new WebSocket('ws://localhost:' + pluginSettings.get('port'));
+    ws = new WebSocket('ws://localhost:' + pluginSettings.get('port', 2134));
     ws.onmessage = (ev: MessageEvent<string>) => handleMessage(ev);
     ws.onopen = () => {
         clearTimeout(reconnectInterval);
