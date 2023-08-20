@@ -23,6 +23,7 @@ function reconnectWS(reconnect: () => void): void {
     reconnectInterval = setTimeout(() => {
         logger.log('Attempting to reconnect to WebSoket server');
         reconnect();
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     }, pluginSettings.get('intervalDurationSeconds'));
 }
 
