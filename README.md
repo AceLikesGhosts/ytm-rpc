@@ -99,7 +99,7 @@ All client mod flavors still require both the server and the extension.
 
 ### Vencord Plugin Installation
 
-At this moment, [Venord](https://vencord.dev) is not supported due to the restrictive license on their
+At this moment, [Vencord](https://vencord.dev) is not supported due to the restrictive license on their
 plugin template, which contains their build tools. 
 
 ## Usage
