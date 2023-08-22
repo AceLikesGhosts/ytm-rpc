@@ -80,12 +80,21 @@ async function setActivity(data: WebSocketData): Promise<void> {
 }
 
 export async function start(): Promise<void> {
-    const assetManager = webpack.getById(3564) as { hR: (clientId: string, data: [key: string, undef: undefined]) => Promise<string[]> };
-    const foundGetAsset = assetManager.hR;
+    const assetManager = webpack.getBySource<Record<string, (...args: any[]) => any>>('getAssetImage: size must === [number, number] for Twitch');
+
+    let foundGetAsset: (clientId: string, data: [key: string, undef: undefined]) => Promise<string[]>;
+    for(const key in assetManager) {
+        const member = assetManager[key];
+        if(member.toString().includes('apply(')) {
+            foundGetAsset = member;
+            break;
+        }
+    }
+
     getAsset = async (key: string) => {
         return (await foundGetAsset('1075993095138713612', [key, undefined]))[0];
     };
-
+    
     connectWS();
 }
 
