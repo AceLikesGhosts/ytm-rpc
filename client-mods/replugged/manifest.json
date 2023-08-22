@@ -1,5 +1,5 @@
 {
-    "id": "me.acelikesghosts.YTM",
+    "id": "me.acelikesghosts.ytm",
     "name": "YTM RPC",
     "description": "simple WebSocket connection to a local YTM-RPC server, to display your Youtube Music data more.. \"properly\"",
     "author": {
