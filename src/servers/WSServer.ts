@@ -67,8 +67,18 @@ export class WSServer extends GenericServer {
         this._app = this._expressWs.app;
 
         // we don't care what we send/get from here, ever!
-        (this._app as Application & WithWebsocketMethod).ws('/', (_, req) => {
+        (this._app as Application & WithWebsocketMethod).ws('/', (ws, req) => {
             console.log(chalk.blue(`WebSocket (${ req.socket.remoteAddress }) connected to WS server`));
+            ws.on('close', (code, reason) => {
+                // we use 1000 to signify the websocket was turned off on the
+                // plugin side
+                if(code !== 1000) {
+                    console.error(chalk.red(`Websocket (${ req.socket.remoteAddress }) closed connection: ${ reason }`));
+                }
+                else {
+                    console.log(chalk.blue(`Websocket (${ req.socket.remoteAddress }) closed connection: ${ reason }`));
+                }
+            });
         });
 
         console.log(chalk.blue('added websocket server to express instance'));
@@ -78,8 +88,8 @@ export class WSServer extends GenericServer {
 
     public fixPresence(presence: Presence): DiscordPresence {
         const rp: DiscordPresence = {} as DiscordPresence;
-        const actualName: string = presence.smallImageText?.toLowerCase() === 'paused' ? 
-            presence.details!.substring(this.pausedLength, presence.details!.length) 
+        const actualName: string = presence.smallImageText?.toLowerCase() === 'paused' ?
+            presence.details!.substring(this.pausedLength, presence.details!.length)
             : presence.details!;
         const splitStr: string[] | undefined = presence?.state?.split('•');
         const actualArtist: string = splitStr![0].trim();
