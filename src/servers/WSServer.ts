@@ -31,6 +31,7 @@ type DiscordPresence = {
 
 export class WSServer extends GenericServer {
     private _expressWs: expressWS.Instance | undefined;
+    private readonly pausedLength: number = 'Paused: '.length;
 
     public constructor(opts: Readonly<IConstants>) {
         super(opts);
@@ -77,6 +78,9 @@ export class WSServer extends GenericServer {
 
     public fixPresence(presence: Presence): DiscordPresence {
         const rp: DiscordPresence = {} as DiscordPresence;
+        const actualName: string = presence.smallImageText?.toLowerCase() === 'paused' ? 
+            presence.details!.substring(this.pausedLength, presence.details!.length) 
+            : presence.details!;
         const splitStr: string[] | undefined = presence?.state?.split('•');
         const actualArtist: string = splitStr![0].trim();
         const actualAlbum: string = splitStr![1].trim();
@@ -115,12 +119,8 @@ export class WSServer extends GenericServer {
          */
 
 
-        // rp.name = actualArtist + ' - ' + original && original?.song ? original.song : presence.details || 'Unknown';
-        rp.name = `${ actualArtist } • ${ presence.details }`;
-        // rp.details = original?.song ? original.song : presence.details ? presence.details : 'Undefined';
-        // rp.state = presence.state ? presence.state.replace('•', '-') : 'Unknown';
-        // rp.state = 'By ' + actualArtist;
-        rp.details = presence.details ? presence.details : 'Unknown';
+        rp.name = `${ actualArtist } • ${ actualName }`;
+        rp.details = actualName ?? 'Unknown';
         rp.state = `by ${ actualArtist }`;
         rp.type = 2; // Listening to
         rp.flags = 1;
