@@ -85,7 +85,7 @@ export class WSServer extends GenericServer {
         const actualArtist: string = splitStr![0].trim();
         const actualAlbum: string = splitStr![1].trim();
 
-        rp.application_id = ((<any>this)._opts).client_id;
+        rp.application_id = this['_opts'].client_id;
         rp.timestamps = {
             start: presence.startTimestamp as number,
             end: presence.endTimestamp as number
