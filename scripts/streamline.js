@@ -4,8 +4,8 @@
 // Typescript.
 
 const child_process = require('node:child_process');
-const { cpSync } = require('fs');
 const { join } = require('path');
+const { copyFileSync, accessSync } = require('node:fs');
 
 const COMMANDS = {
     install: 'npm ci',
@@ -27,7 +27,7 @@ async function handleArgs() {
 
         // --client=bd 
         // -> 'client': 'bd'
-        if(newArg.includes('=')) {
+        if(newArg.indexOf('=') > -1) {
             const indx = newArg.indexOf('=');
             const key = newArg.slice(0, indx);
             const value = newArg.slice(indx + 1);
@@ -43,40 +43,47 @@ async function handleArgs() {
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-function installReplugged() {
-    // WARNING: this is hardcoded, seethe!
-    void runGeneric('npm run build', 'Finished transpiling Replugged plugin.', join(__dirname, '..', 'client-mods', 'replugged'));
+async function installReplugged() {
+    return async () => {
+        // WARNING: this is hardcoded, seethe!
+        void runGeneric('npm run build', 'Finished transpiling Replugged plugin.', join(__dirname, '..', 'client-mods', 'replugged'));
+    };
 }
 
 function getBetterDiscordPluginFolder() {
     /** @type {string} */
     const WIN_PATH = process.env.APPDATA;
     /** @type {string} */
-    const LINUX_PATH = process.env.XDG_CONFIG_HOME ? process.env.XDG_CONFIG_HOME : path.join(process.env.HOME, '.config');
+    const LINUX_PATH = process.env.XDG_CONFIG_HOME ? process.env.XDG_CONFIG_HOME : join(process.env.HOME, '.config');
 
     return require('os').platform().indexOf('win') > -1 ? join(WIN_PATH, 'BetterDiscord', 'plugins') : join(LINUX_PATH, 'BetterDiscord', 'plugins');
 }
 
-/**
- * @returns {void}
- */
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-function installBetterDiscord() {
-    const pluginFolder = getBetterDiscordPluginFolder();
-    const bdPluginFolder = join(__dirname, '..', 'client-mods', 'BetterDiscord');
-
-    cpSync(join(bdPluginFolder, 'YTM.plugin.js'), pluginFolder);
-    console.log('✔ Installed BetterDiscord plugin.');
+async function installBetterDiscord() {
+    return async () => {
+        const pluginFolder = getBetterDiscordPluginFolder();
+        const bdPluginFolder = join(__dirname, '..', 'client-mods', 'BetterDiscord');
+        const PLUGIN = join(bdPluginFolder, 'YTM.plugin.js');
+        try {
+            accessSync(pluginFolder);
+            accessSync(PLUGIN);
+            accessSync(bdPluginFolder);
+            copyFileSync(PLUGIN, pluginFolder);
+            console.log('✔ Installed BetterDiscord plugin.');
+        } 
+        catch(_) {
+            console.error('The installation script does not have enough permissions in order to access a required folder to copy the BetterDiscord plugin.');
+        }
+    };
 }
 
 async function handleChosenOptions(opts) {
     opts = {
-        ...opts,
-        deps: true,
-        build: true,
-        client: null
+        deps: opts.deps !== undefined ? opts.deps : true,
+        build: opts.build !== undefined ? opts.deps : true,
+        client: opts.client !== null ? opts.client : null,
     };
-
 
     console.log('Starting streamlining script:');
     console.log('You are still required to manually install the Chromium extension which enables');
@@ -96,12 +103,15 @@ async function handleChosenOptions(opts) {
     if(opts.client !== null) {
         switch(opts.client.toLowerCase()) {
             case 'bd': case 'betterdiscord': {
-                queuedThings.push(installBetterDiscord);
+                queuedThings.push(installBetterDiscord());
+                break;
             }
             case 'replugged': case 'powercord': {
-                queuedThings.push(installReplugged);
+                queuedThings.push(installReplugged());
+                break;
             }
             case 'vencord': case 'shitcord': {
+                console.error('Vencord is currently not supported.');
                 break;
             }
             default: {
