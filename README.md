@@ -17,6 +17,15 @@ This project is a Discord Rich Presence that displays information about the curr
 - Typescript compiler (`tsc`) installed on your machine.
 - A [Chromium](https://www.chromium.org/Home/) based web-browser.
 
+## Installation
+At this moment, you can either manually install the the RPC, or run the streamlining script.
+It is heavily recommended that you manually install the required parts, alongside manually set them up.
+
+If you wish to use the streamlining script, after cloning the repository, run the following:
+```sh
+node ./scripts/streamline.js
+```
+
 ## Server Installation
 
 > [!IMPORTANT]  
