@@ -92,11 +92,11 @@ async function handleChosenOptions(opts) {
     let queuedThings = [];
 
     if(opts.deps) {
-        queuedThings.push(runGeneric(COMMANDS.install, 'Finished installing Node (server) dependencies.'));
+        queuedThings.push(runGeneric(COMMANDS.install, 'Finished installing Node (server) dependencies.', join(__dirname, '..')));
     }
 
     if(opts.build) {
-        queuedThings.push(runGeneric(COMMANDS.build, 'Finished transpiling server.'));
+        queuedThings.push(runGeneric(COMMANDS.build, 'Finished transpiling server.', join(__dirname, '..')));
     }
 
     /* eslint-disable indent */
