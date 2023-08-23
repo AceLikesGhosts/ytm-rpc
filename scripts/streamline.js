@@ -15,7 +15,7 @@ const COMMANDS = {
 /**
  * node streamline.js --deps --build --client=bd
  */
-function handleArgs() {
+async function handleArgs() {
     let parsedArgs = {
         deps: true,
         build: true,
@@ -39,7 +39,7 @@ function handleArgs() {
         }
     }
 
-    handleChosenOptions(parsedArgs);
+    await handleChosenOptions(parsedArgs);
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -69,13 +69,18 @@ function installBetterDiscord() {
     console.log('✔ Installed BetterDiscord plugin.');
 }
 
-function handleChosenOptions(opts) {
+async function handleChosenOptions(opts) {
     opts = {
         ...opts,
         deps: true,
         build: true,
         client: null
     };
+
+
+    console.log('Starting streamlining script:');
+    console.log('You are still required to manually install the Chromium extension which enables');
+    console.log('the server to work! Installation steps can be seen on the Github\'s README!');
 
     let queuedThings = [];
 
@@ -105,29 +110,29 @@ function handleChosenOptions(opts) {
         }
     }
     /* eslint-enable indent */
-    const started = Date.now();
 
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    Promise.allSettled(queuedThings).then(() => {
-        console.log(`Finished all installation steps in ${Date.now() - started}ms.`);
-        console.log('You are still required to manually install the Chromium extension which enables');
-        console.log('the server to work! Installation steps can be seen on the Github\'s README!');
-    });
+    for(let i = 0; i < queuedThings.length; i++) {
+        const toCall = await queuedThings[i];
+        await toCall();
+    }
 }
+
 /**
  * @param {string} command 
  * @param {string} finish 
  */
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 async function runGeneric(command, finish, cwd) {
-    child_process.exec(command, cwd ? { cwd: cwd } : void 0, (err) => {
-        if(err) {
-            console.error('Failed to run command.');
-            throw err;
-        }
+    return async () => {
+        child_process.exec(command, cwd ? { cwd: cwd } : void 0, (err) => {
+            if(err) {
+                console.error('Failed to run command.');
+                throw err;
+            }
 
-        console.log('✔ ' + finish);
-    });
+            console.log('✔ ' + finish);
+        });
+    };
 }
 
 // if they passed args we are not going to ask them questions and just
