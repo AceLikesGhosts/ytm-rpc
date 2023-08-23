@@ -35,7 +35,7 @@ function handleArgs() {
             parsedArgs[key] = value;
         }
         else {
-            parsedArgs[key] = true;
+            parsedArgs[newArg] = true;
         }
     }
 
