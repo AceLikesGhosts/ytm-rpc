@@ -6,6 +6,7 @@
 const child_process = require('node:child_process');
 const { join } = require('path');
 const { copyFileSync, accessSync } = require('node:fs');
+const isWin = require('os').platform().indexOf('win') > -1;
 
 const COMMANDS = {
     install: 'npm ci',
@@ -56,7 +57,7 @@ function getBetterDiscordPluginFolder() {
     /** @type {string} */
     const LINUX_PATH = process.env.XDG_CONFIG_HOME ? process.env.XDG_CONFIG_HOME : join(process.env.HOME, '.config');
 
-    return require('os').platform().indexOf('win') > -1 ? join(WIN_PATH, 'BetterDiscord', 'plugins') : join(LINUX_PATH, 'BetterDiscord', 'plugins');
+    return isWin ? join(WIN_PATH, 'BetterDiscord', 'plugins') : join(LINUX_PATH, 'BetterDiscord', 'plugins');
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -84,6 +85,10 @@ async function handleChosenOptions(opts) {
         build: opts.build !== undefined ? opts.deps : true,
         client: opts.client !== null ? opts.client : null,
     };
+
+    if(!isWin) {
+        process.env.PATH = process.env.PATH + ':/usr/local/bin';
+    }
 
     console.log('Starting streamlining script:');
     console.log('You are still required to manually install the Chromium extension which enables');
