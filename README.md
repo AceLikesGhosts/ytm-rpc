@@ -18,18 +18,18 @@ This project is a Discord Rich Presence that displays information about the curr
 - A [Chromium](https://www.chromium.org/Home/) based web-browser.
 
 ## Installation
-At this moment, you can either manually install the the RPC, or run the streamlining script.
+At this moment, you can either manually install the the RPC, or run the setup script.
 It is heavily recommended that you manually install the required parts, alongside manually set them up.
 
-If you wish to use the streamlining script, after cloning the repository, run the following:
+If you wish to use the setup script, after cloning the repository, run the following:
 
 Unix
 ```sh
-bash ./scripts/streamline.sh --deps --build
+bash ./scripts/setup.sh --deps --build
 ```
 Windows
 ```bat
-./scripts/streamline.bat --deps --build
+./scripts/setup.bat --deps --build
 ```
 
 ## Server Installation
