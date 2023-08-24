@@ -17,6 +17,10 @@ function copyEnv {
   fi
 }
 
+function warnMessage {
+  echo "WARNING! You are still required to add the Chromium extension manually!"
+}
+
 # Install Replugged plugin
 function installReplugged {
   runGeneric "npm run --silent build" "Finished transpiling Replugged plugin." "$(dirname "$0")/../client-mods/replugged"
@@ -73,6 +77,7 @@ if [[ $# -eq 0 ]]; then
 fi
 
 copyEnv 
+warnMessage 
 
 for arg in "$@"; do
   case "$arg" in
