@@ -22,8 +22,14 @@ At this moment, you can either manually install the the RPC, or run the streamli
 It is heavily recommended that you manually install the required parts, alongside manually set them up.
 
 If you wish to use the streamlining script, after cloning the repository, run the following:
+
+Unix
 ```sh
 bash ./scripts/streamline.sh --deps --build
+```
+Windows
+```bat
+./scripts/streamline.bat --deps --build
 ```
 
 ## Server Installation
