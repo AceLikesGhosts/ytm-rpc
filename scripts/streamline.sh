@@ -57,11 +57,8 @@ function runGeneric {
 }
 
 # Start streamlining script
-echo "Starting streamlining script:"
-echo "You are still required to manually install the Chromium extension which enables"
-echo "the server to work! Installation steps can be seen on the Github's README!"
-
 queuedThings=()
+missingArgs=0
 
 for arg in "$@"; do
   case "$arg" in
@@ -79,8 +76,7 @@ for arg in "$@"; do
       esac
       ;;
     *)
-      echo "Invalid argument: $arg" >&2
-      exit 1
+      missingArgs=1
       ;;
   esac
 done
@@ -92,9 +88,12 @@ if [[ ${#queuedThings[@]} -eq 0 ]]; then
   echo "--build -> Build the TypeScript server."
   echo "--client -> Install a client mod. Supported options are 'bd' and 'replugged'."
   echo "Example: ./streamline.sh --deps --build --client=bd"
-else
-  for ((i = 0; i < ${#queuedThings[@]}; i++)); do
-    eval "${queuedThings[i]}"
-    wait
-  done
+elif [[ $missingArgs -eq 0 ]]; then
+  echo "You are still required to manually install the Chromium extension which enables"
+  echo "the server to work! Installation steps can be seen on the Github's README!"
 fi
+
+for ((i = 0; i < ${#queuedThings[@]}; i++)); do
+  eval "${queuedThings[i]}"
+  wait
+done
