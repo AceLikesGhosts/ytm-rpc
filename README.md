@@ -23,7 +23,7 @@ It is heavily recommended that you manually install the required parts, alongsid
 
 If you wish to use the streamlining script, after cloning the repository, run the following:
 ```sh
-node ./scripts/streamline.js --deps --build
+bash ./scripts/streamline.sh --deps --build
 ```
 
 ## Server Installation
