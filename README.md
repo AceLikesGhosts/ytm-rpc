@@ -17,6 +17,17 @@ This project is a Discord Rich Presence that displays information about the curr
 - Typescript compiler (`tsc`) installed on your machine.
 - A [Chromium](https://www.chromium.org/Home/) based web-browser.
 
+## Installation
+At this moment, you can either manually install the the RPC, or run the setup script.
+It is heavily recommended that you manually install the required parts, alongside manually set them up.
+
+If you wish to use the setup script, after cloning the repository, run the following:
+
+Unix
+```sh
+bash ./scripts/setup.sh --deps --build
+```
+
 ## Server Installation
 
 > [!IMPORTANT]  
