@@ -18,4 +18,4 @@ jobs:
         - name: "checkout repo"
           uses: actions/checkout@v1
         - name: "run setup script (win)"
-          run: ${GITHUB_WORKSPACE}/scripts/setup.bat --deps --build
+          run: ${GITHUB_WORKSPACE}\\scripts\\setup.bat --deps --build
