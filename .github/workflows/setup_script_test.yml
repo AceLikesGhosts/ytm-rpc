@@ -15,4 +15,4 @@ jobs:
         - name: "move to workspace"
           run: cd ${GITHUB_WORKSPACE}
         - name: "run setup script (linux)"
-          run: bash /scripts/setup.sh --deps --build
+          run: bash ./scripts/setup.sh --deps --build
