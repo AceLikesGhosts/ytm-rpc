@@ -6,6 +6,17 @@ COMMANDS=(
   [build]="npm --silent run ts:build"
 )
 
+# copy env
+function copyEnv {
+  envFile="$(dirname "$0")/../.env"
+  envExampleFile="$(dirname "$0")/../.env.example"
+  
+  if [[ ! -e "$envFile" && -e "$envExampleFile" ]]; then
+    cp "$envExampleFile" "$envFile"
+    echo "Copied .env.example to .env."
+  fi
+}
+
 # Install Replugged plugin
 function installReplugged {
   runGeneric "npm run --silent build" "Finished transpiling Replugged plugin." "$(dirname "$0")/../client-mods/replugged"
@@ -60,6 +71,8 @@ if [[ $# -eq 0 ]]; then
   echo "Usage: $0 --deps --build --client=<bd|replugged>"
   exit 1
 fi
+
+copyEnv 
 
 for arg in "$@"; do
   case "$arg" in
