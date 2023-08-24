@@ -3,7 +3,7 @@
 # These are the stupid requirements for TypeScript, this isn't TypeScript.
 
 COMMANDS=(
-  [install]="npm ci --quiet"
+  [install]="npm install --quiet"
   [build]="npm --silent run ts:build"
 )
 
