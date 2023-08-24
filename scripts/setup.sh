@@ -1,19 +1,17 @@
 #!/bin/bash
 
-# These are the stupid requirements for TypeScript, this isn't TypeScript.
-
+# Commands
 COMMANDS=(
   [install]="npm install --quiet"
   [build]="npm --silent run ts:build"
 )
 
+# Install Replugged plugin
 function installReplugged {
-  {
-    # WARNING: this is hardcoded, seethe!
-    runGeneric "npm run --silent build" "Finished transpiling Replugged plugin." "$(dirname "$0")/../client-mods/replugged"
-  } &
+  runGeneric "npm run --silent build" "Finished transpiling Replugged plugin." "$(dirname "$0")/../client-mods/replugged"
 }
 
+# Get BetterDiscord plugin folder
 function getBetterDiscordPluginFolder {
   if [[ "$(uname)" == "Darwin" ]]; then
     echo "$HOME/Library/Application Support/BetterDiscord/plugins"
@@ -22,6 +20,7 @@ function getBetterDiscordPluginFolder {
   fi
 }
 
+# Install BetterDiscord plugin
 function installBetterDiscord {
   local pluginFolder
   pluginFolder=$(getBetterDiscordPluginFolder)
@@ -32,68 +31,56 @@ function installBetterDiscord {
     cp "$PLUGIN" "$pluginFolder"
     echo "✔ Installed BetterDiscord plugin."
   else
-    echo "The installation script does not have enough permissions in order to access a required folder to copy the BetterDiscord plugin." >&2
+    echo "Not enough permissions to copy the BetterDiscord plugin." >&2
   fi
 }
 
+# Run command and display finish message
 function runGeneric {
+  command="$1"
+  finish="$2"
+  cwd="$3"
+  
   {
-    command="$1"
-    finish="$2"
-    cwd="$3"
-    {
-      if [[ -n "$cwd" ]]; then
-        (cd "$cwd" && eval "$command")
-      else
-        eval "$command"
-      fi
-    } || {
-      echo "Failed to run command." >&2
-      exit 1
-    }
+    if [[ -n "$cwd" ]]; then
+      (cd "$cwd" && eval "$command")
+    else
+      eval "$command"
+    fi
+  } || {
+    echo "Failed to run command." >&2
+    exit 1
+  }
 
-    echo "✔ $finish"
-  } &
+  echo "✔ $finish"
 }
 
-# Start streamlining script
-queuedThings=()
-missingArgs=0
+# Process arguments
+if [[ $# -eq 0 ]]; then
+  echo "Usage: $0 --deps --build --client=<bd|replugged>"
+  exit 1
+fi
 
 for arg in "$@"; do
   case "$arg" in
-    --deps) queuedThings+=("runGeneric '${COMMANDS[install]}' 'Finished installing Node (server) dependencies.' '$(dirname "$0")/..'") ;;
-    --build) queuedThings+=("runGeneric '${COMMANDS[build]}' 'Finished transpiling server.' '$(dirname "$0")/..'") ;;
+    --deps) runGeneric "${COMMANDS[install]}" "Installed Node dependencies." "$(dirname "$0")/.." ;;
+    --build) runGeneric "${COMMANDS[build]}" "Transpiled server." "$(dirname "$0")/.." ;;
     --client=*)
       client="${arg#*=}"
       case "$client" in
-        bd | betterdiscord) queuedThings+=("installBetterDiscord") ;;
-        replugged | powercord) queuedThings+=("installReplugged") ;;
+        bd | betterdiscord) installBetterDiscord ;;
+        replugged | powercord) installReplugged ;;
         *)
-          echo "Expected 'bd' | 'replugged' but got '$client'" >&2
+          echo "Invalid client mod: '$client'" >&2
           exit 1
           ;;
       esac
       ;;
     *)
-      missingArgs=1
+      echo "Invalid argument: '$arg'" >&2
+      exit 1
       ;;
   esac
 done
 
-if [[ ${#queuedThings[@]} -eq 0 ]]; then
-  echo "Missing required arguments!"
-  echo "This script supports the following arguments:"
-  echo "--deps -> Install dependencies for the Node server."
-  echo "--build -> Build the TypeScript server."
-  echo "--client -> Install a client mod. Supported options are 'bd' and 'replugged'."
-  echo "Example: ./streamline.sh --deps --build --client=bd"
-elif [[ $missingArgs -eq 0 ]]; then
-  echo "You are still required to manually install the Chromium extension which enables"
-  echo "the server to work! Installation steps can be seen on the Github's README!"
-fi
-
-for ((i = 0; i < ${#queuedThings[@]}; i++)); do
-  eval "${queuedThings[i]}"
-  wait
-done
+echo "Done!"
