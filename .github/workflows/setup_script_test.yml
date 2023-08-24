@@ -1,0 +1,21 @@
+on:
+    push:
+    pull_request:
+
+jobs:
+    setup-script-linux:
+        name: setup-linux
+        runs-on: ubuntu-latest
+        steps:
+        - name: "checkout repo"
+          uses: actions/checkout@v1
+        - name: "run setup script (linux)"
+          run: bash ${GITHUB_WORKSPACE}/scripts/setup.sh --deps --build
+    setup-script-windows:
+        name: setup-windows
+        runs-on: windows-latest
+        steps:
+        - name: "checkout repo"
+          uses: actions/checkout@v1
+        - name: "run setup script (win)"
+          run: ${GITHUB_WORKSPACE}/scripts/setup.bat --deps --build
