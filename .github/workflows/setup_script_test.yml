@@ -12,5 +12,7 @@ jobs:
         - uses: actions/setup-node@v3
           with:
             node-version: 16
+        - name: "move to workspace"
+          run: cd ${GITHUB_WORKSPACE}
         - name: "run setup script (linux)"
           run: ${GITHUB_WORKSPACE}/scripts/setup.sh --deps --build
