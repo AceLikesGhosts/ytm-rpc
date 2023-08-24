@@ -3,14 +3,14 @@
 # These are the stupid requirements for TypeScript, this isn't TypeScript.
 
 COMMANDS=(
-  [install]="npm ci"
-  [build]="npm run ts:build"
+  [install]="npm ci --quiet"
+  [build]="npm --silent run ts:build"
 )
 
 function installReplugged {
   {
     # WARNING: this is hardcoded, seethe!
-    runGeneric "npm run build" "Finished transpiling Replugged plugin." "$(dirname "$0")/../client-mods/replugged"
+    runGeneric "npm run --silent build" "Finished transpiling Replugged plugin." "$(dirname "$0")/../client-mods/replugged"
   } &
 }
 
