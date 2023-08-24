@@ -27,10 +27,6 @@ Unix
 ```sh
 bash ./scripts/setup.sh --deps --build
 ```
-Windows
-```bat
-./scripts/setup.bat --deps --build
-```
 
 ## Server Installation
 
