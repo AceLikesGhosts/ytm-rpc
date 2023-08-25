@@ -93,7 +93,6 @@ export class WSServer extends GenericServer {
             presence.details!.substring(this.pausedLength, presence.details!.length)
             : presence.details!;
         const splitStr: string[] | undefined = presence?.state?.split('•');
-        console.log(splitStr);
         const actualArtist: string = splitStr![0].trim();
         const actualAlbum: string = splitStr![1].trim();
 
