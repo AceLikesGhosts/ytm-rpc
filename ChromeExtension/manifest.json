@@ -1,29 +1,23 @@
 {
-  "manifest_version": 2,
-  "name": "YouTubeMusicDiscordRichPresence",
-  "description": "ytm-rpc",
-  "version": "1.0",
-  "content_scripts": [
-    {
-      "matches": [
-        "https://music.youtube.com/*"
-      ],
-      "js": [
-        "content.js"
-      ]
-    }
-  ],
-  "background": {
-    "scripts": [
-      "background.js"
+    "manifest_version": 2,
+    "name": "TESTING",
+    "description": "TESTING",
+    "version": "1.0",
+    "content_scripts": [
+        {
+            "matches": [
+                "https://music.youtube.com/*"
+            ],
+            "js": [
+                "content.js"
+            ]
+        }
     ],
-    "persistent": true
-  },
-  "browser_action": {},
-  "permissions": [
-    "http://localhost/*",
-    "tabs",
-    "activeTab"
-  ],
-  "icons": {}
+    "browser_action": {},
+    "permissions": [
+        "http://localhost/*",
+        "tabs",
+        "activeTab"
+    ],
+    "icons": {}
 }

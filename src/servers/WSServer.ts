@@ -41,6 +41,7 @@ export class WSServer extends GenericServer {
                 {
                     song: 'Nothing playing',
                     artist: 'Waiting for music..      ',
+                    album: undefined,
                     icon: undefined,
                     link: undefined,
                     timeMax: undefined,
