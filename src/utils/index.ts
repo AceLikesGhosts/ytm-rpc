@@ -31,6 +31,7 @@ export function milliToTime(millis: string): number {
 export type SongPresenceData = {
     song: string;
     artist: string;
+    album?: string;
     timeNow?: number;
     timeMax?: number;
     icon?: string;
@@ -39,12 +40,11 @@ export type SongPresenceData = {
 };
 
 export function makePresence(
-    { song, artist, timeNow, timeMax, icon, link, isPlaying }: SongPresenceData,
+    { song, artist, album, timeNow, timeMax, icon, link, isPlaying }: SongPresenceData,
     constants: IConstants
 ): Presence | null {
     song = stringify(song);
     artist = stringify(artist);
-    artist = artist.substring(0, artist.length - 6); // removes the year + the bullet point + the space (EX: The Day * 2009 -> The Day)
 
     if(!song || song === undefined || song.length < 1) {
         console.error('No song name was passed to `update`.');
@@ -62,7 +62,7 @@ export function makePresence(
     if(isPlaying) {
         return {
             details: song,
-            state: artist,
+            state: `${ artist } ${ album ? '• ' + album : '' }`,
             startTimestamp: timeNow || 0,
             endTimestamp: endTime || 0,
             largeImageKey: icon || constants.images.default_img,
@@ -81,7 +81,7 @@ export function makePresence(
     else {
         return {
             details: `Paused: ${ song }`,
-            state: artist,
+            state: `${ artist } ${ album ? '• ' + album : '' }`,
             largeImageKey: icon || constants.images.default_img,
             largeImageText: song,
             smallImageKey: constants.images.pause_img || undefined,

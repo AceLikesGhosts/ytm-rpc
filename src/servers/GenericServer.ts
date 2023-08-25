@@ -1,4 +1,5 @@
 import chalk from 'chalk';
+import cors from 'cors';
 import express, { type Application } from 'express';
 import { makePresence, milliToTime } from '../utils';
 import type { Presence } from 'discord-rpc';
@@ -8,6 +9,7 @@ import type { Server } from '../types/Server';
 type ContentRequest = {
     song: string;
     artist: string;
+    album: string;
     link: string;
     timeMax: string;
     timeNow: string;
@@ -25,6 +27,7 @@ export abstract class GenericServer implements Server {
 
         this._app = express();
         this._app.use(express.json({ limit: '10mb' }));
+        this._app.use(cors());
     }
 
     public getApp(): Application {
@@ -54,7 +57,7 @@ export abstract class GenericServer implements Server {
 
             /** @constant */
             const dataString =
-                `${ content.song } • ${ content.artist.substring(0, content.artist.length - 6) } ${ content.timeMax.replace(' ', '') }`
+                `${ content.song } • ${ content.artist } ${ content.timeMax }`
                     .replace(/(\r\n|\n|\r)/gm, '')
                     .trim();
 
@@ -70,6 +73,7 @@ export abstract class GenericServer implements Server {
                     {
                         song: content.song,
                         artist: content.artist,
+                        album: content.album,
                         timeNow: milliToTime(content.timeNow),
                         timeMax: milliToTime(content.timeMax),
                         icon: content.icon,
