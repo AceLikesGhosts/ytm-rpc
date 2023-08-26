@@ -32,11 +32,8 @@
         };
         player.addEventListener('onStateChange', (code) => {
             if(code !== 1 && code !== 2) {
-                log(`code failed: ${code}`)
                 return;
             }
-
-            log('below state change check: ' + code);
 
             const isPaused = code === 1 ? false : true;
             const songData = player.getVideoData();
