@@ -39,9 +39,13 @@ export abstract class GenericServer implements Server {
 
     public start(): void {
         this._app.post('/', (req, res) => {
+            console.log('got request');
             const content: ContentRequest = req.body;
 
             if(content.song === undefined || content.song === null) {
+                console.log(content);
+                console.log(content.song);
+                console.log(content.song === undefined || content.song === null);
                 return res.status(400).json({
                     ok: false,
                     message: 'Missing required field `song`.'

@@ -1,9 +1,17 @@
 (function() {
+    function log(msg) {
+        console.log(
+            '%c[YTM] %c' + msg,
+            'color:purple',
+            'color:white'
+        );
+    }
+
     function waitForMoviePlayer() {
         new MutationObserver((_, observer) => {
             const player = document.getElementById('movie_player');
             if(player !== null) {
-                console.log('found player injecting script');
+                log('found player injecting script');
                 injectScript();
                 observer.disconnect();
             }
@@ -15,13 +23,20 @@
 
     function monitorContent() {
         const player = document.getElementById('movie_player');
-
+        const log = function log(msg) {
+            console.log(
+                '%c[YTM] %c' + msg,
+                'color:purple',
+                'color:white'
+            );
+        };
         player.addEventListener('onStateChange', (code) => {
-            console.log('state change');
-            // if we arent playing, or pausing, we dont really care.
             if(code !== 1 && code !== 2) {
+                log(`code failed: ${code}`)
                 return;
             }
+
+            log('below state change check: ' + code);
 
             const isPaused = code === 1 ? false : true;
             const songData = player.getVideoData();
@@ -30,7 +45,7 @@
             const icon = document.getElementsByClassName('image style-scope ytmusic-player-bar')[0].src;
             const album = document.querySelector('#layout > ytmusic-player-bar > div.middle-controls.style-scope.ytmusic-player-bar > div.content-info-wrapper.style-scope.ytmusic-player-bar > span > span.subtitle.style-scope.ytmusic-player-bar > yt-formatted-string > a:nth-child(3)').innerHTML;
 
-            const xhr = new XMLHttpRequest();
+            log('above making http request');
             const url = 'http://localhost:2134/';
 
             const requestData = {
@@ -44,19 +59,14 @@
                 link: `https://music.youtube.com/watch?v=${songData.video_id}`
             };
 
-            xhr.open('POST', url, true);
-            xhr.setRequestHeader('Content-Type', 'application/json');
-
-            xhr.onreadystatechange = function() {
-                if(xhr.readyState === 4) {
-                    if(xhr.status !== 200) {
-                        throw new Error('Request failed: ' + xhr.statusText);
-                    }
-                }
-            };
-
-            xhr.send(JSON.stringify(requestData));
-
+            fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                mode: 'cors',
+                body: JSON.stringify(requestData)
+            }).then(() => {
+                log('posted song data to server (' + requestData.song + ')');
+            });
         });
     }
 
