@@ -23,6 +23,7 @@
 
     function monitorContent() {
         const player = document.getElementById('movie_player');
+        const albumQuery = '#layout > ytmusic-player-bar > div.middle-controls.style-scope.ytmusic-player-bar > div.content-info-wrapper.style-scope.ytmusic-player-bar > span > span.subtitle.style-scope.ytmusic-player-bar > yt-formatted-string > a:nth-child(3)';
         const log = function log(msg) {
             console.log(
                 '%c[YTM] %c' + msg,
@@ -38,8 +39,9 @@
             }
 
             setTimeout(() => {
-                let songData = player.getVideoData();
-                if(songData !== null && songData !== void 0) {
+                const songData = player.getVideoData();
+                const albumCover = document.querySelector(albumQuery).innerHTML;
+                if((songData !== null && songData !== void 0) && (albumCover !== null && albumCover !== void 0)) {
                     update(1);
                 }
                 else {
@@ -54,7 +56,7 @@
             const timeNow = player.getCurrentTime();
             const timeMax = player.getDuration();
             const icon = `https://i1.ytimg.com/vi/${songData.video_id}/1.jpg`;
-            const album = document.querySelector('#layout > ytmusic-player-bar > div.middle-controls.style-scope.ytmusic-player-bar > div.content-info-wrapper.style-scope.ytmusic-player-bar > span > span.subtitle.style-scope.ytmusic-player-bar > yt-formatted-string > a:nth-child(3)').innerHTML;
+            const album = document.querySelector(albumQuery).innerHTML;
 
             log('above making http request');
             const url = 'http://localhost:2134/';
