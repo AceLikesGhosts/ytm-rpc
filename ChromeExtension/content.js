@@ -30,16 +30,30 @@
                 'color:white'
             );
         };
-        player.addEventListener('onStateChange', (code) => {
-            if(code !== 1 && code !== 2) {
-                return;
+
+        function waitAndThenDetectSong(attempts = 0) {
+            console.log('inside wait func');
+            if(attempts > 15) {
+                throw 'We are actually buffering, odd. Pause and unpause to update the state after you finish updating.';
             }
 
+            setTimeout(() => {
+                let songData = player.getVideoData();
+                if(songData !== null && songData !== void 0) {
+                    update(1);
+                }
+                else {
+                    waitAndThenDetectSong(attempts++);
+                }
+            }, 500);
+        }
+
+        function update(code) {
             const isPaused = code === 1 ? false : true;
             const songData = player.getVideoData();
             const timeNow = player.getCurrentTime();
             const timeMax = player.getDuration();
-            const icon = document.getElementsByClassName('image style-scope ytmusic-player-bar')[0].src;
+            const icon = `https://i1.ytimg.com/vi/${songData.video_id}/1.jpg`;
             const album = document.querySelector('#layout > ytmusic-player-bar > div.middle-controls.style-scope.ytmusic-player-bar > div.content-info-wrapper.style-scope.ytmusic-player-bar > span > span.subtitle.style-scope.ytmusic-player-bar > yt-formatted-string > a:nth-child(3)').innerHTML;
 
             log('above making http request');
@@ -64,13 +78,28 @@
             }).then(() => {
                 log('posted song data to server (' + requestData.song + ')');
             });
+        }
+
+        player.addEventListener('onStateChange', (code) => {
+            // youtube does not like to tell us if we started playing
+            // after a buffer, so we'll try to bruteforce it.
+            if(code === 5) {
+                console.log('hit a code 5');
+                return waitAndThenDetectSong();
+            }
+
+            if(code !== 1 && code !== 2) {
+                return;
+            }
+
+            update(code);
         });
     }
 
     function injectScript() {
         const script = document.createElement('script');
         script.id = 'ytm-rpc-injected-script';
-        script.textContent = `(${monitorContent})(/** arguments */);`;
+        script.textContent = `(${monitorContent})();`;
         document.documentElement.appendChild(script);
     }
 
