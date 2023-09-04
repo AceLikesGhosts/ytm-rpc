@@ -33,15 +33,14 @@
         };
 
         function waitAndThenDetectSong(attempts = 0) {
-            console.log('inside wait func');
             if(attempts > 15) {
                 throw 'We are actually buffering, odd. Pause and unpause to update the state after you finish updating.';
             }
 
             setTimeout(() => {
                 const songData = player.getVideoData();
-                const albumCover = document.querySelector(albumQuery).innerHTML;
-                if((songData !== null && songData !== void 0) && (albumCover !== null && albumCover !== void 0)) {
+                const albumCover = document.querySelector(albumQuery);
+                if((songData !== null && songData !== void 0) && (albumCover !== null && albumCover !== void 0) && (albumCover.innerHTML !== void 0 && albumCover.innerHTML !== void 0)) {
                     update(1);
                 }
                 else {
@@ -50,13 +49,13 @@
             }, 500);
         }
 
-        function update(code) {
+        function update(code, album) {
             const isPaused = code === 1 ? false : true;
             const songData = player.getVideoData();
             const timeNow = player.getCurrentTime();
             const timeMax = player.getDuration();
             const icon = `https://i1.ytimg.com/vi/${songData.video_id}/1.jpg`;
-            const album = document.querySelector(albumQuery).innerHTML;
+            album = album ? album : document.querySelector(albumQuery).innerHTML;
 
             log('above making http request');
             const url = 'http://localhost:2134/';
@@ -86,7 +85,6 @@
             // youtube does not like to tell us if we started playing
             // after a buffer, so we'll try to bruteforce it.
             if(code === 5) {
-                console.log('hit a code 5');
                 return waitAndThenDetectSong();
             }
 
