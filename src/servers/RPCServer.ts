@@ -1,9 +1,9 @@
 import chalk from 'chalk';
 import type { Presence } from 'discord-rpc';
+import type { SongData } from 'src/types/SongData';
+import type { IConstants } from '../types/Constants';
 import { Client } from 'discord-rpc';
 import { GenericServer } from './GenericServer';
-import type { IConstants } from '../types/Constants';
-import type { SongData } from 'src/types/SongData';
 import { stringify } from '../utils';
 
 type SongPresenceData = {

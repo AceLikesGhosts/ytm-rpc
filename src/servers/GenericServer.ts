@@ -1,10 +1,11 @@
-import chalk from 'chalk';
-import cors from 'cors';
-import express, { type Application } from 'express';
+
 import { milliToTime } from '../utils';
 import type { IConstants } from '../types/Constants';
 import type { Server } from '../types/Server';
 import type { SongData } from '../types/SongData';
+import express, { type Application } from 'express';
+import chalk from 'chalk';
+import cors from 'cors';
 
 export abstract class GenericServer implements Server {
     private readonly _opts: Readonly<IConstants>;

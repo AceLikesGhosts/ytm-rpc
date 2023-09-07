@@ -1,9 +1,9 @@
 import type { Application, WithWebsocketMethod } from 'express-ws';
-import expressWS from 'express-ws';
-import { GenericServer } from './GenericServer';
-import type { IConstants } from '../types/Constants';
-import chalk from 'chalk';
 import type { SongData } from '../types/SongData';
+import type { IConstants } from '../types/Constants';
+import { GenericServer } from './GenericServer';
+import expressWS from 'express-ws';
+import chalk from 'chalk';
 
 type DiscordPresence = {
     application_id: string;
