@@ -23,7 +23,7 @@
 
     function monitorContent() {
         const player = document.getElementById('movie_player');
-        const albumQuery = '#layout > ytmusic-player-bar > div.middle-controls.style-scope.ytmusic-player-bar > div.content-info-wrapper.style-scope.ytmusic-player-bar > span > span.subtitle.style-scope.ytmusic-player-bar > yt-formatted-string > a:nth-child(3)';
+        const albumQuery = '#layout > ytmusic-player-bar > div.middle-controls.style-scope.ytmusic-player-bar > div.content-info-wrapper.style-scope.ytmusic-player-bar > span > span.subtitle.style-scope.ytmusic-player-bar > yt-formatted-string';
         const log = function log(msg) {
             console.log(
                 '%c[YTM] %c' + msg,
@@ -55,7 +55,7 @@
             const timeNow = player.getCurrentTime();
             const timeMax = player.getDuration();
             const icon = `https://i1.ytimg.com/vi/${songData.video_id}/1.jpg`;
-            album = album ? album : document.querySelector(albumQuery).innerHTML;
+            album = album ? album : document.querySelector(albumQuery).title.split('•')[1];
 
             log('above making http request');
             const url = 'http://localhost:2134/';
