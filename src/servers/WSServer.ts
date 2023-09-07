@@ -1,10 +1,9 @@
 import type { Application, WithWebsocketMethod } from 'express-ws';
 import expressWS from 'express-ws';
-import { type Presence } from 'discord-rpc';
-import { makePresence } from '../utils';
 import { GenericServer } from './GenericServer';
 import type { IConstants } from '../types/Constants';
 import chalk from 'chalk';
+import type { SongData } from '../types/SongData';
 
 type DiscordPresence = {
     application_id: string;
@@ -31,26 +30,9 @@ type DiscordPresence = {
 
 export class WSServer extends GenericServer {
     private _expressWs: expressWS.Instance | undefined;
-    private readonly pausedLength: number = 'Paused: '.length;
 
     public constructor(opts: Readonly<IConstants>) {
         super(opts);
-
-        this.update(
-            makePresence(
-                {
-                    song: 'Nothing playing',
-                    artist: 'Waiting for music..      ',
-                    album: undefined,
-                    icon: undefined,
-                    link: undefined,
-                    timeMax: undefined,
-                    timeNow: undefined,
-                    isPlaying: true
-                },
-                opts
-            )!
-        );
 
         process.on('SIGINT', () => {
             this._expressWs?.getWss().clients.forEach((client) => {
@@ -87,39 +69,7 @@ export class WSServer extends GenericServer {
         super.start();
     }
 
-    public fixPresence(presence: Presence): DiscordPresence {
-        const rp: DiscordPresence = {} as DiscordPresence;
-        const actualName: string = presence.smallImageText?.toLowerCase() === 'paused' ?
-            presence.details!.substring(this.pausedLength, presence.details!.length)
-            : presence.details!;
-        const splitStr: string[] | undefined = presence?.state?.split('•');
-        const actualArtist: string = splitStr![0].trim();
-        const actualAlbum: string = splitStr![1].trim();
-
-        rp.application_id = this['_opts'].client_id;
-        rp.timestamps = {
-            start: presence.startTimestamp as number,
-            end: presence.endTimestamp as number
-        };
-        rp.assets = {
-            large_image: presence.largeImageKey!,
-            large_text: `on ${ actualAlbum }`,
-            small_image: presence.smallImageKey!,
-            small_text: presence.smallImageText!
-        };
-
-        rp.buttons = [];
-        rp.metadata = {
-            button_urls: []
-        };
-
-        if(presence.buttons) {
-            for(let i: number = 0; i < presence.buttons.length; i++) {
-                rp.buttons.push(presence.buttons[i].label);
-                rp.metadata.button_urls.push(presence.buttons[i].url);
-            }
-        }
-
+    public fixPresence(presence: SongData<true>): DiscordPresence {
         /**
          * The way that it will be displayed on the client is:
          * 
@@ -128,22 +78,48 @@ export class WSServer extends GenericServer {
          * State
          * Large Image Text
          */
-
-
-        rp.name = `${ actualArtist } • ${ actualName }`;
-        rp.details = actualName ?? 'Unknown';
-        rp.state = `by ${ actualArtist }`;
-        rp.type = 2; // Listening to
+        const rp: DiscordPresence = {} as DiscordPresence;
+        // required
+        rp.application_id = this['_opts'].client_id;
+        rp.type = 2;
         rp.flags = 1;
+
+        rp.timestamps = {
+            start: presence.timeNow,
+            end: presence.timeMax
+        };
+
+        rp.assets = {
+            large_text: `on ${ presence.album }`,
+            small_text: presence.isPaused && this['_opts'].images.pause_img !== undefined ? 'Paused' : '',
+            large_image: presence.icon || this['_opts'].images.default_img,
+            small_image: ''
+        };
+
+        if(presence.isPaused) {
+            const pausedImage = this['_opts'].images.pause_img;
+            if(pausedImage !== undefined && pausedImage !== null) {
+                rp.assets.small_image = pausedImage;
+            }
+        }
+
+        rp.buttons = [
+            '▶ Listen on Youtube Music'
+        ];
+        rp.metadata = {
+            button_urls: [
+                presence.link
+            ]
+        };
+
+        rp.name = `${ presence.artist } • ${ presence.song }`;
+        rp.details = presence.song ?? 'Unknown';
+        rp.state = `by ${ presence.artist ?? 'Unknown' }`;
 
         return rp;
     }
 
-    public override update(presence: Presence): void {
-        if(presence.largeImageKey === this['_opts'].images.default_img) {
-            return;
-        }
-
+    public override update(presence: SongData<true>): void {
         const fixedPresence = this.fixPresence(presence);
         this._expressWs?.getWss().clients.forEach((client) => {
             client.send(JSON.stringify(fixedPresence));

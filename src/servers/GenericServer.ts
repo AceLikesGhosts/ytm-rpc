@@ -1,26 +1,15 @@
 import chalk from 'chalk';
 import cors from 'cors';
 import express, { type Application } from 'express';
-import { makePresence, milliToTime } from '../utils';
-import type { Presence } from 'discord-rpc';
+import { milliToTime } from '../utils';
 import type { IConstants } from '../types/Constants';
 import type { Server } from '../types/Server';
-
-type ContentRequest = {
-    song: string;
-    artist: string;
-    album: string;
-    link: string;
-    timeMax: string;
-    timeNow: string;
-    icon: string;
-    isPaused: boolean;
-};
+import type { SongData } from '../types/SongData';
 
 export abstract class GenericServer implements Server {
     private readonly _opts: Readonly<IConstants>;
     public _app: Application;
-    private _lastState: ContentRequest = {} as ContentRequest;
+    private _lastState: SongData = {} as SongData;
 
     public constructor(opts: Readonly<IConstants>) {
         this._opts = opts;
@@ -35,15 +24,13 @@ export abstract class GenericServer implements Server {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    public abstract update(_presence: Presence): void;
+    public abstract update(_presence: SongData<true>): void;
 
     public start(): void {
         this._app.post('/', (req, res) => {
-            const content: ContentRequest = req.body;
+            const content: SongData = req.body;
 
             if(content.song === undefined || content.song === null) {
-                console.log(content);
-                console.log(content.song);
                 console.log(content.song === undefined || content.song === null);
                 return res.status(400).json({
                     ok: false,
@@ -72,19 +59,11 @@ export abstract class GenericServer implements Server {
 
             this._lastState = content;
             this.update(
-                makePresence(
-                    {
-                        song: content.song,
-                        artist: content.artist,
-                        album: content.album,
-                        timeNow: milliToTime(content.timeNow),
-                        timeMax: milliToTime(content.timeMax),
-                        icon: content.icon,
-                        link: content.link,
-                        isPlaying: !content.isPaused
-                    },
-                    this._opts
-                )!
+                {
+                    ...content,
+                    timeNow: milliToTime(content.timeNow),
+                    timeMax: milliToTime(content.timeMax),
+                } as SongData<true>
             );
             return res.status(200).json({
                 ok: true,

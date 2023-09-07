@@ -1,6 +1,6 @@
-import type { Presence } from 'discord-rpc';
+import type { SongData } from './SongData';
 
 export interface Server {
-    update(presence: Presence): void;
+    update(presence: SongData<true>): void;
     start(): void;
 }
