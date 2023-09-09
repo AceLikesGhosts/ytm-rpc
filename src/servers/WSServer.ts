@@ -97,10 +97,10 @@ export class WSServer extends GenericServer {
         };
 
         if(presence.isPaused) {
-            const pausedImage = this['_opts'].images.pause_img;
-            if(pausedImage !== undefined && pausedImage !== null) {
-                rp.assets.small_image = pausedImage;
-            }
+            rp.assets.small_image = this['_opts'].images.pause_img ?? '';
+        }
+        else {
+            rp.assets.small_image = this['_opts'].images.play_img ?? '';
         }
 
         rp.buttons = [
