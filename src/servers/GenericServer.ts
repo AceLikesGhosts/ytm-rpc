@@ -63,16 +63,16 @@ export abstract class GenericServer implements Server {
                 this.update(
                     {
                         ...content,
-                        timeNow: 0,
-                        timeMax: 0
+                        timeNow: undefined,
+                        timeMax: undefined
                     } as SongData<true>
                 );
             }
             else this.update(
                 {
                     ...content,
-                    timeNow: milliToTime(content.timeNow),
-                    timeMax: milliToTime(content.timeMax),
+                    timeNow: milliToTime(content.timeNow!),
+                    timeMax: milliToTime(content.timeMax!),
                 } as SongData<true>
             );
             return res.status(200).json({

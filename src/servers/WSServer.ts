@@ -84,23 +84,27 @@ export class WSServer extends GenericServer {
         rp.type = 2;
         rp.flags = 1;
 
-        rp.timestamps = {
-            start: presence.timeNow,
-            end: presence.timeMax
-        };
+        if(presence.timeMax !== undefined && presence.timeNow !== undefined) {
+            rp.timestamps = {
+                start: presence.timeNow,
+                end: presence.timeMax
+            };
+        }
 
         rp.assets = {
             large_text: `on ${ presence.album }`,
-            small_text: presence.isPaused && this['_opts'].images.pause_img !== undefined ? 'Paused' : '',
+            small_text: 'THIS_SHOULD_BE_REPLACED!',
             large_image: presence.icon || this['_opts'].images.default_img,
             small_image: ''
         };
 
         if(presence.isPaused) {
             rp.assets.small_image = this['_opts'].images.pause_img ?? '';
+            rp.assets.small_text = 'Paused';
         }
         else {
             rp.assets.small_image = this['_opts'].images.play_img ?? '';
+            rp.assets.small_text = 'Playing';
         }
 
         rp.buttons = [
