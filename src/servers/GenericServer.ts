@@ -59,7 +59,16 @@ export abstract class GenericServer implements Server {
             // }
 
             this._lastState = content;
-            this.update(
+            if(content.isPaused) {
+                this.update(
+                    {
+                        ...content,
+                        timeNow: 0,
+                        timeMax: 0
+                    } as SongData<true>
+                );
+            }
+            else this.update(
                 {
                     ...content,
                     timeNow: milliToTime(content.timeNow),
