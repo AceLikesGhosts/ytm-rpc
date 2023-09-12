@@ -46,8 +46,6 @@ function connectWS(): void {
 }
 
 function handleMessage(ev: MessageEvent<string>): void {
-    logger.log('Recieved WebSocket message');
-
     const data: WebSocketData & { closing: string; } = JSON.parse(ev.data);
 
     if(data && data.closing) {
@@ -63,7 +61,6 @@ function handleMessage(ev: MessageEvent<string>): void {
 }
 
 async function setActivity(data: WebSocketData): Promise<void> {
-    logger.log(`ASSETS: ${ JSON.stringify(data.assets) }`);
     const large = await getAsset(data.assets.large_image);
     const small = await getAsset(data.assets.small_image);
 
