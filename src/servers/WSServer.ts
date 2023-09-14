@@ -2,6 +2,7 @@ import type { Application, WithWebsocketMethod } from 'express-ws';
 import type { SongData } from '../types/SongData';
 import type { IConstants } from '../types/Constants';
 import { GenericServer } from './GenericServer';
+import { stringify } from '../utils';
 import expressWS from 'express-ws';
 import chalk from 'chalk';
 
@@ -116,9 +117,11 @@ export class WSServer extends GenericServer {
             ]
         };
 
-        rp.name = `${ presence.artist } • ${ presence.song }`;
-        rp.details = presence.song ?? 'Unknown';
-        rp.state = `by ${ presence.artist ?? 'Unknown' }`;
+        const s_artist: string = stringify(presence.artist);
+        const s_song: string = stringify(presence.song);
+        rp.name = `${ s_artist } • ${ s_song }`;
+        rp.details = s_song ?? 'Unknown';
+        rp.state = `by ${ s_artist ?? 'Unknown' }`;
 
         return rp;
     }

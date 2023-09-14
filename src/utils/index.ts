@@ -17,6 +17,7 @@ export function stringify(str: string): string {
 
     str = he.decode(str);
     str = str.replace(/(\r\n|\n|\r)/gm, '');
+    str = str.trim();
 
     if(str.length >= 127) {
         str = str.substring(0, 124);
