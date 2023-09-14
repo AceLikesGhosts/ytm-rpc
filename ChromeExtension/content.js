@@ -49,13 +49,13 @@
             }, 500);
         }
 
-        function update(code, album) {
+        function update(code) {
             const isPaused = code === 1 ? false : true;
             const songData = player.getVideoData();
             const timeNow = player.getCurrentTime();
             const timeMax = player.getDuration();
             const icon = `https://i1.ytimg.com/vi/${songData.video_id}/1.jpg`;
-            album = album ? album : document.querySelector(albumQuery).title.split('•')[1];
+            const album = document.querySelector(albumQuery).title.split('•')[1];
 
             log('above making http request');
             const url = 'http://localhost:2134/';
