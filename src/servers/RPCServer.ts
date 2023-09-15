@@ -6,17 +6,6 @@ import { Client } from 'discord-rpc';
 import { GenericServer } from './GenericServer';
 import { stringify } from '../utils';
 
-type SongPresenceData = {
-    song: string;
-    artist: string;
-    album?: string;
-    timeNow?: number;
-    timeMax?: number;
-    icon?: string;
-    link?: string;
-    isPlaying?: boolean;
-};
-
 export class RPCServer extends GenericServer {
     private readonly _rpc: Client;
 
@@ -31,11 +20,11 @@ export class RPCServer extends GenericServer {
                     album: this['_opts'].images.default_img,
                     artist: 'Waiting for music..',
                     song: 'Nothing playing',
-                    icon: undefined,
-                    link: undefined,
+                    icon: this['_opts'].images.default_img,
+                    link: 'https://music.youtube.com',
                     timeMax: undefined,
                     timeNow: undefined,
-                    isPlaying: true
+                    isPaused: false
                 }
             );
         });
@@ -44,7 +33,7 @@ export class RPCServer extends GenericServer {
     }
 
     private makePresence(
-        { song, artist, album, timeNow, timeMax, icon, link, isPlaying }: SongPresenceData
+        { song, artist, album, timeNow, timeMax, icon, link, isPaused }: SongData<true>
     ): Presence | null {
         song = stringify(song);
         artist = stringify(artist);
@@ -62,7 +51,7 @@ export class RPCServer extends GenericServer {
         const currentTime = Date.now();
         const endTime = currentTime + (timeMax! - timeNow!); // Calculate the correct end time
 
-        if(isPlaying) {
+        if(!isPaused) {
             return {
                 details: song,
                 state: `${artist} ${album ? '• ' + album : ''}`,
@@ -100,7 +89,7 @@ export class RPCServer extends GenericServer {
         }
     }
 
-    public override update(presence: SongData<true> | SongPresenceData): void {
+    public override update(presence: SongData<true>): void {
         void this._rpc.setActivity(this.makePresence(presence) ?? void 0);
     }
 }
