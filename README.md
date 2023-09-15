@@ -58,13 +58,13 @@ npm run ts:build
 
 Optional:
 - If you wish to use a custom image for the waiting for stage, or the play/pause icons, you will have to make your own Discord application and provide the images there.
-- If the default port of `2134` is in use already, change the value in both the `.env`, and the [extension's background script](https://github.com/AceLikesGhosts/ytm-rpc/blob/master/ChromeExtension/background.js#L23)
+- If the default port of `2134` is in use already, change the value in both the `.env`, and the [extension's background script](https://github.com/AceLikesGhosts/ytm-rpc/blob/master/chrome-extension/background.js#L23)
 
 ### Extension Installation:
 1. Open your Chromium based browser and navigate to the respective extensions page (`chrome://extensions` for Google Chrome/Chromium, `opera://extensions` for Opera/OperaGX).
 2. Turn on the Developer Mode switch (usually located at the top-right corner of the extensions page).
 3. Click on the "Load unpacked" button.
-4. Browse to the project directory where you cloned the repository and select the folder named `ChromeExtension`.
+4. Browse to the project directory where you cloned the repository and select the folder named `chrome-extension`.
 The extension should now be installed and active in your Chromium browser.
 
 ## Client Mod Installation:
