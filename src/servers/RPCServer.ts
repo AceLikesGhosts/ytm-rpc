@@ -37,18 +37,6 @@ export class RPCServer extends GenericServer {
                     timeNow: undefined,
                     isPlaying: true
                 }
-                // makePresence(
-                //     {
-                //         song: 'Nothing playing',
-                //         artist: 'Waiting for music..      ',
-                //         icon: undefined,
-                //         link: undefined,
-                //         timeMax: undefined,
-                //         timeNow: undefined,
-                //         isPlaying: true
-                //     },
-                //     opts
-                // )!
             );
         });
 
