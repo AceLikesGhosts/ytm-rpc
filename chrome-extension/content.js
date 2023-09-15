@@ -36,7 +36,7 @@
             if(attempts > 15) {
                 throw 'We are actually buffering, odd. Pause and unpause to update the state after you finish updating.';
             }
-
+            
             setTimeout(() => {
                 const songData = player.getVideoData();
                 const albumCover = document.querySelector(albumQuery);
@@ -78,7 +78,7 @@
                 body: JSON.stringify(requestData)
             }).then(() => {
                 log('posted song data to server (' + requestData.song + ')');
-            });
+            }).catch(console.error);
         }
 
         player.addEventListener('onStateChange', (code) => {
