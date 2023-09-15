@@ -93,7 +93,7 @@ export class WSServer extends GenericServer {
         }
 
         rp.assets = {
-            large_text: `on ${ presence.album }`,
+            large_text: `on ${ stringify(presence.album) }`,
             small_text: 'THIS_SHOULD_BE_REPLACED!',
             large_image: presence.icon || this['_opts'].images.default_img,
             small_image: ''
