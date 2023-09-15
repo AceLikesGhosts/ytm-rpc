@@ -111,6 +111,7 @@ export class WSServer extends GenericServer {
         rp.buttons = [
             '▶ Listen on Youtube Music'
         ];
+        
         rp.metadata = {
             button_urls: [
                 presence.link
