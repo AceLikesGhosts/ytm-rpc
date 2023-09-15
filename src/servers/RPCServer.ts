@@ -43,65 +43,64 @@ export class RPCServer extends GenericServer {
         void this._rpc.login({ clientId: opts.client_id });
     }
 
-    public override update(presence: SongData<true> | SongPresenceData): void {
-        function makePresence(
-            { song, artist, album, timeNow, timeMax, icon, link, isPlaying }: SongPresenceData,
-            constants: IConstants
-        ): Presence | null {
-            song = stringify(song);
-            artist = stringify(artist);
+    private makePresence(
+        { song, artist, album, timeNow, timeMax, icon, link, isPlaying }: SongPresenceData
+    ): Presence | null {
+        song = stringify(song);
+        artist = stringify(artist);
 
-            if(!song || song === undefined || song.length < 1) {
-                console.error('No song name was passed to `update`.');
-                return null;
-            }
-
-            if(!artist || artist === undefined || artist.length < 1) {
-                console.error('No artist was passed to `update`.');
-                return null;
-            }
-
-            const currentTime = Date.now();
-            const endTime = currentTime + (timeMax! - timeNow!); // Calculate the correct end time
-
-            if(isPlaying) {
-                return {
-                    details: song,
-                    state: `${ artist } ${ album ? '• ' + album : '' }`,
-                    startTimestamp: timeNow || 0,
-                    endTimestamp: endTime || 0,
-                    largeImageKey: icon || constants.images.default_img,
-                    largeImageText: song,
-                    smallImageKey: constants.images.play_img || undefined,
-                    smallImageText: constants.images.play_img !== undefined ? 'Playing' : undefined,
-                    buttons: [
-                        {
-                            label: '▶ Listen on Youtube Music',
-                            url: link || 'https://music.youtube.com'
-                        }
-                    ],
-                    instance: true
-                };
-            }
-            else {
-                return {
-                    details: `Paused: ${ song }`,
-                    state: `${ artist } ${ album ? '• ' + album : '' }`,
-                    largeImageKey: icon || constants.images.default_img,
-                    largeImageText: song,
-                    smallImageKey: constants.images.pause_img || undefined,
-                    smallImageText: constants.images.pause_img !== undefined ? 'Paused' : undefined,
-                    buttons: [
-                        {
-                            label: '▶ Listen on Youtube Music',
-                            url: link || 'https://music.youtube.com'
-                        }
-                    ],
-                    instance: true
-                };
-            }
+        if(!song || song === undefined || song.length < 1) {
+            console.error('No song name was passed to `update`.');
+            return null;
         }
 
-        void this._rpc.setActivity(makePresence(presence, this['_opts'])!);
+        if(!artist || artist === undefined || artist.length < 1) {
+            console.error('No artist was passed to `update`.');
+            return null;
+        }
+
+        const currentTime = Date.now();
+        const endTime = currentTime + (timeMax! - timeNow!); // Calculate the correct end time
+
+        if(isPlaying) {
+            return {
+                details: song,
+                state: `${artist} ${album ? '• ' + album : ''}`,
+                startTimestamp: timeNow || 0,
+                endTimestamp: endTime || 0,
+                largeImageKey: icon || this['_opts'].images.default_img,
+                largeImageText: song,
+                smallImageKey: this['_opts'].images.play_img || undefined,
+                smallImageText: this['_opts'].images.play_img !== undefined ? 'Playing' : undefined,
+                buttons: [
+                    {
+                        label: '▶ Listen on Youtube Music',
+                        url: link || 'https://music.youtube.com'
+                    }
+                ],
+                instance: true
+            };
+        }
+        else {
+            return {
+                details: `Paused: ${song}`,
+                state: `${artist} ${album ? '• ' + album : ''}`,
+                largeImageKey: icon || this['_opts'].images.default_img,
+                largeImageText: song,
+                smallImageKey: this['_opts'].images.pause_img || undefined,
+                smallImageText: this['_opts'].images.pause_img !== undefined ? 'Paused' : undefined,
+                buttons: [
+                    {
+                        label: '▶ Listen on Youtube Music',
+                        url: link || 'https://music.youtube.com'
+                    }
+                ],
+                instance: true
+            };
+        }
+    }
+
+    public override update(presence: SongData<true> | SongPresenceData): void {
+        void this._rpc.setActivity(this.makePresence(presence) ?? void 0);
     }
 }
