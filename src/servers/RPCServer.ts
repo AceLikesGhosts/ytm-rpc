@@ -32,64 +32,63 @@ export class RPCServer extends GenericServer {
         void this._rpc.login({ clientId: opts.client_id });
     }
 
-    private makePresence(
-        { song, artist, album, timeNow, timeMax, icon, link, isPaused }: SongData<true>
-    ): Presence | null {
-        song = stringify(song);
-        artist = stringify(artist);
+    public override update(presence: SongData<true>): void {
+        let discordPresence: Presence = {};
+
+        const song = stringify(presence.song);
+        const artist = stringify(presence.artist);
+        const album = stringify(presence.album);
 
         if(!song || song === undefined || song.length < 1) {
             console.error('No song name was passed to `update`.');
-            return null;
+            return;
         }
 
         if(!artist || artist === undefined || artist.length < 1) {
             console.error('No artist was passed to `update`.');
-            return null;
+            return;
         }
 
         const currentTime = Date.now();
-        const endTime = currentTime + (timeMax! - timeNow!); // Calculate the correct end time
+        const endTime = currentTime + (presence.timeMax! - presence.timeNow!); // Calculate the correct end time
 
-        if(!isPaused) {
-            return {
+        if(!presence.isPaused) {
+            discordPresence = {
                 details: song,
-                state: `${artist} ${album ? '• ' + album : ''}`,
-                startTimestamp: timeNow || 0,
+                state: `${ artist } ${ album ? '• ' + album : '' }`,
+                startTimestamp: presence.timeNow || 0,
                 endTimestamp: endTime || 0,
-                largeImageKey: icon || this['_opts'].images.default_img,
+                largeImageKey: presence.icon || this['_opts'].images.default_img,
                 largeImageText: song,
                 smallImageKey: this['_opts'].images.play_img || undefined,
                 smallImageText: this['_opts'].images.play_img !== undefined ? 'Playing' : undefined,
                 buttons: [
                     {
                         label: '▶ Listen on Youtube Music',
-                        url: link || 'https://music.youtube.com'
+                        url: presence.link || 'https://music.youtube.com'
                     }
                 ],
                 instance: true
             };
         }
         else {
-            return {
-                details: `Paused: ${song}`,
-                state: `${artist} ${album ? '• ' + album : ''}`,
-                largeImageKey: icon || this['_opts'].images.default_img,
+            discordPresence = {
+                details: `Paused: ${ song }`,
+                state: `${ artist } ${ album ? '• ' + album : '' }`,
+                largeImageKey: presence.icon || this['_opts'].images.default_img,
                 largeImageText: song,
                 smallImageKey: this['_opts'].images.pause_img || undefined,
                 smallImageText: this['_opts'].images.pause_img !== undefined ? 'Paused' : undefined,
                 buttons: [
                     {
                         label: '▶ Listen on Youtube Music',
-                        url: link || 'https://music.youtube.com'
+                        url: presence.link || 'https://music.youtube.com'
                     }
                 ],
                 instance: true
             };
         }
-    }
 
-    public override update(presence: SongData<true>): void {
-        void this._rpc.setActivity(this.makePresence(presence) ?? void 0);
+        void this._rpc.setActivity(discordPresence || void 0);
     }
 }
