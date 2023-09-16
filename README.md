@@ -1,6 +1,27 @@
-# Youtube Music Discord Rich Presence
+<div align="center">
+    <h3 align="center">
+        Youtube Music Discord Rich Presence
+    </h3>
+    <p align="center">
+        A simplistic rich presence for <a href="https://discordapp.com">Discord</a> that displays your song information from Youtube Music.
+    </p>
+</div>
 
-This project is a Discord Rich Presence that displays information about the currently playing music on Discord.
+- - -
+
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li><a href="#features">Features</a></li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#installation">Installation</a></li>
+      </ul>
+    </li>
+  </ol>
+</details>
 
 ## Features
 | Features                 | Status             |
@@ -11,123 +32,173 @@ This project is a Discord Rich Presence that displays information about the curr
 | Pausing/Unpausing        | :white_check_mark: |
 | Pause/Playing mini-icons | :white_check_mark: |
 
-## Prerequisites
+## Getting Started
 
-- Node.js and npm installed on your machine.
-- Typescript compiler (`tsc`) installed on your machine.
-- A [Chromium](https://www.chromium.org/Home/) based web-browser.
+Depending whether or not you use a Discord client modification, the way the RPC will look is different.
 
-## Installation
-At this moment, you can either manually install the the RPC, or run the setup script.
-It is heavily recommended that you manually install the required parts, alongside manually set them up.
+* Without client modification (native RPC)
 
-If you wish to use the setup script, after cloning the repository, run the following:
+!["Screenshot of RPC without a client mod"](./images/rpc.png)
+!["Screenshot of RPC without a client mod but paused"](./images/paused.png)
 
-Unix
+* With client modification (plugin)
+
+!["screenshot of betterdiscord listening to status"](images/bd-activity.png)
+!["screenshot of betterdiscord listening to status but paused"](images/bd-activity-paused.png)
+
+### Prerequisites
+
+* [Node.js (v18.17.1 LTS)](https://nodejs.org/en/download) alongside npm
+* The Typescript Compiler
+  ```sh
+  # After installing Node.js
+  npm install typescript -g
+  ```
+* Git
+* A [Chromium](https://chromium.org) browser, or one that can run Chromium extensions
+  *    <details>
+        <summary>List of Chromium Browsers</summary>
+        <ol>
+            <li><a href="https://chromium.org">Chromium</a></li>
+            <li><a href="https://google.com/chrome">Google Chrome</a></li>
+            <li><a href="https://www.microsoft.com/en-us/edge">Microsoft Edge</a></li>
+            <li><a href="https://brave.com">Brave</a></li>
+            <li><a href="https://www.opera.com/gx">Opera GX</a> and <a href="https://www.opera.com">Opera</a></li>
+        </ol>
+        </details>
+
+
+### Usage
+In order to use this project, you must have the [server](#server-installation) running, alongside the 
+[Chromium extension](#extension-installation) running.
+
+To start and install each respective component in located within its section.
+
+### Installation
+
+> [!NOTE]
+> This project has a setup script in order to streamline the installation process, the manual methods of
+> installing and setting up the components are still available. 
+
+Before proceeding with any of the methods below for installation, you have to clone the project.
+Open your terminal, where you wish to store the files for the project, then run the following:
+```sh
+git clone https://github.com/acelikesghosts/ytm-rpc.git
+cd ytm-rpc
+```
+
+Then proceed with one of the following:
+
+* [Server Installation](#server-installation)
+* [Extension Installation](#extension-installation)
+* [Client Mod Installation](#client-mod-installation)
+
+### Setup Script
+
+To run the setup script, you must have a bash terminal.
+
+The accepted arguments are the following:
+
+**ALL OPTIONS ARE OPTIONAL, BUT ATLEAST ONE IS REQUIRED TO RUN THE SCRIPT**
+| Argument                   | Description                                          |
+| -------------------------- | ---------------------------------------------------- |
+| `--deps`                   | Installs the dependencies required for each project. |
+| `--build`                  | Builds the server                                    |
+| `--client=<bd\|replugged>` | Specify what client modification to install          |
+
+After deciding what arguments you wish to pass to the setup script, run the following:
+
+```sh
+bash ./scripts/setup.sh (your arguments)
+```
+
+The recommended installation script arguments are the following:
 ```sh
 bash ./scripts/setup.sh --deps --build
 ```
 
-## Server Installation
+### Server Installation
+1. Install the NPM dependencies
+   ```sh
+   npm install
+   ```
+2. Copy the `.env.example` into `.env`
+   ```sh
+   cp .env.example .env
+   ```
+3. Configure the `.env` file 
+   * If using a client mod it is required to set `USING_WS` to true
+   * You can change the pause/play mini-icons, and more by doing so.
+5. Build the server
+   ```sh
+   npx tsc
+   ```
 
-> [!IMPORTANT]  
-> The default server installation will use an rich presence, which does not support `Listening to ...`, if you want
-> that feature you are required to use a [client mod](#client-mod-installation). If you are using a client mod,
-> set the `USING_WS` setting in your `.env` to `true`.
+Then run it using `node .`
 
-1. Clone the repository to your local machine.
-2. Navigate to the project directory and install the required dependencies using npm:
+### Extension Installation
 
-```bash
-npm install
-```
+1. Open your Chromium based browser and navigate to the respective extensions tab.
+2. Turn on the Developer Mode switch (typically located in the top right of the extensions page)
+3. Click on the "Load Unpacked" button
+4. BRowser to the project directory, and select the folder named `chrome-extension`
 
-3. Run the setup script (creates `.env`)
-```bash
-npm run setup
-# OR
-# ./setup.sh
-```
+If you have any open tabs of Youtube Music, please restart them.
 
-4. Run the build script
-```bash
-npm run ts:build
-# OR
-# npx tsc ./src/
-```
+### Client Mod Installation
 
-Optional:
-- If you wish to use a custom image for the waiting for stage, or the play/pause icons, you will have to make your own Discord application and provide the images there.
-- If the default port of `2134` is in use already, change the value in both the `.env`, and the [extension's background script](https://github.com/AceLikesGhosts/ytm-rpc/blob/master/chrome-extension/background.js#L23)
+> [!WARNING]
+> Using client modifications on Discord can result in termination, or account suspension.
 
-### Extension Installation:
-1. Open your Chromium based browser and navigate to the respective extensions page (`chrome://extensions` for Google Chrome/Chromium, `opera://extensions` for Opera/OperaGX).
-2. Turn on the Developer Mode switch (usually located at the top-right corner of the extensions page).
-3. Click on the "Load unpacked" button.
-4. Browse to the project directory where you cloned the repository and select the folder named `chrome-extension`.
-The extension should now be installed and active in your Chromium browser.
+| Client Mod                      | Status             |
+| ------------------------------- | ------------------ |
+| [BetterDiscord](#betterdiscord) | :white_check_mark: |
+| [Replugged](#replugged)         | :white_check_mark: |
+| [Vencord](#vencord)             | :x:                |
 
-## Client Mod Installation:
+!["screenshot of betterdiscord listening to status"](images/bd-activity.png)
+!["screenshot of betterdiscord listening to status but paused"](images/bd-activity-paused.png)
 
-> [!WARNING]  
-> Using a client mod is against [Discord's Terms of Service](https://dis.gd/tos), and can result in account termination.
+#### BetterDiscord
 
-Based off of your flavor of [Discord](https://discordapp.com) client mod, the plugin you will need to install
-will vary with installation steps.
-
-All client mod flavors still require both the server and the extension.
-
-| Client Mod                                          | Status             |
-| --------------------------------------------------- | ------------------ |
-| [BetterDiscord](#betterdiscord-plugin-installation) | :white_check_mark: |
-| [Replugged](#replugged-plugin-installation)         | :white_check_mark: |
-| [Vencord](#vencord-plugin-installation)             | :x:                |
-
-### BetterDiscord Plugin Installation
-
-1. Navigate to the [client-mods/BetterDiscord](./client-mods/BetterDiscord/) folder.
-2. Open your [BetterDiscord](https://betterdiscord.app) plugin folder.
-3. Copy the `YTM.plugin.js` file into your BetterDiscord plugin folder.
+1. Navigate to the [client-mods/betterdiscord](./client-mods/BetterDiscord/) folder.
+2. Open your BetterDiscord plugin folder.
+3. Copy the `YTM.plugin.js` file into the plugins folder.
 4. Enable the plugin within BetterDiscord
-5. (Optional) If you have modified the port of the server, change the port within the settings.
 
-### Replugged Plugin Installation
+#### Replugged
+
+**Prerequisites**
+* pnpm
+  ```sh
+  npm i pnpm -g
+  ```
+
+If you have changed the port which the server runs at, change it within the plugin's settings as well.
 
 1. Navigate to the [client-mods/replugged](./client-mods/replugged/) folder.
-2. Install the required dependencies and build the source code.
-    ```sh
-    pnpm install
-    pnpm run build
-    ```
-3. Ensure that it is in your [Replugged](https://replugged.dev) plugin folder after building, if it is not manually copy it into it.
-4. Navigate to the plugin settings within Replugged
-5. Press `load missing plugins`, then refresh Discord
+2. Install the dependenices for the project.
+  ```sh
+  pnpm install
+  ```
+3. Build the Typescript project
+  ```sh
+  pnpm run build
+  ```
+4. Ensure that it is in your Replugged plugins folder after building.
+5. Navigate to the plugin settings within Replugged.
+6. Press `Load Missing Buttons`, then refresh Discord.
 
 !["gif of load missing plugins"](images/load-missing-plugins.gif)
 
-### Vencord Plugin Installation
+### Vencord
 
-At this moment, [Vencord](https://vencord.dev) is not supported due to them not supporting external plugins; as this is a very niche 
-thing, getting the plugin merged into the normal Vencord selection of plugins would be near impossible.
+At the moment, it is not possible to create custom plugins for Vencord without having it merged into the
+base client mod, which is a big overstep for a project like this.
 
-## Usage
+[Follow this PR for when they allow external plugins](https://github.com/Vendicated/Vencord/pull/951)
 
-1. Compile the Typescript codebase if you have not already
-```bash
-npm run ts:build
-# OR
-# npx tsc ./src/
-```
-
-2. Start the Express server to listen for incoming requests:
-
-```bash
-node .
-```
-
-3. Ensure that the Chrome extension is active.
-
-## Updating
+### Updating
 
 Updating your local version of the project is rather simple, and all you have to do is:
 
@@ -144,35 +215,10 @@ npm install
 3. Rebuild the Typescript codebase
 ```bash
 npm run ts:build
-# OR
-# npx tsc ./src/
 ```
 
 4. Navigate to [the browser's extension manager](#extension-installation) and press `Update`
 
 !["update image"](images/update.png)
 
-
-## Notes
-
-- If using the RPC strategy you will be limited to 1 change per every 15 seconds, alongside not getting the `Listening to` status.
-
-## Images
-
-
-#### RPC
-
-!["screenshot of RPC"](images/rpc.png)
-!["screenshot of paused RPC state"](images/paused.png)
-
----
-
-
-#### Client Mod Plugins
-
-> [!NOTE]
-> These screenshots are taken with the [BetterDiscord](#betterdiscord-plugin-installation) plugin
-> although it will look the same on any other client mod flavor.
-
-!["screenshot of betterdiscord listening to status"](images/bd-activity.png)
-!["screenshot of betterdiscord listening to status but paused"](images/bd-activity-paused.png)
+5. If you are using a client modification, go to the respective installation section and proceed with the steps.
