@@ -8,7 +8,7 @@
         "project": [
             "./tsconfig.json",
             "./client-mods/**/tsconfig.json",
-            "./ChromeExtension/tsconfig.json"
+            "./chrome-extension/tsconfig.json"
         ]
     }
 }

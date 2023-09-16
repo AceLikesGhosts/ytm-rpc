@@ -1,11 +1,10 @@
-export type IConstants = Readonly<Constants>;
-export interface Constants {
-    using_ws: boolean;
-    client_id: string;
-    port: number;
-    images: {
-        default_img: string;
-        pause_img: string;
-        play_img: string;
+export interface IConstants {
+    readonly using_ws: boolean;
+    readonly client_id: string;
+    readonly port: number;
+    readonly images: {
+        readonly default_img: string;
+        readonly pause_img: string;
+        readonly play_img: string;
     };
 }
