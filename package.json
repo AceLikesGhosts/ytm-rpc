@@ -27,6 +27,7 @@
   },
   "devDependencies": {
     "@biased-ts/eslint-config": "^2.0.0",
+    "@types/chrome": "^0.0.246",
     "@types/cors": "^2.8.13",
     "@types/discord-rpc": "^4.0.5",
     "@types/express": "^4.17.17",

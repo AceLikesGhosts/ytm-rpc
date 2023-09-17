@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>u shouldnt be able to see this</title>
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval' http://platform.linkedin.com ">
+
+    <style>
+        html,
+        body {
+            background-color: #181a19;
+            color: white;
+            font-family: monospace;
+            height: 150px;
+            width: 200px;
+        }
+
+        .center {
+            height: 100%;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        input {
+            background: transparent;
+            color: white;
+            text-align: center;
+            outline: 0;
+        }
+
+        label {
+            font-size: 1.5em;
+        }
+
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            /* display: none; <- Crashes Chrome on hover */
+            -webkit-appearance: none;
+            margin: 0;
+            /* <-- Apparently some margin are still there even though it's hidden */
+        }
+
+        input[type=number] {
+            -moz-appearance: textfield;
+            appearance: textfield;
+            /* Firefox */
+        }
+    </style>
+
+    <script src="popup.js"></script>
+</head>
+
+<body>
+    <div class="center">
+        <div class="center">
+            <label for="port">Port</label>
+            <input type="number" placeholder="2134" name="port" id="port" />
+        </div>
+    </div>
+</body>
+
+</html>

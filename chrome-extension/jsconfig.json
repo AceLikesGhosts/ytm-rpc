@@ -3,5 +3,8 @@
         "include": [
             "chrome"
         ]
-    }
+    },
+    "include": [
+        "./**.js"
+    ]
 }
