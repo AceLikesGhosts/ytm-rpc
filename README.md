@@ -141,7 +141,9 @@ Then run it using `node .`
 1. Open your Chromium based browser and navigate to the respective extensions tab.
 2. Turn on the Developer Mode switch (typically located in the top right of the extensions page)
 3. Click on the "Load Unpacked" button
-4. BRowser to the project directory, and select the folder named `chrome-extension`
+4. Browser to the project directory, and select the folder named `chrome-extension`
+
+If you have changed the port of the server, click on the extension to modify the port data is sent to.
 
 If you have any open tabs of Youtube Music, please restart them.
 
