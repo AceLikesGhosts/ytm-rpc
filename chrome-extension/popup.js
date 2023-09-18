@@ -1,6 +1,5 @@
 void (async () => {
     chrome.storage.sync.get(['ytm_PORT'], (items) => {
-        console.log(items);
         document.getElementById('port')
             .value = items.ytm_PORT || 2134;
     });

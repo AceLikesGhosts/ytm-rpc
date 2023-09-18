@@ -1,15 +1,24 @@
 (function() {
-    chrome.storage.sync.get(['ytm_PORT'], (items) => {
+    /**
+     * @param {string} id - The ID of the element to watch for. 
+     * @param {HTMLElement} what - Where we should watch from 
+     * @param {MutationObserverInit} opts - The options to give the MutationObserver
+     * @param {((element: unknown) => any | Promise<any>) } cb 
+     */
+    function watchFor(id, what, opts, cb) {
         new MutationObserver((_, observer) => {
-            const injectedScript = document.getElementById('ytm-rpc-injected-script');
+            const search = document.getElementById(id);
 
-            if(injectedScript !== void 0 && injectedScript !== null) {
+            if(search !== void 0 && search !== null) {
                 observer.disconnect();
-                document.dispatchEvent(new CustomEvent('ytm_PORT', { detail: { port: items.ytm_PORT } }));
+                cb(search);
             }
-        }).observe(document.documentElement, {
-            subtree: true,
-            childList: true
+        }).observe(what, opts);
+    }
+
+    chrome.storage.sync.get(['ytm_PORT'], (items) => {
+        watchFor('ytm-rpc-injected-script', document.documentElement, { subtree: true, childList: true }, () => {
+            document.dispatchEvent(new CustomEvent('ytm_RPC', { detail: { port: items.ytm_PORT } }));
         });
     });
 
@@ -21,25 +30,21 @@
         }
     });
 
+    /**
+     * @param {string} msg 
+     */
     function log(msg) {
         console.log(
-            '%c[YTM] %c' + msg,
+            '%c[YTM] %c',
             'color:purple',
-            'color:white'
+            msg
         );
     }
 
     function waitForMoviePlayer() {
-        new MutationObserver((_, observer) => {
-            const player = document.getElementById('movie_player');
-            if(player !== null) {
-                log('found player injecting script');
-                injectScript();
-                observer.disconnect();
-            }
-        }).observe(document.documentElement, {
-            subtree: true,
-            childList: true
+        watchFor('movie_player', document.documentElement, { subtree: true, childList: true }, () => {
+            log('found player injecting script');
+            injectScript();
         });
     }
 
@@ -55,9 +60,9 @@
         const albumQuery = '#layout > ytmusic-player-bar > div.middle-controls.style-scope.ytmusic-player-bar > div.content-info-wrapper.style-scope.ytmusic-player-bar > span > span.subtitle.style-scope.ytmusic-player-bar > yt-formatted-string';
         const log = function log(msg) {
             console.log(
-                '%c[YTM] %c' + msg,
+                '%c[YTM] %c',
                 'color:purple',
-                'color:white'
+                msg
             );
         };
 
@@ -86,8 +91,6 @@
             const icon = `https://i1.ytimg.com/vi/${songData.video_id}/1.jpg`;
             const album = document.querySelector(albumQuery).title.split('•')[1];
 
-            log('above making http request');
-            log(`port ${port}`);
             const url = `http://localhost:${port}/`;
 
             const requestData = {
