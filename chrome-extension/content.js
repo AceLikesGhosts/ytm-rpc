@@ -35,7 +35,7 @@
      */
     function log(msg) {
         console.log(
-            '%c[YTM] %c',
+            '%c[YTM] ',
             'color:purple',
             msg
         );
@@ -60,7 +60,7 @@
         const albumQuery = '#layout > ytmusic-player-bar > div.middle-controls.style-scope.ytmusic-player-bar > div.content-info-wrapper.style-scope.ytmusic-player-bar > span > span.subtitle.style-scope.ytmusic-player-bar > yt-formatted-string';
         const log = function log(msg) {
             console.log(
-                '%c[YTM] %c',
+                '%c[YTM] ',
                 'color:purple',
                 msg
             );
