@@ -130,7 +130,7 @@
             const icon = `https://i1.ytimg.com/vi/${songData.video_id}/1.jpg`;
             const album = document.querySelector(albumQuery).title.split('•')[1];
 
-            const url = `http://localhost:${port}/`;
+            const url = `http://localhost:${port ?? 2134}/`;
 
             const requestData = {
                 song: songData.title,
@@ -156,7 +156,7 @@
         player.addEventListener('onStateChange', (code) => {
             // youtube does not like to tell us if we started playing
             // after a buffer, so we'll try to bruteforce it.
-            if(code === 5) {
+            if(code === 5 || code === 3) {
                 return waitAndThenDetectSong();
             }
 
