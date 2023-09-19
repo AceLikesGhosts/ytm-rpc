@@ -26,13 +26,6 @@ void (async () => {
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
                 void browser.storage.sync.set(items);
             };
-
-            cAPI.storage.onChanged = {};
-            cAPI.storage.onChanged.addListener = function(cb) {
-                browser.storage.onChanged.addListener((ch) => {
-                    cb(ch, 'sync');
-                });
-            };
         }
         else {
             cAPI.storage = chrome.storage;
@@ -40,13 +33,11 @@ void (async () => {
     }
 
     cAPI.storage.sync.get(['ytm_PORT'], (items) => {
-        console.log(`inside storage sync set popup.js -> items: ${JSON.stringify(items)}`);
         document.getElementById('port')
             .value = items.ytm_PORT || 2134;
     });
 
     async function handleChange(type, message) {
-        console.log(`inside handlechange ${type} -> ${message}`);
         const toSend = {};
         toSend[type] = message;
         void cAPI.storage.sync.set(toSend);
