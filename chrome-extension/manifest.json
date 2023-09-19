@@ -23,5 +23,11 @@
         "tabs",
         "activeTab",
         "storage"
-    ]
+    ],
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "{6cc88d43-3d21-4ce0-aeca-3b0332fd3a5d}",
+            "strict_min_version": "42.0"
+        }
+    }
 }

@@ -1,5 +1,40 @@
 (function() {
     /**
+     * @type {{
+     *  storage: chrome.storage
+     * }}
+     */
+    const cAPI = {};
+
+    if(typeof chrome !== 'undefined') {
+        if(typeof browser !== 'undefined') {
+            cAPI.storage = {};
+            cAPI.storage.sync = {};
+            /**
+             * @param {string | string[]} keys
+             */
+            cAPI.storage.sync.get = function(keys, cb) {
+                browser.storage.sync.get(keys)
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+                    .then(cb)
+                    .catch(e => {
+                        throw e;
+                    });
+            };
+
+            cAPI.storage.onChanged = {};
+            cAPI.storage.onChanged.addListener = function(cb) {
+                browser.storage.onChanged.addListener((ch) => {
+                    cb(ch, 'sync');
+                });
+            };
+        }
+        else {
+            cAPI.storage = chrome.storage;
+        }
+    }
+
+    /**
      * @param {string} id - The ID of the element to watch for. 
      * @param {HTMLElement} what - Where we should watch from 
      * @param {MutationObserverInit} opts - The options to give the MutationObserver
@@ -16,16 +51,16 @@
         }).observe(what, opts);
     }
 
-    chrome.storage.sync.get(['ytm_PORT'], (items) => {
+    cAPI.storage.sync.get(['ytm_PORT'], (items) => {
         watchFor('ytm-rpc-injected-script', document.documentElement, { subtree: true, childList: true }, () => {
-            document.dispatchEvent(new CustomEvent('ytm_RPC', { detail: { port: items.ytm_PORT } }));
+            window.postMessage({ type: 'ytm_PORT', port: items.ytm_PORT });
         });
     });
 
-    chrome.storage.onChanged.addListener((/** @type {Record<string, unknown>} */ changes, namespace) => {
+    cAPI.storage.onChanged.addListener((/** @type {Record<string, unknown>} */ changes, namespace) => {
         for(let [key, { newValue }] of Object.entries(changes)) {
             if(namespace === 'sync' && key === 'ytm_PORT') {
-                document.dispatchEvent(new CustomEvent('ytm_PORT', { detail: { port: newValue } }));
+                window.postMessage({ type: 'ytm_PORT', port: newValue });
             }
         }
     });
@@ -51,9 +86,13 @@
     function monitorContent() {
         let port = 2134;
 
-        document.addEventListener('ytm_PORT', (p) => {
-            port = p.detail.port;
-            log(`Updated port to ${p.detail.port}`);
+        window.addEventListener('message', (e) => {
+            if(e.data.type !== 'ytm_PORT') {
+                return;
+            }
+
+            port = e.data.port;
+            log(`Updated port to ${e.data.port}`);
         });
 
         const player = document.getElementById('movie_player');
