@@ -55,22 +55,12 @@ Depending whether or not you use a Discord client modification, the way the RPC 
   npm install typescript -g
   ```
 * Git
-* A [Chromium](https://chromium.org) browser, or one that can run Chromium extensions
-  *    <details>
-        <summary>List of Chromium Browsers</summary>
-        <ol>
-            <li><a href="https://chromium.org">Chromium</a></li>
-            <li><a href="https://google.com/chrome">Google Chrome</a></li>
-            <li><a href="https://www.microsoft.com/en-us/edge">Microsoft Edge</a></li>
-            <li><a href="https://brave.com">Brave</a></li>
-            <li><a href="https://www.opera.com/gx">Opera GX</a> and <a href="https://www.opera.com">Opera</a></li>
-        </ol>
-        </details>
+* A modern browser such as [Firefox](https://firefox.com) or a [Chromium](https://chromium.org) based one
 
 
 ### Usage
 In order to use this project, you must have the [server](#server-installation) running, alongside the 
-[Chromium extension](#extension-installation) running.
+[extension](#extension-installation) running.
 
 To start and install each respective component in located within its section.
 
@@ -138,12 +128,21 @@ Then run it using `node .`
 
 ### Extension Installation
 
-1. Open your Chromium based browser and navigate to the respective extensions tab.
+#### Chromium
+
+1. Navigate to the respective extensions tab.
 2. Turn on the Developer Mode switch (typically located in the top right of the extensions page)
 3. Click on the "Load Unpacked" button
-4. Browser to the project directory, and select the folder named `chrome-extension`
+4. Browser to the project directory, and select the folder named `extension`
 
-If you have changed the port of the server, click on the extension to modify the port data is sent to.
+#### Firefox
+
+1. Navigate to [about:debugging](about:debugging)
+2. Proceed to the `This Firefox` tab
+3. Select `Load Temporary Add-on…`
+4. Navigate to the `extension` folder and select any file within it.
+
+If you have changed the port of the server, click on the extension's icon to modify the port data is sent to.
 
 If you have any open tabs of Youtube Music, please restart them.
 
