@@ -111,7 +111,7 @@ export class WSServer extends GenericServer {
         rp.buttons = [
             '▶ Listen on Youtube Music'
         ];
-        
+
         rp.metadata = {
             button_urls: [
                 presence.link
@@ -127,7 +127,12 @@ export class WSServer extends GenericServer {
         return rp;
     }
 
-    public override update(presence: SongData<true>): void {
+    public override update(presence: SongData<true> | undefined): void {
+        if(!presence) {
+            this._expressWs?.getWss().clients.forEach((client) => client.send('{}'));
+            return;
+        }
+
         const fixedPresence = this.fixPresence(presence);
         this._expressWs?.getWss().clients.forEach((client) => {
             client.send(JSON.stringify(fixedPresence));
