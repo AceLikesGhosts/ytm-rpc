@@ -107,25 +107,8 @@
             );
         };
 
-        function waitAndThenDetectSong(attempts = 0) {
-            if(attempts > 15) {
-                throw 'We are actually buffering, odd. Pause and unpause to update the state after you finish updating.';
-            }
-
-            setTimeout(() => {
-                const songData = player.getVideoData();
-                const albumCover = document.querySelector(albumQuery);
-                if((songData !== null && songData !== void 0) && (albumCover !== null && albumCover !== void 0) && (albumCover.innerHTML !== void 0 && albumCover.innerHTML !== void 0)) {
-                    update(1);
-                }
-                else {
-                    waitAndThenDetectSong(attempts++);
-                }
-            }, 500);
-        }
-
-        function update(code) {
-            const isPaused = code === 1 ? false : true;
+        function update(event) {
+            const isPaused = event.target.paused;
             const songData = player.getVideoData();
             const timeNow = player.getCurrentTime();
             const timeMax = player.getDuration();
@@ -155,19 +138,14 @@
             }).catch(console.error);
         }
 
-        player.addEventListener('onStateChange', (code) => {
-            // youtube does not like to tell us if we started playing
-            // after a buffer, so we'll try to bruteforce it.
-            if(code === 5 || code === 3) {
-                return waitAndThenDetectSong();
-            }
+        const videoElements = document.getElementsByTagName('video');
+        if(!videoElements || !videoElements[0]) {
+            throw 'Unable to find Video element, odd.';
+        }
 
-            if(code !== 1 && code !== 2) {
-                return;
-            }
-
-            update(code);
-        });
+        videoElements[0].addEventListener('play', update);
+        videoElements[0].addEventListener('pause', update);
+        videoElements[0].addEventListener('seeked', update);
     }
 
     function injectScript() {
