@@ -116,7 +116,6 @@ module.exports = class YTM {
         }, this.intervalDurationSeconds * 1000);
     }
 
-
     /**
      * @param {{ data: string }} ev 
      */

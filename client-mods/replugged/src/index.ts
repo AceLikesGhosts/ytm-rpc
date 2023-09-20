@@ -21,7 +21,7 @@ interface WebSocketData {
 function reconnectWS(reconnect: () => void): void {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     reconnectInterval = setTimeout(() => {
-        logger.log('Attempting to reconnect to WebSoket server');
+        logger.log('Attempting to reconnect to WebSocket server');
         reconnect();
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     }, pluginSettings.get('intervalDurationSeconds', 15));
@@ -55,6 +55,8 @@ function handleMessage(ev: MessageEvent<string>): void {
             type: 'LOCAL_ACTIVITY_UPDATE',
             activity: {}
         });
+
+        return;
     }
 
     void setActivity(data);
