@@ -43,7 +43,7 @@ module.exports = class YTM {
     }
 
     getVersion() {
-        return '0.0.1';
+        return '0.1.2';
     }
 
     getAuthor() {
