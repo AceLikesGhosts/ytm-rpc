@@ -74,6 +74,15 @@ module.exports = class YTM {
     reconnectInterval = void 0;
 
     async setActivity(activity) {
+        // If we get sent nothing, get the fuck out
+        if(!activity || typeof activity === 'undefined') {
+            this.rpc.dispatch({
+                type: 'LOCAL_ACTIVITY_UPDATE',
+                activity: {}
+            });
+
+            return;
+        }
         // activity.assets.large_image
         // activity.assets.small_image
         const large = await this.getAsset(activity.assets.large_image);
