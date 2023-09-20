@@ -88,7 +88,7 @@
     function monitorContent() {
         let port = 2134;
 
-        window.addEventListener('message', (e) => {
+        window.addEventListener('message', (/** @type {MessageEvent<Record<string, unknown>>} */ e) => {
             if(e.data.type !== 'ytm_PORT') {
                 return;
             }

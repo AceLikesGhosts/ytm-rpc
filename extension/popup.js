@@ -42,6 +42,7 @@ void (async () => {
     });
 
     async function handleChange(type, message) {
+        /** @type {Record<string, unknown>} */
         const toSend = {};
         toSend[type] = message;
         void cAPI.storage.sync.set(toSend);
