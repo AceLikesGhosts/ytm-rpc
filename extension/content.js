@@ -8,14 +8,16 @@
 
     if(typeof chrome !== 'undefined') {
         if(typeof browser !== 'undefined') {
-            cAPI.storage = {};
-            cAPI.storage.sync = {};
+            cAPI.storage = {
+                sync: {}
+            };
+
             /**
              * @param {string | string[]} keys
+             * @param {string | string[] | Record<string, unknown>} cb
              */
             cAPI.storage.sync.get = function(keys, cb) {
                 browser.storage.sync.get(keys)
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
                     .then(cb)
                     .catch(e => {
                         throw e;
