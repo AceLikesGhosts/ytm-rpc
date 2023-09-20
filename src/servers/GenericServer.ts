@@ -1,5 +1,5 @@
 
-import { milliToTime } from '../utils';
+import { milliToTime, stringify } from '../utils';
 import type { IConstants } from '../types/Constants';
 import type { Server } from '../types/Server';
 import type { SongData } from '../types/SongData';
@@ -25,7 +25,7 @@ export abstract class GenericServer implements Server {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    public abstract update(_presence: SongData<true>): void;
+    public abstract update(_presence: SongData<true> | undefined): void;
 
     public start(): void {
         this._app.post('/', (req, res) => {
@@ -48,8 +48,7 @@ export abstract class GenericServer implements Server {
 
             /** @constant */
             const dataString =
-                `${ content.song } • ${ content.artist } ${ content.timeMax }`
-                    .replace(/(\r\n|\n|\r)/gm, '')
+                `${ stringify(content.song) } • ${ stringify(content.artist) } ${ content.timeMax }`
                     .trim();
 
             if(this._lastState.song !== content.song) {
@@ -59,22 +58,29 @@ export abstract class GenericServer implements Server {
             // }
 
             this._lastState = content;
+
             if(content.isPaused) {
-                this.update(
-                    {
-                        ...content,
-                        timeNow: undefined,
-                        timeMax: undefined
-                    } as SongData<true>
-                );
+                if(this['_opts'].style === 'hide') {
+                    this.update(undefined);
+                }
+                else {
+                    this.update(
+                        {
+                            ...content,
+                            timeNow: undefined,
+                            timeMax: undefined
+                        } as SongData<true>
+                    );
+                }
             }
             else this.update(
                 {
                     ...content,
                     timeNow: milliToTime(content.timeNow!),
-                    timeMax: milliToTime(content.timeMax!),
+                    timeMax: milliToTime(content.timeMax!)
                 } as SongData<true>
             );
+
             return res.status(200).json({
                 ok: true,
                 message: 'Updated RPC'

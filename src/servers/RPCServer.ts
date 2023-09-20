@@ -32,7 +32,12 @@ export class RPCServer extends GenericServer {
         void this._rpc.login({ clientId: opts.client_id });
     }
 
-    public override update(presence: SongData<true>): void {
+    public override update(presence: SongData<true> | undefined): void {
+        if(!presence) {
+            void this._rpc.setActivity(void 0);
+            return;
+        }
+
         let discordPresence: Presence = {};
 
         const song = stringify(presence.song);

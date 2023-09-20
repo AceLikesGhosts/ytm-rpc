@@ -43,7 +43,7 @@ module.exports = class YTM {
     }
 
     getVersion() {
-        return '0.0.1';
+        return '0.1.2';
     }
 
     getAuthor() {
@@ -122,6 +122,16 @@ module.exports = class YTM {
     handleWSMessage(ev) {
         console.log('[YTM] Recieved Websocket message');
 
+        // If we get sent nothing, get the fuck out
+        if(ev.data === '{}') {
+            this.rpc.dispatch({
+                type: 'LOCAL_ACTIVITY_UPDATE',
+                activity: {}
+            });
+
+            return;
+        }
+        
         const data = JSON.parse(ev.data);
 
         if(data && data.closing) {

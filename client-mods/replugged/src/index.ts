@@ -46,6 +46,15 @@ function connectWS(): void {
 }
 
 function handleMessage(ev: MessageEvent<string>): void {
+    if(ev.data === '{}') {
+        fluxDispatcher.dispatch({
+            type: 'LOCAL_ACTIVITY_UPDATE',
+            activity: {}
+        });
+
+        return;
+    }
+
     const data: WebSocketData & { closing: string; } = JSON.parse(ev.data);
 
     if(data && data.closing) {
