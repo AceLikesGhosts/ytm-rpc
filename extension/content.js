@@ -29,7 +29,7 @@
              * @param {((changes: Record<string, unknown>, areaName: 'sync' | 'local' | 'managed' | 'session') => void) } cb 
              */
             cAPI.storage.onChanged.addListener = function(cb) {
-                browser.storage.onChanged.addListener((ch) => {
+                browser.storage.onChanged.addListener((/** @type {Record<string, unknown>} */ ch) => {
                     cb(ch, 'sync');
                 });
             };
