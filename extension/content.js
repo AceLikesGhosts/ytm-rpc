@@ -104,6 +104,9 @@
         };
 
 
+        /**
+         * Album data is lazy-loaded so we are forced to fetch it in this manner
+         */
         async function waitForAlbum() {
             return new Promise((resolve) => {
                 const interval = setInterval(() => {
@@ -136,7 +139,7 @@
                 link: `https://music.youtube.com/watch?v=${songData.video_id}`
             };
 
-            fetch(url, {
+            await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 mode: 'cors',
