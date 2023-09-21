@@ -25,6 +25,9 @@
             };
 
             cAPI.storage.onChanged = {};
+            /**
+             * @param {((changes: Record<string, unknown>, areaName: 'sync' | 'local' | 'managed' | 'session') => void) } cb 
+             */
             cAPI.storage.onChanged.addListener = function(cb) {
                 browser.storage.onChanged.addListener((ch) => {
                     cb(ch, 'sync');
