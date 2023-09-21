@@ -67,24 +67,21 @@
         }
     });
 
-    /**
-     * @param {string} msg 
-     */
-    function log(msg) {
-        console.log(
-            '%c[YTM] ',
-            'color:purple',
-            msg
-        );
-    }
-
     function waitForMoviePlayer() {
         watchFor('movie_player', document.documentElement, { subtree: true, childList: true }, () => {
-            log('found player injecting script');
+            console.log(
+                '%c[YTM] ',
+                'color:purple',
+                'found player, injecting script'
+            );
             injectScript();
         });
     }
 
+    /**
+     * @description INJECTED INTO THE PAGE
+     * @throws
+     */
     function monitorContent() {
         let port = 2134;
 
@@ -98,7 +95,6 @@
         });
 
         const player = document.getElementById('movie_player');
-        const albumQuery = '#layout > ytmusic-player-bar > div.middle-controls.style-scope.ytmusic-player-bar > div.content-info-wrapper.style-scope.ytmusic-player-bar > span > span.subtitle.style-scope.ytmusic-player-bar > yt-formatted-string';
         const log = function log(msg) {
             console.log(
                 '%c[YTM] ',
@@ -107,14 +103,26 @@
             );
         };
 
-        function update(event) {
+
+        async function waitForAlbum() {
+            return new Promise((resolve) => {
+                const interval = setInterval(() => {
+                    const query = document.getElementsByClassName('byline style-scope ytmusic-player-bar complex-string');
+                    if(query.length > 0) {
+                        clearInterval(interval);
+                        resolve(query[0].title.split('•')[1].trim());
+                    }
+                }, 100);
+            });
+        }
+
+        async function update(event) {
             const isPaused = event.target.paused;
             const songData = player.getVideoData();
             const timeNow = player.getCurrentTime();
             const timeMax = player.getDuration();
             const icon = `https://i1.ytimg.com/vi/${songData.video_id}/1.jpg`;
-            const album = document.querySelector(albumQuery).title.split('•')[1];
-
+            const album = await waitForAlbum();
             const url = `http://localhost:${port ?? 2134}/`;
 
             const requestData = {
