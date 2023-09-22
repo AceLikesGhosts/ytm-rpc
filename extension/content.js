@@ -123,7 +123,7 @@
         }
 
         async function update(event) {
-            const isPaused = event.target.paused;
+            const isPaused = (event.target || event).paused;
             const songData = player.getVideoData();
             const timeNow = player.getCurrentTime();
             const timeMax = player.getDuration();
@@ -160,6 +160,17 @@
         videoElements[0].addEventListener('play', update);
         videoElements[0].addEventListener('pause', update);
         videoElements[0].addEventListener('seeked', update);
+
+        /** @type {boolean} */
+        let wasFirstPlay;
+        new MutationObserver(() => {
+            if(!wasFirstPlay) {
+                wasFirstPlay = true;
+                return;
+            }
+
+            void update(videoElements[0]);
+        }).observe(document.querySelector('#movie_player > div.ytp-spinner'), { childList: true, attributes: true });
     }
 
     function injectScript() {
