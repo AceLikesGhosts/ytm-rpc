@@ -9,6 +9,7 @@ const Constants: IConstants = {
     port: Number(process.env.PORT) || 2134,
     // holy 1 liner
     style: process.env.STYLE && ['show', 'hide'].includes(process.env.STYLE) ? process.env.STYLE as 'show' | 'hide' : undefined,
+    show_song_title: process.env.SHOW_TITLE?.toLowerCase() === 'true' ? true : false,
     images: {
         default_img: process.env.DEFAULT_IMG || 'ytm',
         pause_img: process.env.PAUSE_IMG || 'paused',
