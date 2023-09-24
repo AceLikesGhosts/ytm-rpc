@@ -1,4 +1,5 @@
-(function() {
+(() => {
+    // #region Polyfill
     /**
      * @type {{
      *  storage: chrome.storage
@@ -38,6 +39,34 @@
             cAPI.storage = chrome.storage;
         }
     }
+    // #endregion
+
+    cAPI.storage.sync.get(['ytm_PORT'], (items) => {
+        watchFor('ytm-rpc-injected-script', document.documentElement, { subtree: true, childList: true }, () => {
+            window.postMessage({ type: 'ytm_PORT', port: items.ytm_PORT });
+        });
+    });
+
+    cAPI.storage.onChanged.addListener((/** @type {Record<string, unknown>} */ changes, namespace) => {
+        for(let [key, { newValue }] of Object.entries(changes)) {
+            if(namespace === 'sync' && key === 'ytm_PORT') {
+                window.postMessage({ type: 'ytm_PORT', port: newValue });
+            }
+        }
+    });
+
+    /**
+     * @description Logs out a message, but pretty.
+     * @param {string} msg 
+     * @param {'log' | 'warn' | 'error'} type
+     */
+    function log(msg, type = 'log') {
+        console.log(
+            '%c[YTM] ',
+            'color:purple',
+            msg
+        );
+    }
 
     /**
      * @param {string} id - The ID of the element to watch for. 
@@ -56,40 +85,70 @@
         }).observe(what, opts);
     }
 
-    cAPI.storage.sync.get(['ytm_PORT'], (items) => {
-        watchFor('ytm-rpc-injected-script', document.documentElement, { subtree: true, childList: true }, () => {
-            window.postMessage({ type: 'ytm_PORT', port: items.ytm_PORT });
-        });
-    });
+    /**
+     * @description Injects a script into the page.
+     * @param {{
+     *  id: string;
+     *  mainScript: (...args: any[]) => any | Promise<any>;
+     *  fns: ((...args: any[]) => any | Promise<any>)[]
+     * }} param0 
+     */
+    function injectScript({ id, mainScript, fns }) {
+        const script = document.createElement('script');
+        script.id = id;
+        /* eslint-disable indent */
+        // eslint doesnt like this area
+        script.textContent = `
+        (function() {
+        ${fns.map((fn) => {
+            return fn.toString();
+        }).join('')}
 
-    cAPI.storage.onChanged.addListener((/** @type {Record<string, unknown>} */ changes, namespace) => {
-        for(let [key, { newValue }] of Object.entries(changes)) {
-            if(namespace === 'sync' && key === 'ytm_PORT') {
-                window.postMessage({ type: 'ytm_PORT', port: newValue });
-            }
-        }
+        (${mainScript})();
+        })();
+        `;
+        /* eslint-enable indent */
+        document.documentElement.appendChild(script);
+    }
+
+    /**
+     * Injects the script into the page after finding the movie player.
+     */
+    watchFor('movie_player', document.documentElement, { subtree: true, childList: true }, () => {
+        log('found player injecting script');
+        injectScript({
+            id: 'ytm-rpc-injected-script',
+            fns: [log, watchFor],
+            mainScript: monitorContent
+        });
     });
 
     /**
-     * @param {string} msg 
+     * @description The page injected code, used to monitor the song.
      */
-    function log(msg) {
-        console.log(
-            '%c[YTM] ',
-            'color:purple',
-            msg
-        );
-    }
-
-    function waitForMoviePlayer() {
-        watchFor('movie_player', document.documentElement, { subtree: true, childList: true }, () => {
-            log('found player injecting script');
-            injectScript();
-        });
-    }
-
     function monitorContent() {
+        /**
+         * @description The port we send data to.
+         * @type {number}
+         */
         let port = 2134;
+
+        /* eslint-disable jsdoc/valid-types */
+        /**
+         * @description The Youtube Music player
+         * @type {{ 
+         * getVideoData(): Record<string, unknown>;
+         * getCurrentTime(): number;
+         * getDuration(): number;
+         * }}
+         */
+        /* eslint-enable jsdoc/valid-types */
+        const player = document.getElementById('movie_player');
+        /**
+         * @description A stupid querySelector query to get the album.
+         * @type {string}
+         */
+        const albumQuery = '#layout > ytmusic-player-bar > div.middle-controls.style-scope.ytmusic-player-bar > div.content-info-wrapper.style-scope.ytmusic-player-bar > span > span.subtitle.style-scope.ytmusic-player-bar > yt-formatted-string';
 
         window.addEventListener('message', (/** @type {MessageEvent<Record<string, unknown>>} */ e) => {
             if(e.data.type !== 'ytm_PORT') {
@@ -100,16 +159,11 @@
             log(`Updated port to ${e.data.port}`);
         });
 
-        const player = document.getElementById('movie_player');
-        const albumQuery = '#layout > ytmusic-player-bar > div.middle-controls.style-scope.ytmusic-player-bar > div.content-info-wrapper.style-scope.ytmusic-player-bar > span > span.subtitle.style-scope.ytmusic-player-bar > yt-formatted-string';
-        const log = function log(msg) {
-            console.log(
-                '%c[YTM] ',
-                'color:purple',
-                msg
-            );
-        };
-
+        /**
+         * @description Attempts to fetch the song data and album art for 7.5 seconds.
+         * @param {number} attempts - How many times have we attempted to fetch the song data or album cover?
+         * @throws
+         */
         function waitAndThenDetectSong(attempts = 0) {
             if(attempts > 15) {
                 throw 'We are actually buffering, odd. Pause and unpause to update the state after you finish updating.';
@@ -127,6 +181,10 @@
             }, 500);
         }
 
+        /**
+         * @description Fetches and sends the data to the server.
+         * @param {number} code 
+         */
         function update(code) {
             const isPaused = code === 1 ? false : true;
             const songData = player.getVideoData();
@@ -137,28 +195,26 @@
 
             const url = `http://localhost:${port ?? 2134}/`;
 
-            const requestData = {
-                song: songData.title,
-                artist: songData.author,
-                album: album,
-                timeMax: timeMax,
-                timeNow: timeNow,
-                isPaused: isPaused,
-                icon: icon,
-                link: `https://music.youtube.com/watch?v=${songData.video_id}`
-            };
-
             fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 mode: 'cors',
-                body: JSON.stringify(requestData)
+                body: JSON.stringify({
+                    song: songData.title,
+                    artist: songData.author,
+                    album: album,
+                    timeMax: timeMax,
+                    timeNow: timeNow,
+                    isPaused: isPaused,
+                    icon: icon,
+                    link: `https://music.youtube.com/watch?v=${songData.video_id}`
+                })
             }).then(() => {
-                log('posted song data to server (' + requestData.song + ')');
+                log('posted song data to server (' + songData.title + ')');
             }).catch(console.error);
         }
 
-        player.addEventListener('onStateChange', (code) => {
+        player.addEventListener('onStateChange', (/** @type {number} */ code) => {
             // youtube does not like to tell us if we started playing
             // after a buffer, so we'll try to bruteforce it.
             if(code === 5 || code === 3) {
@@ -172,13 +228,4 @@
             update(code);
         });
     }
-
-    function injectScript() {
-        const script = document.createElement('script');
-        script.id = 'ytm-rpc-injected-script';
-        script.textContent = `(${monitorContent})();`;
-        document.documentElement.appendChild(script);
-    }
-
-    waitForMoviePlayer();
 })();
