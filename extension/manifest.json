@@ -3,7 +3,7 @@
     "manifest_version": 2,
     "name": "ytm-rpc",
     "description": "The Chromium extension used to communicate with the Youtube Music RPC server!",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "content_scripts": [
         {
             "matches": [

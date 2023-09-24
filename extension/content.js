@@ -58,9 +58,8 @@
     /**
      * @description Logs out a message, but pretty.
      * @param {string} msg 
-     * @param {'log' | 'warn' | 'error'} type
      */
-    function log(msg, type = 'log') {
+    function log(msg) {
         console.log(
             '%c[YTM] ',
             'color:purple',
