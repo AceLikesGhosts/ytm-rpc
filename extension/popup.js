@@ -6,8 +6,8 @@ void (async () => {
      */
     const cAPI = {};
 
-    if(typeof chrome !== 'undefined') {
-        if(typeof browser !== 'undefined') {
+    if (typeof chrome !== 'undefined') {
+        if (typeof browser !== 'undefined') {
             cAPI.storage = {
                 sync: {}
             };
