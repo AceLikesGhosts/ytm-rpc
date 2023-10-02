@@ -118,8 +118,8 @@ export class WSServer extends GenericServer {
             ]
         };
 
-        const s_artist: string = stringify(presence.artist);
-        const s_song: string = stringify(presence.song);
+        const s_artist: string = stringify(presence.artist, 'artist');
+        const s_song: string = stringify(presence.song, 'song');
         rp.name = this['_opts'].show_song_title ? `${ s_artist } • ${ s_song }` : 'Youtube Music';
         rp.details = s_song ?? 'Unknown';
         rp.state = `by ${ s_artist ?? 'Unknown' }`;
