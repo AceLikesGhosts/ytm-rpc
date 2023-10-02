@@ -6,13 +6,13 @@ import he from 'he';
  * @returns A sanitized string (that also stringifies it)
  * @throws
  */
-export function stringify(str: string): string {
+export function stringify(str: string, argName: string = 'unknown'): string {
     if(!str || typeof str !== 'string') {
-        throw new Error('Invaliid argument was pasesd to stringify, a non-string value!');
+        throw new Error(`${ argName ? `(${ argName }) ` : '' }` + 'Invalid argument was passed to stringify, was passed to Stringify, it does not exist or was a non-string value.');
     }
 
     if(str === '' || str === ' ') {
-        throw new Error('Failed to parse string -> it was empty');
+        throw new Error(`${ argName ? '(' + argName + ') ' : '' }Failed to parse string -> it was empty`);
     }
 
     str = he.decode(str);
