@@ -93,11 +93,17 @@ export class WSServer extends GenericServer {
         }
 
         rp.assets = {
-            large_text: `on ${ stringify(presence.album, 'album') }`,
+            large_text: '',
+            // large_text: `on ${ stringify(presence.album, 'album') }`,
             small_text: 'THIS_SHOULD_BE_REPLACED!',
             large_image: presence.icon || this['_opts'].images.default_img,
             small_image: ''
         };
+
+        if(presence.album) {
+            rp.assets.large_text = `on ${stringify(presence.album, 'album')}`;
+        }
+        else {}
 
         if(presence.isPaused) {
             rp.assets.small_image = this['_opts'].images.pause_img ?? '';
