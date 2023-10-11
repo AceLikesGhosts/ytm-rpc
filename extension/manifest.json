@@ -10,6 +10,7 @@
                 "https://music.youtube.com/*"
             ],
             "js": [
+                "polyfill.js",
                 "content.js"
             ]
         }

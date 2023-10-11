@@ -1,46 +1,4 @@
 (() => {
-    // #region Polyfill
-    /**
-     * @type {{
-     *  storage: chrome.storage
-     * }}
-     */
-    const cAPI = {};
-
-    if(typeof chrome !== 'undefined') {
-        if(typeof browser !== 'undefined') {
-            cAPI.storage = {
-                sync: {}
-            };
-
-            /**
-             * @param {string | string[]} keys
-             * @param {string | string[] | Record<string, unknown>} cb
-             */
-            cAPI.storage.sync.get = function(keys, cb) {
-                browser.storage.sync.get(keys)
-                    .then(cb)
-                    .catch(e => {
-                        throw e;
-                    });
-            };
-
-            cAPI.storage.onChanged = {};
-            /**
-             * @param {((changes: Record<string, unknown>, areaName: "sync" | "local" | "managed" | "session") => void)} cb 
-             */
-            cAPI.storage.onChanged.addListener = function(cb) {
-                browser.storage.onChanged.addListener((/** @type {Record<string, unknown>} */ ch) => {
-                    cb(ch, 'sync');
-                });
-            };
-        }
-        else {
-            cAPI.storage = chrome.storage;
-        }
-    }
-    // #endregion
-
     cAPI.storage.sync.get(['ytm_PORT'], (items) => {
         watchFor('ytm-rpc-injected-script', document.documentElement, { subtree: true, childList: true }, () => {
             window.postMessage({ type: 'ytm_PORT', port: items.ytm_PORT });
