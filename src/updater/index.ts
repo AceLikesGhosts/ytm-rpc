@@ -54,16 +54,25 @@ export default class Updater {
 
         this._path = path;
         this._gitInfo = new GitInfo(this._path);
-        this.warn(this.getMessage());
+        
+        const message = this.getMessage();
+        if(!message) {
+            return;
+        }
+
+        this.warn(message);
     }
 
-    private getMessage(): string {
-        // const current = this._gitInfo.getCurrentCommit()!;
-        const current = '428977dc829188af75530900600b29c54eb18060'; // TODO: replace with normal statement once testing is done
+    private getMessage(): string | undefined {
+        const current = this._gitInfo.getCurrentCommit()!;
         const last = this._gitInfo.getRemoteLastCommit()!;
         const lastData = this._gitInfo.getCommitDate(last)!;
         const lastDate = new Date(Number(lastData) * 1000);
         const difference = this._gitInfo.getCommitCountBetween(current, last);
+
+        if(!difference || Number(difference) === 0) {
+            return undefined;
+        }
 
         // holy aids.
         const message =
