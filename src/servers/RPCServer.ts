@@ -42,7 +42,7 @@ export class RPCServer extends GenericServer {
 
         const song = stringify(presence.song, 'song');
         const artist = stringify(presence.artist, 'artist');
-        const album = stringify(presence.album, 'album');
+        const album = presence.album ? stringify(presence.album) : void 0;
 
         if(!song || song === undefined || song.length < 1) {
             console.error('No song name was passed to `update`.');

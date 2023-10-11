@@ -59,6 +59,14 @@ export abstract class GenericServer implements Server {
 
             this._lastState = content;
 
+            const viewsRegex = /\d{0,}(?:,\d{3})*(?:\.\d+)?[KM] views/gm;
+            const matches = content.album!.match(viewsRegex);
+
+            // if it matches, remove it.
+            if(matches) {
+                content.album = void 0;
+            }
+
             if(content.isPaused) {
                 if(this['_opts'].style === 'hide') {
                     this.update(undefined);
