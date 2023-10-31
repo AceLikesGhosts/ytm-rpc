@@ -49,7 +49,8 @@ function handleMessage(ev: MessageEvent<string>): void {
     if(ev.data === '{}') {
         fluxDispatcher.dispatch({
             type: 'LOCAL_ACTIVITY_UPDATE',
-            activity: {}
+            activity: {},
+            socketId: 'YoutubeMusicRPC'
         });
 
         return;
@@ -62,7 +63,8 @@ function handleMessage(ev: MessageEvent<string>): void {
         ws?.close(1000, 'Master server shutdown');
         fluxDispatcher.dispatch({
             type: 'LOCAL_ACTIVITY_UPDATE',
-            activity: {}
+            activity: {},
+            socketId: 'YoutubeMusicRPC'
         });
 
         return;
@@ -83,7 +85,8 @@ async function setActivity(data: WebSocketData): Promise<void> {
 
     fluxDispatcher.dispatch({
         type: 'LOCAL_ACTIVITY_UPDATE',
-        activity: data
+        activity: data,
+        socketId: 'YoutubeMusicRPC'
     });
 }
 
@@ -93,7 +96,7 @@ export async function start(): Promise<void> {
     let foundGetAsset: (clientId: string, data: [key: string, undef: undefined]) => Promise<string[]>;
     for(const key in assetManager) {
         const member = assetManager[key];
-        if(member.toString().includes('apply(')) {
+        if(member.toString().includes('APPLICATION_ASSETS_FETCH_SUCCESS')) {
             foundGetAsset = member;
             break;
         }

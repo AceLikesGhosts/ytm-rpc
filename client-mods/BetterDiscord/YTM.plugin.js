@@ -86,7 +86,8 @@ module.exports = class YTM {
         console.log(activity);
         this.rpc.dispatch({
             type: 'LOCAL_ACTIVITY_UPDATE',
-            activity
+            activity,
+            socketId: 'YoutubeMusicRPC'
         });
     }
 
@@ -126,12 +127,13 @@ module.exports = class YTM {
         if(ev.data === '{}') {
             this.rpc.dispatch({
                 type: 'LOCAL_ACTIVITY_UPDATE',
-                activity: {}
+                activity: {},
+                socketId: 'YoutubeMusicRPC'
             });
 
             return;
         }
-        
+
         const data = JSON.parse(ev.data);
 
         if(data && data.closing) {
@@ -139,7 +141,8 @@ module.exports = class YTM {
             this.ws.close(1000, 'Master server shutdown');
             this.rpc.dispatch({
                 type: 'LOCAL_ACTIVITY_UPDATE',
-                activity: {}
+                activity: {},
+                socketId: 'YoutubeMusicRPC'
             });
             return;
         }
@@ -162,7 +165,7 @@ module.exports = class YTM {
         let foundGetAsset;
         for(const key in assetManager) {
             const member = assetManager[key];
-            if(member.toString().includes('apply(')) {
+            if(member.toString().includes('APPLICATION_ASSETS_FETCH_SUCCESS')) {
                 foundGetAsset = member;
                 break;
             }
@@ -189,7 +192,8 @@ module.exports = class YTM {
         // clear RPC
         this.rpc.dispatch({
             type: 'LOCAL_ACTIVITY_UPDATE',
-            activity: {}
+            activity: {},
+            socketId: 'YoutubeMusicRPC'
         });
 
         this.rpc = void 0;
