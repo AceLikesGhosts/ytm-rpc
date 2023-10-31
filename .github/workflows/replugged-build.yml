@@ -7,6 +7,10 @@ jobs:
     name: Replugged-build
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: ./client-mods/replugged
+
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v2
@@ -19,9 +23,6 @@ jobs:
       - uses: pnpm/action-setup@v2
         with:
           version: latest
-
-      - name: Navigate to Replugged folder
-        run: cd ./client-mods/replugged 
 
       - name: Install Node.js dependencies
         run: pnpm install

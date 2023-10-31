@@ -6,6 +6,9 @@ jobs:
   build:
     name: BetterDiscord-build
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./client-mods/BetterDiscord
 
     steps:
       - name: Check out Git repository
@@ -15,12 +18,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-
-      - name: Navigate to BetterDiscord folder
-        run: cd ./client-mods/BetterDiscord
-
-      - name: get cwd
-        run: ls -la
 
       - name: Install NPM packages
         run: npm install
