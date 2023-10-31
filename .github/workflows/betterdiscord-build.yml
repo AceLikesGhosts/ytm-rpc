@@ -19,6 +19,9 @@ jobs:
       - name: Navigate to BetterDiscord folder
         run: cd ./client-mods/BetterDiscord
 
+      - name: get cwd
+        run: ls -la
+
       - name: Install NPM packages
         run: npm install
       
