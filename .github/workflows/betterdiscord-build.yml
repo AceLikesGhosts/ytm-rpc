@@ -17,7 +17,7 @@ jobs:
           node-version: 18
 
       - name: Navigate to BetterDiscord folder
-        run: cd client-mods/BetterDiscord
+        run: cd ./client-mods/BetterDiscord
 
       - name: Install NPM packages
         run: npm install

@@ -21,8 +21,8 @@ jobs:
           version: latest
 
       - name: Navigate to Replugged folder
-        run: cd client-mods/replugged 
-        
+        run: cd ./client-mods/replugged 
+
       - name: Install Node.js dependencies
         run: pnpm install
 
