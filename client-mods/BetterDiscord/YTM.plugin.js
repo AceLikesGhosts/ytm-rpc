@@ -1,7 +1,7 @@
 /**
  * @name YTM
  * @description A simple WebSocket connection to a local YTM-RPC server, to display your Youtube Music data more.. "properly"
- * @version 0.0.1
+ * @version 0.1.1
  * @author ace.
  * @authorId 249746236008169473
  * @website https://github.com/acelikesghosts/ytm-rpc

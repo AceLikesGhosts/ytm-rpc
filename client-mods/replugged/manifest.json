@@ -7,7 +7,7 @@
         "discordID": "327639826075484162",
         "github": "acelikesghosts"
     },
-    "version": "0.1.2",
+    "version": "0.2.2",
     "updater": {
         "type": "github",
         "id": "acelikesghosts/ytm-rpc"
