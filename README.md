@@ -163,9 +163,17 @@ If you have any open tabs of Youtube Music, please restart them.
 #### BetterDiscord
 
 1. Navigate to the [client-mods/betterdiscord](./client-mods/BetterDiscord/) folder.
-2. Open your BetterDiscord plugin folder.
-3. Copy the `YTM.plugin.js` file into the plugins folder.
-4. Enable the plugin within BetterDiscord
+2. Install the dependencies required
+```sh
+npm install
+```
+3. Tranpsile the JSX to JS
+```sh
+npm run build
+```
+4. Move the file created in `dist` to your BetterDiscord plugin folder
+
+If you have changed the port which the server runs at, change it within the plugin's settings as well.
 
 #### Replugged
 

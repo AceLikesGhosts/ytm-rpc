@@ -1,0 +1,19 @@
+{
+  "name": "betterdiscord",
+  "version": "1.0.0",
+  "description": "You are probably looking for the [server's source code](../../src/)",
+  "scripts": {
+    "build": "babel src/index.jsx -o dist/YTM.plugin.js"
+  },
+  "keywords": [],
+  "author": "AceLikesGhosts",
+  "license": "MIT",
+  "dependencies": {
+    "@types/betterdiscord": "github:zerthox/betterdiscord-types"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.23.0",
+    "@babel/core": "^7.23.2",
+    "@babel/preset-react": "^7.22.15"
+  }
+}
