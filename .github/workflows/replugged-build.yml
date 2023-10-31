@@ -1,0 +1,30 @@
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    name: Replugged-build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: latest
+
+      - name: Navigate to Replugged folder
+        run: cd client-mods/replugged 
+        
+      - name: Install Node.js dependencies
+        run: pnpm install
+
+      - name: Build Replugged
+        run: pnpm run build

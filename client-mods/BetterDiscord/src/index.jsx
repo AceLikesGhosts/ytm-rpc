@@ -169,7 +169,6 @@ module.exports = class YTM extends BdApi.React.Component {
         // i love you
         const filter = BdApi.Webpack.Filters.byStrings('getAssetImage: size must === [number, number] for Twitch');
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        // @ts-expect-error I DONT CARE
         const assetManager = BdApi.Webpack.getModule((/** @type {Record<string, unknown>} */ m) => typeof m === 'object' && Object.values(m).some(filter));
         let foundGetAsset;
         for(const key in assetManager) {
