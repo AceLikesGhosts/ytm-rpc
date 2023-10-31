@@ -5,7 +5,13 @@ const logger = new Logger('Plugin', 'YTM');
 export const pluginSettings = await settings.init<{
     port: number;
     intervalDurationSeconds: number;
-}>('me.acelikesghosts.ytm');
+    showTimeBar: boolean;
+}>('me.acelikesghosts.ytm', {
+    port: 2134,
+    intervalDurationSeconds: 15,
+    showTimeBar: false
+});
+
 let ws: WebSocket | undefined;
 let reconnectInterval: NodeJS.Timeout;
 let getAsset: (key: string) => Promise<string>;
@@ -105,7 +111,7 @@ export async function start(): Promise<void> {
     getAsset = async (key: string) => {
         return (await foundGetAsset('1075993095138713612', [key, undefined]))[0];
     };
-    
+
     connectWS();
 }
 
