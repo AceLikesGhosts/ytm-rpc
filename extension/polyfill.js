@@ -29,6 +29,16 @@ if(typeof chrome !== 'undefined') {
         cAPI.storage.sync.set = function(items) {
             void browser.storage.sync.set(items);
         };
+
+        cAPI.storage.onChanged = {};
+        /**
+         * @param {*} cb 
+         */
+        cAPI.storage.onChanged.addListener = function(cb) {
+            browser.storage.onChanged.addListener((/** @type {string} */ ch) => {
+                cb(ch, 'sync');
+            });
+        };
     }
     else {
         cAPI.storage = chrome.storage;
