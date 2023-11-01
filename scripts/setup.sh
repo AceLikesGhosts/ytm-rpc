@@ -26,21 +26,24 @@ function installReplugged {
   runGeneric "npm run --silent build" "Finished transpiling Replugged plugin." "$(dirname "$0")/../client-mods/replugged"
 }
 
-# Get BetterDiscord plugin folder
-function getBetterDiscordPluginFolder {
+function getAppdata {
   if [[ "$(uname)" == "Darwin" ]]; then
-    echo "$HOME/Library/Application Support/BetterDiscord/plugins"
+    echo "$HOME/Library/Application Support"
   else
-    echo "$HOME/.config/BetterDiscord/plugins"
+    echo "$HOME/.config"
   fi
 }
 
 # Install BetterDiscord plugin
 function installBetterDiscord {
-  local pluginFolder
-  pluginFolder=$(getBetterDiscordPluginFolder)
+  local appData
+  appData=$(getAppdata)
+  pluginFolder="$appData/BetterDiscord/plugins"
   bdPluginFolder="$(dirname "$0")/../client-mods/BetterDiscord"
-  PLUGIN="$bdPluginFolder/YTM.plugin.js"
+  PLUGIN="$bdPluginFolder/dist/YTM.plugin.js"
+
+  runGeneric "npm install" "Installed BetterDiscord plugin dependencies." "$(dirname "$0")/../client-mods/BetterDiscord"
+  runGeneric "npm run build" "Finished transpiling BetterDiscord plugin." "$(dirname "$0")/../client-mods/BetterDiscord"
 
   if [[ -d "$pluginFolder" && -e "$PLUGIN" && -d "$bdPluginFolder" ]]; then
     cp "$PLUGIN" "$pluginFolder"
@@ -76,8 +79,8 @@ if [[ $# -eq 0 ]]; then
   exit 1
 fi
 
-copyEnv 
 warnMessage 
+copyEnv 
 
 for arg in "$@"; do
   case "$arg" in
