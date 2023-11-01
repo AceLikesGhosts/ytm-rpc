@@ -6,15 +6,17 @@ export const pluginSettings = await settings.init<{
     port: number;
     intervalDurationSeconds: number;
     showTimeBar: boolean;
+    clientId: string;
 }>('me.acelikesghosts.ytm', {
     port: 2134,
     intervalDurationSeconds: 15,
-    showTimeBar: false
+    showTimeBar: false,
+    clientId: '1075993095138713612'
 });
 
 let ws: WebSocket | undefined;
 let reconnectInterval: NodeJS.Timeout;
-let getAsset: (key: string) => Promise<string>;
+let getAsset: (clientId: string, key: string) => Promise<string>;
 
 // Only the parts we care enough about to need typed
 interface WebSocketData {
@@ -80,8 +82,9 @@ function handleMessage(ev: MessageEvent<string>): void {
 }
 
 async function setActivity(data: WebSocketData): Promise<void> {
-    const large = await getAsset(data.assets.large_image);
-    const small = await getAsset(data.assets.small_image);
+    const clientId = pluginSettings.get('clientId', '1075993095138713612') as string;
+    const large = await getAsset(clientId, data.assets.large_image);
+    const small = await getAsset(clientId, data.assets.small_image);
 
     data.assets.large_image = large;
     data.assets.small_image = small;
@@ -108,8 +111,8 @@ export async function start(): Promise<void> {
         }
     }
 
-    getAsset = async (key: string) => {
-        return (await foundGetAsset('1075993095138713612', [key, undefined]))[0];
+    getAsset = async (clientId: string, key: string) => {
+        return (await foundGetAsset(clientId, [key, undefined]))[0];
     };
 
     connectWS();
