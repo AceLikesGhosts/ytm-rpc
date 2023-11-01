@@ -55,7 +55,7 @@ module.exports = class YTM extends BdApi.React.Component {
 
     /**
      * Turns external links into Discord's cached links for activities
-     * @type {(url: string) => Promise<string>}
+     * @type {(id: string, url: string) => Promise<string>}
      */
     getAsset = void 0;
 
@@ -71,8 +71,8 @@ module.exports = class YTM extends BdApi.React.Component {
      * @param {{ assets: { large_image: string; small_image: string } }} activity 
      */
     async setActivity(activity) {
-        const large = activity.assets.large_image ? await this.getAsset(activity.assets.large_image) : undefined;
-        const small = activity.assets.small_image ? await this.getAsset(activity.assets.small_image) : undefined;
+        const large = activity.assets.large_image ? await this.getAsset(this.settings.clientId, activity.assets.large_image) : undefined;
+        const small = activity.assets.small_image ? await this.getAsset(this.settings.clientId, activity.assets.small_image) : undefined;
 
         activity.assets.large_image = large;
         activity.assets.small_image = small;
@@ -178,8 +178,8 @@ module.exports = class YTM extends BdApi.React.Component {
                 break;
             }
         }
-        this.getAsset = async key => {
-            return (await foundGetAsset('1075993095138713612', [key, undefined]))[0];
+        this.getAsset = async (id, key) => {
+            return (await foundGetAsset(id, [key, undefined]))[0];
         };
         // #endregion
 
