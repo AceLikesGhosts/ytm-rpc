@@ -15,7 +15,6 @@
     "license": "MIT",
     "type": "replugged-plugin",
     "renderer": "src/index.ts",
-    "plaintextPatches": "src/plaintextPatches.ts",
     "source": "https://github.com/acelikesghosts/ytm-rpc",
     "image": [
         "https://pls.kill-all.men/6bMczpFp7.png"
