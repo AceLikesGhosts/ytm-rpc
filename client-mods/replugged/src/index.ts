@@ -127,3 +127,4 @@ export function stop(): void {
     }
 }
 
+export { default as Settings } from './components/Settings';
