@@ -1,9 +1,9 @@
+import type { IConstants } from './types/Constants';
 import { config } from 'dotenv'; config();
-import Updater from './updater';
 import { RPCServer } from './servers/RPCServer';
 import { WSServer } from './servers/WSServer';
-import type { IConstants } from './types/Constants';
 import { join } from 'path';
+import Updater from './updater';
 
 const Constants: IConstants = {
     using_ws: process.env.USING_WS === 'true' ? true : false,
@@ -19,7 +19,11 @@ const Constants: IConstants = {
     }
 } as const;
 
-new Updater(join(__dirname, '..'), process.env.UPDATE_WARNS?.toLowerCase() === 'true' ? true : false);
+void new Updater(
+    'acelikesghosts',
+    'ytm-rpc',
+    join(__dirname, '..')
+).checkForUpdates();
 
 if(Constants.using_ws === true) {
     new WSServer(Constants).start();
