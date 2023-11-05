@@ -56,6 +56,10 @@ export abstract class GenericServer implements Server {
             //  console.log(`${chalk.green('updated')} ${dataString}`);
             // }
 
+            // if there isnt an album (extension fucked up)
+            // we'll just correct here
+            content.album ??= 'Unknown';
+
             this._lastState = content;
 
             const viewsRegex = /\d{0,}(?:,\d{3})*(?:\.\d+)?[KM] views/gm;

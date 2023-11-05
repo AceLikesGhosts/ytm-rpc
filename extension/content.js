@@ -128,8 +128,12 @@
 
             setTimeout(() => {
                 const songData = player.getVideoData();
-                const albumCover = document.querySelector(albumQuery);
-                if((songData !== null && songData !== void 0) && (albumCover !== null && albumCover !== void 0) && (albumCover.innerHTML !== void 0 && albumCover.innerHTML !== void 0)) {
+                const albumText = document.querySelector(albumQuery);
+                if(
+                    (songData !== null && songData !== void 0)
+                    && (albumText !== null && albumText !== void 0)
+                    && (albumText.title !== void 0 && albumText.title !== null)
+                ) {
                     update(1);
                 }
                 else {
