@@ -10,16 +10,16 @@ type DiscordPresence = {
     details: string;
     name: string;
     state: string;
-    metadata: {
+    metadata?: {
         button_urls: string[];
     };
-    assets: {
+    assets?: {
         large_image: string;
         large_text: string;
         small_image: string;
         small_text: string;
     },
-    timestamps: {
+    timestamps?: {
         start: number;
         end: number;
     };
@@ -107,12 +107,13 @@ export default class Song {
         rp.type = 2;
         rp.flags = 1;
 
-        if(this.data.timeMax !== undefined && this.data.timeNow !== undefined) {
-            rp.timestamps = {
-                start: this.data.timeNow,
-                end: this.endTime
-            };
-        }
+        // discord doesnt display it so there is no point in sending it
+        // if(this.data.timeMax !== undefined && this.data.timeNow !== undefined) {
+        //     rp.timestamps = {
+        //         start: this.data.timeNow,
+        //         end: this.endTime
+        //     };
+        // }
 
         rp.assets = {
             large_text: `on ${ this.data.album }`,
