@@ -45,15 +45,20 @@ export default class Updater {
     }
 
     async checkForUpdates(): Promise<void> {
-        const branch = this.getCurrentLocalBranch();
-        const localCommit = await this.getCurrentLocalCommit(branch);
-        const remoteCommit = await this.getRemoteCommit(branch);
+        try {
+            const branch = this.getCurrentLocalBranch();
+            const localCommit = await this.getCurrentLocalCommit(branch);
+            const remoteCommit = await this.getRemoteCommit(branch);
 
-        if(localCommit === remoteCommit) {
-            console.log(chalk.green(`Your branch '${ branch }' is up to date.`));
-        } 
-        else {
-            console.warn(chalk.yellow(`Please update the repository, as you are out of date!`));
+            if(localCommit === remoteCommit) {
+                console.log(chalk.green(`Your branch '${ branch }' is up to date.`));
+            }
+            else {
+                console.warn(chalk.yellow(`Please update the repository, as you are out of date!`));
+            }
+        }
+        catch(_) {
+            console.error(chalk.red('Failed to update.'));
         }
     }
 }
