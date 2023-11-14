@@ -26,6 +26,8 @@ export default abstract class Server {
                     ok: false,
                     message: 'No content provided.'
                 });
+
+                return;
             }
 
             const song = new Song(content);
