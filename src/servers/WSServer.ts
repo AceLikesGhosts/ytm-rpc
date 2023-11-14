@@ -1,57 +1,29 @@
+import Server from './Server';
+import type Song from '../utils/Song';
 import type { Application, WithWebsocketMethod } from 'express-ws';
-import type { SongData } from '../types/SongData';
-import type { IConstants } from '../types/Constants';
-import { GenericServer } from './GenericServer';
-import { stringify } from '../utils';
 import expressWS from 'express-ws';
 import chalk from 'chalk';
 
-type DiscordPresence = {
-    application_id: string;
-    buttons: string[];
-    details: string;
-    name: string;
-    state: string;
-    metadata: {
-        button_urls: string[];
-    };
-    assets: {
-        large_image: string;
-        large_text: string;
-        small_image: string;
-        small_text: string;
-    },
-    timestamps: {
-        start: number;
-        end: number;
-    };
-    type: number;
-    flags: number;
-};
-
-export class WSServer extends GenericServer {
+export default class WSServer extends Server {
     private _expressWs: expressWS.Instance | undefined;
 
-    public constructor(opts: Readonly<IConstants>) {
-        super(opts);
+    public constructor() {
+        super();
 
         process.on('SIGINT', () => {
             this._expressWs?.getWss().clients.forEach((client) => {
                 client.send(JSON.stringify({
                     closing: true
                 }));
-            });
 
-            process.exit(0);
+                process.exit(0);
+            });
         });
     }
-
     public override start(): void {
-        this._expressWs = expressWS(this._app);
-        this._app = this._expressWs.app;
-
+        this._expressWs = expressWS(this['express']);
         // we don't care what we send/get from here, ever!
-        (this._app as Application & WithWebsocketMethod).ws('/', (ws, req) => {
+        (this['express'] as Application & WithWebsocketMethod).ws('/', (ws, req) => {
             console.log(chalk.blue(`WebSocket (${ req.socket.remoteAddress }) connected to WS server`));
             ws.on('close', (code, reason) => {
                 // we use 1000 to signify the websocket was turned off on the
@@ -70,78 +42,12 @@ export class WSServer extends GenericServer {
         super.start();
     }
 
-    public fixPresence(presence: SongData<true>): DiscordPresence {
-        /**
-         * The way that it will be displayed on the client is:
-         * 
-         * Listening to (name)
-         * Details
-         * State
-         * Large Image Text
-         */
-        const rp: DiscordPresence = {} as DiscordPresence;
-        // required
-        rp.application_id = this['_opts'].client_id;
-        rp.type = 2;
-        rp.flags = 1;
-
-        if(presence.timeMax !== undefined && presence.timeNow !== undefined) {
-            rp.timestamps = {
-                start: presence.timeNow,
-                end: presence.timeMax
-            };
-        }
-
-        rp.assets = {
-            large_text: '',
-            // large_text: `on ${ stringify(presence.album, 'album') }`,
-            small_text: 'THIS_SHOULD_BE_REPLACED!',
-            large_image: presence.icon || this['_opts'].images.default_img,
-            small_image: ''
-        };
-
-        if(presence.album) {
-            rp.assets.large_text = `on ${stringify(presence.album, 'album')}`;
-        }
-        else {}
-
-        if(presence.isPaused) {
-            rp.assets.small_image = this['_opts'].images.pause_img ?? '';
-            rp.assets.small_text = 'Paused';
-        }
-        else {
-            rp.assets.small_image = this['_opts'].images.play_img ?? '';
-            rp.assets.small_text = 'Playing';
-        }
-
-        rp.buttons = [
-            '▶ Listen on Youtube Music'
-        ];
-
-        rp.metadata = {
-            button_urls: [
-                presence.link
-            ]
-        };
-
-        const s_artist: string = stringify(presence.artist, 'artist');
-        const s_song: string = stringify(presence.song, 'song');
-        rp.name = this['_opts'].show_song_title ? `${ s_artist } • ${ s_song }` : 'Youtube Music';
-        rp.details = s_song ?? 'Unknown';
-        rp.state = `by ${ s_artist ?? 'Unknown' }`;
-
-        return rp;
-    }
-
-    public override update(presence: SongData<true> | undefined): void {
-        if(!presence) {
+    public update(song: Song | undefined): void {
+        if(!song) {
             this._expressWs?.getWss().clients.forEach((client) => client.send('{}'));
             return;
         }
 
-        const fixedPresence = this.fixPresence(presence);
-        this._expressWs?.getWss().clients.forEach((client) => {
-            client.send(JSON.stringify(fixedPresence));
-        });
+        this._expressWs?.getWss().clients.forEach((client) => client.send(JSON.stringify(song.toNative())));
     }
 }

@@ -1,0 +1,65 @@
+import chalk from 'chalk';
+import cors from 'cors';
+import express from 'express';
+import type { Application } from 'express';
+import Song from '../utils/Song';
+import { Constants } from '../';
+
+export default abstract class Server {
+    private readonly express: Application;
+    private _lastSong: Song | undefined;
+
+    public constructor() {
+        this.express = express();
+        this.express.use(express.json());
+        this.express.use(cors());
+    }
+
+    public abstract update(song: Song | undefined): void;
+
+    public start(): void {
+        this.express.post('/', (req, res) => {
+            const content = req.body;
+
+            if(!content || !content.song) {
+                res.json({
+                    ok: false,
+                    message: 'No content provided.'
+                });
+            }
+
+            const song = new Song(content);
+
+            if(song === this._lastSong) {
+                res.json({
+                    ok: false,
+                    message: 'Same as last song data'
+                });
+
+                return;
+            }
+
+            if((!this._lastSong) || (this._lastSong!['s_song'] !== song['s_song'])) {
+                // if(this._lastSong && this._lastSong!['s_song'] !== song['s_song']) {
+                console.log(`${ chalk.green('playing') } ${ song['s_song'] } by ${ song['s_artist'] } ${ song['data']['album'] ? `on ${ song['data']['album'] }` : '' } for ${ content.timeMax }`);
+            }
+
+            this._lastSong = song;
+
+            if(song.isPaused && Constants.style === 'hide') {
+                this.update(void 0);
+                return;
+            }
+
+            this.update(song);
+            res.status(200).json({
+                ok: true,
+                message: 'Updated RPC'
+            });
+        });
+
+        this.express.listen(Constants.port, () => {
+            console.log(chalk.blue(`started express application @ localhost:${ Constants.port }`));
+        });
+    }
+}

@@ -1,11 +1,11 @@
 import type { IConstants } from './types/Constants';
 import { config } from 'dotenv'; config();
-import { RPCServer } from './servers/RPCServer';
-import { WSServer } from './servers/WSServer';
 import { join } from 'path';
+import RPCServer from './servers/RPCServer';
+import WSServer from './servers/WSServer';
 import Updater from './updater';
 
-const Constants: IConstants = {
+export const Constants: IConstants = {
     using_ws: process.env.USING_WS === 'true' ? true : false,
     client_id: process.env.CLIENT_ID || '1075993095138713612',
     port: Number(process.env.PORT) || 2134,
@@ -26,8 +26,8 @@ void new Updater(
 ).checkForUpdates();
 
 if(Constants.using_ws === true) {
-    new WSServer(Constants).start();
+    new WSServer().start();
 }
 else {
-    new RPCServer(Constants).start();
+    new RPCServer().start();
 }
