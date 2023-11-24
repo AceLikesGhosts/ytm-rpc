@@ -116,7 +116,7 @@ export default class Song {
         // }
 
         rp.assets = {
-            large_text: `on ${ this.data.album }`,
+            large_text: `${ this.data.album ? `on ${ this.data.album}` : '' }`,
             small_text: '',
             large_image: this.data.icon || Constants.images.default_img,
             small_image: ''
