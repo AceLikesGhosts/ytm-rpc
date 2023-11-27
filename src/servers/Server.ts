@@ -60,8 +60,10 @@ export default abstract class Server {
             });
         });
 
-        this.express.listen(Constants.port, () => {
+        const server = this.express.listen(Constants.port, () => {
             console.log(chalk.blue(`started express application @ localhost:${ Constants.port }`));
         });
+
+        server.setTimeout(1000 * 60 * 10);
     }
 }
