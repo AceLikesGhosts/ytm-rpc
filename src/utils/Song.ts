@@ -36,9 +36,9 @@ export default class Song {
     public constructor(content: Content) {
         // preform the weird mutations before settings anything
         content.album ??= 'Unknown';
-        content.album = stringify(content.album!, 'Song::album_parsing_1');
+        content.album = stringify(content.album, 'Song::album_parsing_1');
         const viewsRegex = /\d{0,}(?:,\d{3})*(?:\.\d+)?[KM] views/gm;
-        const matches = content.album!.match(viewsRegex);
+        const matches = content.album.match(viewsRegex);
 
         // if it matches, remove it.
         if(matches) {
@@ -49,8 +49,8 @@ export default class Song {
         content.timeMax = milliToTime(content.timeMax);
 
         this.data = content;
-        this.s_song = stringify(content.song!, 'Song::s_song');
-        this.s_artist = stringify(content.artist!, 'Song::s_song');
+        this.s_song = stringify(content.song, 'Song::s_song');
+        this.s_artist = stringify(content.artist, 'Song::s_song');
     }
 
     get isPaused(): boolean {
@@ -59,7 +59,7 @@ export default class Song {
 
     get endTime(): number {
         const currentTime = Date.now();
-        const endTime = currentTime + (this.data.timeMax! - this.data.timeNow!); // Calculate the correct end time
+        const endTime = currentTime + (this.data.timeMax - this.data.timeNow); // Calculate the correct end time
         return endTime;
     }
 
@@ -109,7 +109,7 @@ export default class Song {
         rp.flags = 1;
 
         // discord doesnt display it so there is no point in sending it
-        // if(this.data.timeMax !== undefined && this.data.timeNow !== undefined) {
+        // if(this.data.timeMax == undefined && this.data.timeNow == undefined) {
         //     rp.timestamps = {
         //         start: this.data.timeNow,
         //         end: this.endTime
