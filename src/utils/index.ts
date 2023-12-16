@@ -27,8 +27,8 @@ export function stringify(str: string, argName: string = 'unknown'): string {
     return str;
 }
 
-export function milliToTime(millis: string): number {
+export function milliToTime(millis: string | number): number {
     let temp = Date.now();
-    temp += Math.round(parseFloat(millis) * 1000);
+    temp += Math.round(typeof millis === 'string' ? parseFloat(millis) : millis * 1000);
     return temp;
 }

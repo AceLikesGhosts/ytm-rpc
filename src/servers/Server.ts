@@ -5,6 +5,17 @@ import type { Application } from 'express';
 import Song from '../utils/Song';
 import { Constants } from '../';
 
+export type Content = {
+    song: string;
+    artist: string;
+    album: string;
+    icon: string;
+    timeMax: number;
+    timeNow: number;
+    isPaused: boolean;
+    link: string;
+}
+
 export default abstract class Server {
     private readonly express: Application;
     private _lastSong: Song | undefined;
@@ -19,7 +30,7 @@ export default abstract class Server {
 
     public start(): void {
         this.express.post('/', (req, res) => {
-            const content = req.body;
+            const content: Content = req.body;
 
             if(!content || !content.song) {
                 res.json({

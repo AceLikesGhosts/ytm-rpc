@@ -3,6 +3,7 @@
 import { Constants } from '../';
 import { milliToTime, stringify } from '.';
 import type { Presence } from 'discord-rpc';
+import type { Content } from '../servers/Server';
 
 type DiscordPresence = {
     application_id: string;
@@ -28,11 +29,11 @@ type DiscordPresence = {
 };
 
 export default class Song {
-    private readonly data: any;
+    private readonly data: Content;
     private readonly s_song: string;
     private readonly s_artist: string;
 
-    public constructor(content: any) {
+    public constructor(content: Content) {
         // preform the weird mutations before settings anything
         content.album ??= 'Unknown';
         content.album = stringify(content.album!, 'Song::album_parsing_1');
@@ -124,7 +125,7 @@ export default class Song {
 
         if(this.data.isPaused) {
             rp.assets.small_image = Constants.images.pause_img;
-            rp.assets.small_text = 'Pauesd';
+            rp.assets.small_text = 'Paused';
         }
         else {
             rp.assets.small_image = Constants.images.play_img;
