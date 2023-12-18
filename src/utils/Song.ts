@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { Constants } from '../';
 import { milliToTime, stringify } from '.';
 import type { Presence } from 'discord-rpc';
@@ -30,17 +28,24 @@ type DiscordPresence = {
 
 export default class Song {
     private readonly data: Content;
-    private readonly s_song: string;
-    private readonly s_artist: string;
 
     public constructor(content: Content) {
         // preform the weird mutations before settings anything
-        content.album ??= 'Unknown';
-        content.album = stringify(content.album, 'Song::album_parsing_1');
+        if(content.album) content.album = stringify(content.album, 'Song::album_parsing_1');
+        else content.album = 'Unknown';
+        content.song = stringify(content.song, 'Song::song');
+        content.artist = stringify(content.artist, 'Song::artist');
+
+        /**
+         * Parses the album text to see if it contains a view counter which indicates it's a video and not a song
+         * For example:
+         * 150K views -> true
+         * 5M views -> true
+         */
         const viewsRegex = /\d{0,}(?:,\d{3})*(?:\.\d+)?[KM] views/gm;
         const matches = content.album.match(viewsRegex);
 
-        // if it matches, remove it.
+        // if it contains a view counter remove the album
         if(matches) {
             (content.album as unknown) = void 0;
         }
@@ -49,8 +54,6 @@ export default class Song {
         content.timeMax = milliToTime(content.timeMax);
 
         this.data = content;
-        this.s_song = stringify(content.song, 'Song::s_song');
-        this.s_artist = stringify(content.artist, 'Song::s_song');
     }
 
     get isPaused(): boolean {
@@ -64,18 +67,22 @@ export default class Song {
     }
 
     public toPresence(): Presence {
+        const albumText: string = this.data.album ? `• ${ this.data.album }` : '';
+        const icon: string = this.data.icon || Constants.images.default_img;
+        const link: string = this.data.link || 'https://music.youtube.com';
+
         if(this.isPaused) {
             return {
-                details: `Paused: ${ this.s_song }`,
-                state: `${ this.s_artist } ${ this.data.album ? '• ' + this.data.album : '' }`,
-                largeImageKey: this.data.icon || Constants.images.default_img,
-                largeImageText: this.s_song,
-                smallImageKey: Constants.images.pause_img || undefined,
-                smallImageText: Constants.images.pause_img !== undefined ? 'Paused' : undefined,
+                details: `Paused: ${ this.data.song }`,
+                state: `${ this.data.artist } ${ albumText }`,
+                largeImageKey: icon,
+                largeImageText: this.data.song,
+                smallImageKey: Constants.images.pause_img,
+                smallImageText: 'Paused',
                 buttons: [
                     {
                         label: '▶ Listen on Youtube Music',
-                        url: this.data.link || 'https://music.youtube.com'
+                        url: link
                     }
                 ],
                 instance: true
@@ -83,18 +90,18 @@ export default class Song {
         }
 
         return {
-            details: this.s_song,
-            state: `${ this.s_artist } ${ this.data.album ? '• ' + this.data.album : '' }`,
+            details: this.data.song,
+            state: `${ this.data.artist } ${ albumText }`,
             startTimestamp: this.data.timeNow || 0,
             endTimestamp: this.endTime || 0,
-            largeImageKey: this.data.icon || Constants.images.default_img,
-            largeImageText: this.s_song,
-            smallImageKey: Constants.images.play_img || undefined,
-            smallImageText: Constants.images.play_img !== undefined ? 'Playing' : undefined,
+            largeImageKey: icon,
+            largeImageText: this.data.song,
+            smallImageKey: Constants.images.play_img,
+            smallImageText: 'Playing',
             buttons: [
                 {
                     label: '▶ Listen on Youtube Music',
-                    url: this.data.link || 'https://music.youtube.com'
+                    url: link
                 }
             ],
             instance: true
@@ -117,7 +124,7 @@ export default class Song {
         // }
 
         rp.assets = {
-            large_text: `${ this.data.album ? `on ${ this.data.album}` : '' }`,
+            large_text: `${ this.data.album ? `on ${ this.data.album }` : '' }`,
             small_text: '',
             large_image: this.data.icon || Constants.images.default_img,
             small_image: ''
@@ -142,8 +149,8 @@ export default class Song {
             ]
         };
 
-        rp.name = Constants.show_song_title ? `${ this.s_artist } • ${ this.s_song }` : 'Youtube Music';
-        rp.details = this.s_song ?? 'Unknown';
+        rp.name = Constants.show_song_title ? `${ this.data.artist ? this.data.artist.concat(' • ') : '' }${ this.data.song }` : 'Youtube Music';
+        rp.details = this.data.song ?? 'Unknown';
         rp.state = `by ${ this.data.artist ?? 'Unknown' }`;
 
         return rp;
