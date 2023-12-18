@@ -17,8 +17,8 @@
      * @description Logs out a message, but pretty.
      * @param {string} msg 
      */
-    function log(msg) {
-        console.log(
+    function log(msg, type = 'log') {
+        console[type](
             '%c[YTM] ',
             'color:purple',
             msg
@@ -172,7 +172,9 @@
                 })
             }).then(() => {
                 log('posted song data to server (' + songData.title + ')');
-            }).catch(console.error);
+            }).catch((reason) => {
+                log('Failed to send song data to server\nReason: ' + reason, 'error');
+            });
         }
 
         player.addEventListener('onStateChange', (/** @type {number} */ code) => {
