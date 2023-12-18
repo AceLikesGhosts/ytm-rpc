@@ -4,7 +4,7 @@
  * @version 1.0.0
  * @author ace.
  */
-module.exports = class YTM extends BdApi.React.Component {
+module.exports = class YTM {
     defaultSettings = {
         // default settings
         port: 2134,
@@ -119,7 +119,7 @@ module.exports = class YTM extends BdApi.React.Component {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         void this.setActivity(data);
     }
-    
+
     connectWS() {
         if(this.isWebsocketOpen()) {
             this.ws.onclose = null;
