@@ -14,7 +14,7 @@ export type Content = {
     timeNow: number;
     isPaused: boolean;
     link: string;
-}
+};
 
 export default abstract class Server {
     private readonly express: Application;
@@ -52,7 +52,7 @@ export default abstract class Server {
                 return;
             }
 
-            
+
             if((!this._lastSong) || (this._lastSong!['data']?.song !== song['data']?.song)) {
                 // if(this._lastSong && this._lastSong!['s_song'] !== song['s_song']) {
                 console.log(`${ chalk.green('playing') } ${ song['data']?.song } by ${ song['data']?.artist } ${ song['data']['album'] ? `on ${ song['data']['album'] }` : '' } for ${ content.timeMax }`);
