@@ -1,5 +1,5 @@
 /**
- * @name YTMTEST
+ * @name YTM
  * @description A simple WebSocket connection to a local YTM-RPC server, to display your Youtube Music data more.. "properly"
  * @version 1.0.0
  * @author ace.
@@ -46,12 +46,6 @@ module.exports = class YTM {
      * @type {{ dispatch: ( data: { type: string } & Record<string, unknown> ) => void | Promise<void> }}
      */
     dispatcher = void 0;
-
-    /**
-     * Discord's activity renderer
-     * @type { { prototype: { renderTimeBar: () => JSX.Element } } }
-     */
-    activityRenderer = void 0;
 
     /**
      * Turns external links into Discord's cached links for activities
@@ -154,7 +148,6 @@ module.exports = class YTM {
         this.dispatcher = BdApi.Webpack.getByKeys('dispatch', '_subscriptions');
         this.settings = BdApi.loadData('YTM', 'Settings') || this.defaultSettings;
 
-        this.activityRenderer = BdApi.Webpack.getByStrings('renderTimeBar');
         this.components = BdApi.Webpack.getByKeys('Button', 'Switch', 'Select');
         this.margins = BdApi.Webpack.getByKeys('marginBottom40', 'marginTop4');
 
