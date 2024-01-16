@@ -2,7 +2,10 @@
   "name": "ytm-rpc",
   "version": "0.0.1",
   "description": "Shows YouTubeMusic as Rich presence",
-  "main": "./dist/index.js",
+  "main": "./packages/server/dist/index.js",
+  "workspaces": [
+    "packages/*"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/acelikesghosts/ytm-rpc"
@@ -15,26 +18,8 @@
   },
   "author": "acelikesghosts",
   "license": "MIT",
-  "dependencies": {
-    "@octokit/rest": "^20.0.2",
-    "chalk": "^4.0.0",
-    "cors": "^2.8.5",
-    "discord-rpc": "^4.0.1",
-    "dotenv": "^16.3.1",
-    "express": "^4.17.1",
-    "express-ws": "^5.0.2",
-    "he": "^1.2.0",
-    "tslib": "^2.6.1"
-  },
   "devDependencies": {
     "@biased-ts/eslint-config": "^2.0.0",
-    "@types/chrome": "^0.0.246",
-    "@types/cors": "^2.8.13",
-    "@types/discord-rpc": "^4.0.5",
-    "@types/express": "^4.17.17",
-    "@types/express-ws": "^3.0.1",
-    "@types/he": "^1.2.0",
-    "@types/node": "^20.5.0",
     "@typescript-eslint/eslint-plugin": "^5.3.1",
     "@typescript-eslint/parser": "^5.3.1",
     "eslint": "^8.2.0",

@@ -1,0 +1,6 @@
+{
+    "name": "@ytm-rpc/vencord",
+    "scripts": {
+        "build": "echo \"The Vencord client mod does not have source code yet as Vencord does not support third-party plugin\""
+    }
+}

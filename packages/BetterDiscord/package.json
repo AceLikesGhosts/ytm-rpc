@@ -1,5 +1,5 @@
 {
-  "name": "betterdiscord",
+  "name": "@ytm-rpc/betterdiscord",
   "version": "1.0.0",
   "description": "You are probably looking for the [server's source code](../../src/)",
   "scripts": {

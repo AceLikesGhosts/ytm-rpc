@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./client-mods/BetterDiscord
+        working-directory: ./packages/BetterDiscord
 
     steps:
       - name: Check out Git repository
