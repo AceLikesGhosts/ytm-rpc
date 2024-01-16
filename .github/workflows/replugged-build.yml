@@ -9,7 +9,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: ./client-mods/replugged
+        working-directory: ./packages/replugged
 
     steps:
       - name: Check out Git repository
