@@ -121,7 +121,8 @@ bash ./scripts/setup.sh --deps --build
    * You can change the pause/play mini-icons, and more by doing so.
 5. Build the server
    ```sh
-   npx tsc
+   # this will build EVERY package
+   npm run build --workspaces
    ```
 
 Then run it using `node .`
@@ -133,14 +134,14 @@ Then run it using `node .`
 1. Navigate to the respective extensions tab.
 2. Turn on the Developer Mode switch (typically located in the top right of the extensions page)
 3. Click on the "Load Unpacked" button
-4. Browser to the project directory, and select the folder named `extension`
+4. Browser to the project directory, and select the folder named `packages/extensions`
 
 #### Firefox
 
 1. Navigate to [about:debugging](about:debugging)
 2. Proceed to the `This Firefox` tab
 3. Select `Load Temporary Add-on…`
-4. Navigate to the `extension` folder and select any file within it.
+4. Navigate to the `packages/extensions` folder and select any file within it.
 
 If you have changed the port of the server, click on the extension's icon to modify the port data is sent to.
 
@@ -162,7 +163,7 @@ If you have any open tabs of Youtube Music, please restart them.
 
 #### BetterDiscord
 
-1. Navigate to the [client-mods/betterdiscord](./client-mods/BetterDiscord/) folder.
+1. Navigate to the [packages/betterdiscord](./packages/BetterDiscord/) folder.
 2. Install the dependencies required
 ```sh
 npm install
@@ -185,7 +186,7 @@ If you have changed the port which the server runs at, change it within the plug
 
 If you have changed the port which the server runs at, change it within the plugin's settings as well.
 
-1. Navigate to the [client-mods/replugged](./client-mods/replugged/) folder.
+1. Navigate to the [packages/replugged](./packages/replugged/) folder.
 2. Install the dependenices for the project.
   ```sh
   pnpm install
@@ -221,9 +222,9 @@ git pull
 npm install
 ```
 
-3. Rebuild the Typescript codebase
+3. Rebuild the codebase
 ```bash
-npm run ts:build
+npm run build --workspaces
 ```
 
 4. Navigate to [the browser's extension manager](#extension-installation) and press `Update`
