@@ -1,0 +1,9 @@
+{
+    "name": "@ytm-rpc/extension",
+    "scripts": {
+        "build": "echo \"The extension does not need to be built as it's raw JS\""
+    },
+    "dependencies": {
+        "@types/chrome": "^0.0.256"
+    }
+}

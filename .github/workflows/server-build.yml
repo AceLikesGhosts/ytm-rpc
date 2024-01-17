@@ -6,13 +6,17 @@ jobs:
   tsc:
     name: tsc
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./packages/server
+
     steps:
-    - uses: actions/checkout@v1
-    - name: install node v18
-      uses: actions/setup-node@v1
-      with:
-        node-version: 18
-    - name: npm ci
-      run: npm ci
-    - name: tsc
-      uses: icrawl/action-tsc@v1
+      - uses: actions/checkout@v1
+      - name: install node v18
+        uses: actions/setup-node@v1
+        with:
+          node-version: 18
+      - name: npm ci
+        run: npm ci
+      - name: navigate to server & build
+        run: npm run build

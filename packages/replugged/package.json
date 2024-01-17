@@ -1,5 +1,5 @@
 {
-    "name": "@acelikesghosts/ytm-replugged",
+    "name": "@ytm-rpc/replugged",
     "version": "0.0.1",
     "description": "simple WebSocket connection to a local YTM-RPC server, to display your Youtube Music data more.. \"properly\"",
     "engines": {
@@ -17,7 +17,6 @@
         "lint": "npm run prettier:check && pnpm run eslint:check && pnpm run check",
         "lint:fix": "npm run prettier:fix && npm run eslint:fix"
     },
-    "keywords": [],
     "author": "AceLikesGhosts",
     "license": "ISC",
     "devDependencies": {
