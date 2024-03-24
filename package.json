@@ -12,6 +12,7 @@
   },
   "scripts": {
     "node:start": "node ./dist/index.js",
+    "build": "npm run build --workspaces",
     "ts:build": "tsc",
     "ts:bas": "tsc && node ./dist/index.js",
     "setup": "echo .env.example > .env"
