@@ -1,5 +1,5 @@
 import { Constants } from '../';
-import { milliToTime, stringify } from '.';
+import { stringify } from '.';
 import type { Presence } from 'discord-rpc';
 import type { Content } from '../servers/Server';
 
@@ -51,7 +51,12 @@ export default class Song {
         }
 
         // time mutations
-        content.timeMax = milliToTime(content.timeMax);
+        const currentTimeMillis = Date.now();
+        const startTimestamp = currentTimeMillis - (content.timeNow * 1000);
+        const endTimestamp = currentTimeMillis + ((content.timeMax - content.timeNow) * 1000);
+
+        content.timeNow = startTimestamp;
+        content.timeMax = endTimestamp;
 
         this.data = content;
     }
@@ -147,6 +152,11 @@ export default class Song {
             button_urls: [
                 this.data.link
             ]
+        };
+
+        rp.timestamps = {
+            start: this.data.timeNow,
+            end: this.data.timeMax
         };
 
         rp.name = Constants.show_song_title ? `${ this.data.artist ? this.data.artist.concat(' • ') : '' }${ this.data.song }` : 'Youtube Music';
