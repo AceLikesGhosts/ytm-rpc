@@ -146,7 +146,7 @@ module.exports = class YTM {
 
     start() {
         this.dispatcher = BdApi.Webpack.getByKeys('dispatch', '_subscriptions');
-        this.settings = BdApi.loadData('YTM', 'Settings') || this.defaultSettings;
+        this.settings = BdApi.Data.loadData('YTM', 'Settings') || this.defaultSettings;
 
         this.components = BdApi.Webpack.getByKeys('Button', 'Switch', 'Select');
         this.margins = BdApi.Webpack.getByKeys('marginBottom40', 'marginTop4');
@@ -209,7 +209,7 @@ module.exports = class YTM {
         this.getAsset = void 0;
         this.dispatcher = void 0;
 
-        BdApi.saveData('YTM', 'settings', this.settings);
+        BdApi.Data.saveData('YTM', 'settings', this.settings);
     }
 
     getSettingsPanel() {
