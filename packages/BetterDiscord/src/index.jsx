@@ -145,7 +145,7 @@ module.exports = class YTM {
     }
 
     start() {
-        this.dispatcher = BdApi.Webpack.getByKeys('dispatch', '_subscriptions');
+        this.dispatcher = BdApi.Webpack.getByKeys('dispatch', '_subscriptions', { searchExports: true });
         this.settings = BdApi.Data.load('YTM', 'Settings') || this.defaultSettings;
 
         this.components = BdApi.Webpack.getByKeys('Button', 'Switch', 'Select');
