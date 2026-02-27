@@ -105,7 +105,7 @@
          * @description A stupid querySelector query to get the album.
          * @type {string}
          */
-        const albumQuery = '#layout > ytmusic-player-bar > div.middle-controls.style-scope.ytmusic-player-bar > div.content-info-wrapper.style-scope.ytmusic-player-bar > span > span.subtitle.style-scope.ytmusic-player-bar > yt-formatted-string';
+        const albumQuery = '#layout > ytmusic-player-bar > div.middle-controls.style-scope.ytmusic-player-bar > div.content-info-wrapper.style-scope.ytmusic-player-bar > span > div.subtitle.style-scope.ytmusic-player-bar > span > yt-formatted-string';
 
         window.addEventListener('message', (/** @type {MessageEvent<Record<string, unknown>>} */ e) => {
             if(e.data.type !== 'ytm_PORT') {
